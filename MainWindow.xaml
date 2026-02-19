@@ -1,0 +1,224 @@
+﻿<Window x:Class="RecipePlanner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="RecipePlanner"
+        WindowState="Maximized"  
+        Height="600"
+        Width="900">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <!-- Hauptinhalt -->
+            <RowDefinition Height="Auto" />
+            <!-- Buttons unten -->
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Linke Spalte -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <!-- Rezeptliste -->
+                <RowDefinition Height="*" />
+                <!-- Vorrat / Zutaten -->
+            </Grid.RowDefinitions>
+
+            <!-- Rezeptliste -->
+            <GroupBox Header="Rezepte" Grid.Row="0" MinHeight="150">
+                <ListBox ItemsSource="{Binding Recipes}" 
+                         SelectedItem="{Binding SelectedRecipe}"
+                         Margin="0,5,0,0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" FontSize="14"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </GroupBox>
+
+            <!-- Vorrat / Zutaten -->
+            <GroupBox Header="Vorrat / Zutaten" Grid.Row="1" MinHeight="150">
+                <Grid Margin="5">
+
+                    <!-- 2 Spalten -->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <!-- Liste -->
+                        <ColumnDefinition Width="Auto" />
+                        <!-- Buttons -->
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <!-- Eingabe -->
+                        <RowDefinition Height="*"/>
+                        <!-- Liste -->
+                    </Grid.RowDefinitions>
+
+                    <!-- Eingabe oben über der Liste -->
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,5">
+                        <TextBlock Text="Zutaten eingeben (kommagetrennt):"
+                       Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding NewPantryText, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+
+                    <!-- Vorratsliste links -->
+                    <ListBox Grid.Row="1"
+                 Grid.Column="0"
+                 ItemsSource="{Binding PantryItems}"
+                 Margin="0,5,10,0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" FontSize="13"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <!-- Buttons rechts -->
+                    <StackPanel Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Grid.Column="1"
+                    Orientation="Vertical"
+                    HorizontalAlignment="Right">
+
+                        <Button Content="Vorrat speichern"
+                    Command="{Binding SavePantryCommand}"
+                    Margin="0,0,0,5"/>
+
+                        <Button Content="Vorrat bearbeiten"
+                    Command="{Binding EditPantryCommand}"
+                    Margin="0,0,0,5"/>
+
+                        <Button Content="Vorrat löschen"
+                    Command="{Binding DeletePantryCommand}"
+                    Margin="0,0,0,10"/>
+
+                        <Separator Margin="0,5"/>
+
+                        <Button Content="Rezepte finden"
+                    Command="{Binding FindRecipesCommand}"
+                    Margin="0,5,0,5"/>
+
+                        <Button Content="Alle Rezepte anzeigen"
+                    Command="{Binding ShowAllRecipesCommand}"/>
+                    </StackPanel>
+
+                </Grid>
+            </GroupBox>
+
+        </Grid>
+
+        <!-- Rechte Spalte -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <!-- Details -->
+                <RowDefinition Height="*" />
+                <!-- Kochplan -->
+            </Grid.RowDefinitions>
+
+            <!-- Rezeptdetails -->
+            <GroupBox Header="Details" Grid.Row="0" MinHeight="200">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <!-- Scrollbarer Inhalt -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Buttons -->
+                    </Grid.RowDefinitions>
+
+                    <!-- Scrollbarer Bereich -->
+                    <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5">
+                        <StackPanel>
+                            <!-- Rezeptname groß und fett -->
+                            <TextBlock Text="{Binding SelectedRecipe.Name}" 
+                           FontWeight="Bold" 
+                           FontSize="18" 
+                           Margin="0,0,0,10"/>
+
+                            <!-- Zutaten -->
+                            <TextBlock Text="Zutaten:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <ItemsControl ItemsSource="{Binding SelectedRecipe.Ingredients}" Margin="10,0,0,10">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Margin="0,0,0,2">
+                                            <Run Text="• "/>
+                                            <Run Text="{Binding Path=.}"/>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Zubereitung -->
+                            <TextBlock Text="Zubereitung:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <ItemsControl ItemsSource="{Binding SelectedRecipe.Steps}" Margin="10,0,0,10">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Margin="0,0,0,2">
+                                            <Run Text="• "/>
+                                            <Run Text="{Binding Path=.}"/>                 
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Quelle -->
+                            <TextBlock Text="{Binding SelectedRecipe.Source}" 
+                           FontStyle="Italic" 
+                           Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Buttons unten, logisch gruppiert -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
+                        <StackPanel Margin="0,0,5,0">
+                            <Button Content="Rezept bearbeiten" Command="{Binding EditRecipeCommand}" Margin="0,0,0,2"/>
+                            <Button Content="Rezept löschen" Command="{Binding DeleteRecipeCommand}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+
+            <!-- Kochplan -->
+            <GroupBox Header="Kochplan" Grid.Row="1" MinHeight="150">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <!-- ListBox nimmt verfügbaren Platz -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Buttons unten -->
+                    </Grid.RowDefinitions>
+
+                    <!-- Scrollbare ListBox -->
+                    <ListBox Grid.Row="0" ItemsSource="{Binding PlannedMeals}" SelectedItem="{Binding SelectedPlannedMeal}" Margin="0,0,0,5">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="0,0,0,2" 
+                                           Text="{Binding DisplayText}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <!-- Buttons unten -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Rezept planen" Command="{Binding PlanRecipeCommand}" Margin="0,0,5,0"/>
+                        <Button Content="Kochplan bearbeiten" Command="{Binding EditPlannedMealCommand}" Margin="0,0,5,0"/>
+                        <Button Content="Kochplan löschen" Command="{Binding DeletePlannedMealCommand}"/>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <!-- Buttons unten -->
+        <Border Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="0,1,0,0" BorderBrush="LightGray" Padding="5">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Rezept hinzufügen" Command="{Binding AddRecipeCommand}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

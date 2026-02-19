@@ -1,0 +1,19 @@
+﻿# Build Folders
+bin/
+obj/
+*.user
+*.suo
+*.vs/
+
+# Packages
+*.nupkg
+packages/
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Others
+*.log

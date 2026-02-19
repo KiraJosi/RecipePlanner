@@ -1,0 +1,59 @@
+﻿<Window x:Class="RecipePlanner.PlannedMealWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Mahlzeit planen"
+        Height="300"
+        Width="450"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResize">
+
+    <Grid Margin="15">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Inhalt -->
+        <StackPanel>
+
+            <!-- Datum -->
+            <TextBlock Text="Datum:"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,5"/>
+
+            <DatePicker x:Name="DatePicker"
+                        Margin="0,0,0,15"/>
+
+            <!-- Rezept -->
+            <TextBlock Text="Rezept auswählen:"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,5"/>
+
+            <ComboBox x:Name="RecipeComboBox"
+                      DisplayMemberPath="Name"
+                      Margin="0,0,0,10"
+                      IsEditable="False"/>
+
+        </StackPanel>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,15,0,0">
+
+            <Button Content="Abbrechen"
+                    Width="100"
+                    Margin="0,0,10,0"
+                    IsCancel="True"/>
+
+            <Button Content="OK"
+                    Width="100"
+                    IsDefault="True"
+                    Click="OkButton_Click"/>
+        </StackPanel>
+
+    </Grid>
+</Window>
+
