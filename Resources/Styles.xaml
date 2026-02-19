@@ -7,6 +7,7 @@
     <Color x:Key="AccentColor">#4CAF50</Color>
     <Color x:Key="TextColor">#333333</Color>
     <Color x:Key="WarningColor">#E53935</Color>
+    <Color x:Key="DisabledColor">#CCCCCC</Color>
 
     <!-- Brushes -->
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
@@ -14,7 +15,8 @@
     <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
     <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}"/>
     <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}"/>
-
+    <SolidColorBrush x:Key="DisabledBrush" Color="{StaticResource DisabledColor}"/>
+    
     <!-- Buttons -->
     <Style TargetType="Button">
         <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
@@ -24,12 +26,26 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="6"
+                    Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#FF8C65"/>
+                <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Background" Value="#CCCCCC"/>
+                <Setter Property="Background" Value="{StaticResource DisabledBrush}"/>
                 <Setter Property="Foreground" Value="#888888"/>
             </Trigger>
         </Style.Triggers>
@@ -46,7 +62,16 @@
                 <ControlTemplate TargetType="GroupBox">
                     <Border CornerRadius="8" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
                         <StackPanel>
-                            <ContentPresenter ContentSource="Header" Margin="0,0,0,5" RecognizesAccessKey="True"/>
+                            <!-- HeaderTemplate -->
+                            <ContentPresenter ContentSource="Header" Margin="0,0,0,5" RecognizesAccessKey="True">
+                                <ContentPresenter.ContentTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontWeight="Bold" FontSize="16"/>
+                                    </DataTemplate>
+                                </ContentPresenter.ContentTemplate>
+                            </ContentPresenter>
+
+                            <!-- Inhalt -->
                             <ContentPresenter />
                         </StackPanel>
                     </Border>
@@ -54,6 +79,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
 
     <!-- TextBlocks für Labels -->
     <Style TargetType="TextBlock" x:Key="LabelStyle">
@@ -67,6 +93,8 @@
         <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="5"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
     </Style>
 
     <Style TargetType="TextBox">
@@ -74,11 +102,16 @@
         <Setter Property="Margin" Value="0,5,0,5"/>
         <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
         <Setter Property="BorderThickness" Value="1.5"/>
-        <Setter Property="Background" Value="White"/>
+        <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>
