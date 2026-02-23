@@ -99,7 +99,6 @@
         <Setter Property="BorderThickness" Value="1.5"/>
         <Setter Property="Padding" Value="10"/>
         <Setter Property="Margin" Value="5"/>
-        <!-- Template mit runden Ecken -->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="GroupBox">
@@ -107,12 +106,21 @@
                             BorderBrush="{TemplateBinding BorderBrush}" 
                             BorderThickness="{TemplateBinding BorderThickness}" 
                             Padding="{TemplateBinding Padding}">
-                        <StackPanel>
-                            <ContentPresenter ContentSource="Header"
-                                          Margin="0,0,0,5"
-                                          RecognizesAccessKey="True"/>
-                            <ContentPresenter/>
-                        </StackPanel>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <ContentPresenter Grid.Row="0"
+                                              ContentSource="Header"
+                                              Margin="0,0,0,5"
+                                              RecognizesAccessKey="True"/>
+
+                            <ContentPresenter Grid.Row="1"
+                                              Content="{TemplateBinding Content}"
+                                              Margin="0,5,0,0"/>
+                        </Grid>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
