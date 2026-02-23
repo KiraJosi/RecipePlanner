@@ -29,7 +29,14 @@
             </Grid.RowDefinitions>
 
             <!-- Rezeptliste -->
-            <GroupBox Header="Rezepte" Grid.Row="0" MinHeight="150">
+            <GroupBox Grid.Row="0" MinHeight="150">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="🍲" Margin="0,0,5,0"/>
+                        <TextBlock Text="Rezepte"
+                                   Style="{StaticResource GroupHeaderTextStyle}"/>
+                    </StackPanel>
+                </GroupBox.Header>
                 <ListBox ItemsSource="{Binding Recipes}" 
                          SelectedItem="{Binding SelectedRecipe}"
                          Margin="0,5,0,0">
@@ -42,7 +49,14 @@
             </GroupBox>
 
             <!-- Vorrat / Zutaten -->
-            <GroupBox Header="Vorrat / Zutaten" Grid.Row="1" MinHeight="150">
+            <GroupBox Grid.Row="1" MinHeight="150">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="🥫" Margin="0,0,5,0"/>
+                        <TextBlock Text="Vorrat / Zutaten" 
+                                   Style="{StaticResource GroupHeaderTextStyle}"/>
+                    </StackPanel>
+                </GroupBox.Header>
                 <Grid Margin="5">
 
                     <!-- 2 Spalten -->
@@ -69,9 +83,9 @@
 
                     <!-- Vorratsliste links -->
                     <ListBox Grid.Row="1"
-                 Grid.Column="0"
-                 ItemsSource="{Binding PantryItems}"
-                 Margin="0,5,10,0">
+                             Grid.Column="0"
+                             ItemsSource="{Binding PantryItems}"
+                             Margin="0,5,10,0"> 
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}" FontSize="13"/>
@@ -123,7 +137,15 @@
             </Grid.RowDefinitions>
 
             <!-- Rezeptdetails -->
-            <GroupBox Header="Details" Grid.Row="0" MinHeight="200">
+            <GroupBox Grid.Row="0" MinHeight="200">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="📋" 
+                                   Margin="0,0,5,0"/>
+                        <TextBlock Text="Details"
+                                   Style="{StaticResource GroupHeaderTextStyle}"/>
+                    </StackPanel>
+                </GroupBox.Header>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -137,9 +159,9 @@
                         <StackPanel>
                             <!-- Rezeptname groß und fett -->
                             <TextBlock Text="{Binding SelectedRecipe.Name}" 
-                           FontWeight="Bold" 
-                           FontSize="18" 
-                           Margin="0,0,0,10"/>
+                                       FontWeight="Bold" 
+                                       FontSize="18" 
+                                       Margin="0,0,0,10"/>  
 
                             <!-- Zutaten -->
                             <TextBlock Text="Zutaten:" FontWeight="SemiBold" Margin="0,0,0,5"/>
@@ -185,7 +207,15 @@
             </GroupBox>
 
             <!-- Kochplan -->
-            <GroupBox Header="Kochplan" Grid.Row="1" MinHeight="150">
+            <GroupBox Grid.Row="1" MinHeight="150">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="🗓"
+                                   Margin="0,0,5,0"/>
+                        <TextBlock Text="Kochplan"
+                                   Style="{StaticResource GroupHeaderTextStyle}"/>
+                    </StackPanel>
+                </GroupBox.Header>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>

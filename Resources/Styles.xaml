@@ -57,22 +57,16 @@
         <Setter Property="BorderThickness" Value="1.5"/>
         <Setter Property="Padding" Value="10"/>
         <Setter Property="Margin" Value="5"/>
+        <!-- Template mit runden Ecken -->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="GroupBox">
                     <Border CornerRadius="8" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
                         <StackPanel>
-                            <!-- HeaderTemplate -->
-                            <ContentPresenter ContentSource="Header" Margin="0,0,0,5" RecognizesAccessKey="True">
-                                <ContentPresenter.ContentTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding}" FontWeight="Bold" FontSize="16"/>
-                                    </DataTemplate>
-                                </ContentPresenter.ContentTemplate>
-                            </ContentPresenter>
-
-                            <!-- Inhalt -->
-                            <ContentPresenter />
+                            <ContentPresenter ContentSource="Header"
+                                          Margin="0,0,0,5"
+                                          RecognizesAccessKey="True"/>
+                            <ContentPresenter/>
                         </StackPanel>
                     </Border>
                 </ControlTemplate>
@@ -80,6 +74,11 @@
         </Setter>
     </Style>
 
+    <Style x:Key="GroupHeaderTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+    </Style>
 
     <!-- TextBlocks für Labels -->
     <Style TargetType="TextBlock" x:Key="LabelStyle">
