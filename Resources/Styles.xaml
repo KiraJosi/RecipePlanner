@@ -8,6 +8,10 @@
     <Color x:Key="TextColor">#333333</Color>
     <Color x:Key="WarningColor">#E53935</Color>
     <Color x:Key="DisabledColor">#CCCCCC</Color>
+    <Color x:Key="PrimaryHoverColor">#E65C3D</Color>
+
+    <!-- Layout -->
+    <CornerRadius x:Key="DefaultCornerRadius">8</CornerRadius>
 
     <!-- Brushes -->
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
@@ -16,6 +20,7 @@
     <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}"/>
     <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}"/>
     <SolidColorBrush x:Key="DisabledBrush" Color="{StaticResource DisabledColor}"/>
+    <SolidColorBrush x:Key="PrimaryHoverBrush" Color="{StaticResource PrimaryHoverColor}"/>
     
     <!-- Buttons -->
     <Style TargetType="Button">
@@ -32,7 +37,7 @@
                     <Border Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}"
-                    CornerRadius="6"
+                    CornerRadius="{StaticResource DefaultCornerRadius}"
                     Padding="{TemplateBinding Padding}">
                         <ContentPresenter HorizontalAlignment="Center"
                                   VerticalAlignment="Center"/>
@@ -42,14 +47,25 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                <Setter Property="Background" Value="{StaticResource PrimaryHoverBrush}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Background" Value="{StaticResource DisabledBrush}"/>
-                <Setter Property="Foreground" Value="#888888"/>
+                <Setter Property="Foreground" Value="#777777"/>
+                <Setter Property="Cursor" Value="Arrow"/>
+                <Setter Property="Opacity" Value="0.85"/>
             </Trigger>
         </Style.Triggers>
     </Style>
+    <Style x:Key="SecondaryButtonStyle" 
+           TargetType="Button" 
+           BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Background" 
+                Value="{StaticResource SecondaryBrush}"/>
+        <Setter Property="Foreground" 
+                Value="{StaticResource TextBrush}"/>
+    </Style>
+
 
     <!-- GroupBox -->
     <Style TargetType="GroupBox">
@@ -61,7 +77,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="GroupBox">
-                    <Border CornerRadius="8" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                    <Border CornerRadius="{StaticResource DefaultCornerRadius}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Padding="{TemplateBinding Padding}">
                         <StackPanel>
                             <ContentPresenter ContentSource="Header"
                                           Margin="0,0,0,5"

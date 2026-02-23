@@ -14,20 +14,24 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-
-        <!-- Prompt -->
+        
+        <StackPanel Grid.Row="0">
+            <!-- Prompt -->
         <TextBlock x:Name="PromptTextBlock"
                    FontWeight="SemiBold"
                    TextWrapping="Wrap"
                    Margin="0,0,0,10"/>
+        </StackPanel>
 
-        <!-- Eingabefeld -->
-        <TextBox x:Name="InputTextBox"
+        <StackPanel Grid.Row="1">
+            <!-- Eingabefeld -->
+            <TextBox x:Name="InputTextBox"
                  Grid.Row="1"
                  AcceptsReturn="True"
                  TextWrapping="Wrap"
                  VerticalScrollBarVisibility="Auto"
                  MinHeight="80"/>
+        </StackPanel>
 
         <!-- Buttons -->
         <StackPanel Grid.Row="2"
@@ -38,7 +42,8 @@
             <Button Content="Abbrechen"
                     Width="100"
                     Margin="0,0,10,0"
-                    IsCancel="True"/>
+                    IsCancel="True"
+                    Style="{StaticResource SecondaryButtonStyle}"/>
 
             <Button Content="OK"
                     Width="100"
