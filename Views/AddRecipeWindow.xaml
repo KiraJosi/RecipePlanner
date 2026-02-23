@@ -16,36 +16,42 @@
 
         <!-- Scrollbarer Inhalt -->
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-            <StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
                 <!-- Name -->
-                <TextBlock Text="Name:" Style="{StaticResource LabelStyle}"/>
-                <TextBox x:Name="NameTextBox" Margin="0,0,0,10"/>
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="Name:" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="NameTextBox"/>
+                </StackPanel>
 
                 <!-- Zutaten -->
-                <TextBlock Text="Zutaten (kommagetrennt):" Style="{StaticResource LabelStyle}"/>
-                <TextBox x:Name="IngredientsTextBox"
-                         Margin="0,0,0,10"
-                         Height="60"
-                         AcceptsReturn="True"
-                         TextWrapping="Wrap"
-                         VerticalScrollBarVisibility="Auto"/>
+                <StackPanel Grid.Row="1">
+                    <TextBlock Text="Zutaten:" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="IngredientsTextBox"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"/>
+                </StackPanel>
 
                 <!-- Schritte -->
-                <TextBlock Text="Zubereitungsschritte (je Zeile ein Schritt):"
-                           Style="{StaticResource LabelStyle}"/>
-                <TextBox x:Name="StepsTextBox"
-                         Margin="0,0,0,10"
-                         Height="150"
-                         AcceptsReturn="True"
-                         TextWrapping="Wrap"
-                         VerticalScrollBarVisibility="Auto"/>
+                <StackPanel Grid.Row="2">
+                    <TextBlock Text="Schritte:" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="StepsTextBox"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"/>
+                </StackPanel>
 
                 <!-- Quelle -->
-                <TextBlock Text="Quelle:" Style="{StaticResource LabelStyle}"/>
-                <TextBox x:Name="SourceTextBox"/>
-
-            </StackPanel>
+                <StackPanel Grid.Row="3">
+                    <TextBlock Text="Quelle:" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="SourceTextBox"/>
+                </StackPanel>
+            </Grid>
         </ScrollViewer>
 
         <!-- Buttons -->

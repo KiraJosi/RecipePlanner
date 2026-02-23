@@ -4,7 +4,9 @@
         Title="RecipePlanner"
         WindowState="Maximized"  
         Height="600"
-        Width="900">
+        MinHeight="600"
+        Width="900"
+        MinWidth="900">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -22,7 +24,7 @@
         <!-- Linke Spalte -->
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*" />
+                <RowDefinition Height="*" />
                 <!-- Rezeptliste -->
                 <RowDefinition Height="*" />
                 <!-- Vorrat / Zutaten -->
@@ -130,7 +132,7 @@
         <!-- Rechte Spalte -->
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*" />
+                <RowDefinition Height="*" />
                 <!-- Details -->
                 <RowDefinition Height="*" />
                 <!-- Kochplan -->
@@ -155,7 +157,11 @@
                     </Grid.RowDefinitions>
 
                     <!-- Scrollbarer Bereich -->
-                    <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5">
+                    <ScrollViewer Grid.Row="0" 
+                                  VerticalScrollBarVisibility="Auto" 
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  CanContentScroll="True"
+                                  Margin="0,0,0,5">
                         <StackPanel>
                             <!-- Rezeptname groß und fett -->
                             <TextBlock Text="{Binding SelectedRecipe.Name}" 

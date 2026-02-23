@@ -15,27 +15,39 @@
         </Grid.RowDefinitions>
 
         <!-- Inhalt -->
-        <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
             <!-- Datum -->
-            <TextBlock Text="Datum:"
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="Datum:"
                        FontWeight="SemiBold"
                        Margin="0,0,0,5"/>
-
-            <DatePicker x:Name="DatePicker"
-                        Margin="0,0,0,15"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1">
+                <DatePicker x:Name="DatePicker"
+                            Margin="0,0,0,15"/>
+            </StackPanel>
 
             <!-- Rezept -->
-            <TextBlock Text="Rezept auswählen:"
+            <StackPanel Grid.Row="2">
+                <TextBlock Text="Rezept auswählen:"
                        FontWeight="SemiBold"
                        Margin="0,0,0,5"/>
+            </StackPanel>
+            <StackPanel Grid.Row="3">
+                <ComboBox x:Name="RecipeComboBox"
+                          DisplayMemberPath="Name"
+                          Margin="0,0,0,10"
+                          IsEditable="False"/>
+            </StackPanel>
 
-            <ComboBox x:Name="RecipeComboBox"
-                      DisplayMemberPath="Name"
-                      Margin="0,0,0,10"
-                      IsEditable="False"/>
-
-        </StackPanel>
+        </Grid>
 
         <!-- Buttons -->
         <StackPanel Grid.Row="1"
