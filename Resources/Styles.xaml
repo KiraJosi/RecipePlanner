@@ -13,6 +13,18 @@
     <!-- Layout -->
     <CornerRadius x:Key="DefaultCornerRadius">8</CornerRadius>
 
+    <!-- Spacing -->
+    <Thickness x:Key="SpacingSmall">5</Thickness>
+    <Thickness x:Key="SpacingMedium">10</Thickness>
+    <Thickness x:Key="SpacingLarge">15</Thickness>
+
+    <Thickness x:Key="SpacingTopSmall">0,5,0,0</Thickness>
+    <Thickness x:Key="SpacingTopMedium">0,10,0,0</Thickness>
+    <Thickness x:Key="SpacingTopLarge">0,15,0,0</Thickness>
+
+    <Thickness x:Key="SpacingBottomSmall">0,0,0,5</Thickness>
+    <Thickness x:Key="SpacingBottomMedium">0,0,0,10</Thickness>
+
     <!-- Brushes -->
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}"/>
@@ -103,7 +115,7 @@
     <Style TargetType="TextBlock" x:Key="LabelStyle">
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
-        <Setter Property="Margin" Value="0,5,0,0"/>
+        <Setter Property="Margin" Value="{StaticResource SpacingTopSmall}"/>
     </Style>
 
     <!-- ScrollViewer für ListBoxen -->

@@ -7,7 +7,7 @@
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize">
 
-    <Grid Margin="15">
+    <Grid Margin="{StaticResource SpacingLarge}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -26,8 +26,8 @@
             <!-- Datum -->
             <StackPanel Grid.Row="0">
                 <TextBlock Text="Datum:"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,5"/>
+                           FontWeight="SemiBold"
+                           Margin="{StaticResource SpacingBottomSmall}"/>
             </StackPanel>
             <StackPanel Grid.Row="1">
                 <DatePicker x:Name="DatePicker"
@@ -37,13 +37,13 @@
             <!-- Rezept -->
             <StackPanel Grid.Row="2">
                 <TextBlock Text="Rezept auswählen:"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,5"/>
+                           FontWeight="SemiBold"
+                           Margin="{StaticResource SpacingBottomSmall}"/>
             </StackPanel>
             <StackPanel Grid.Row="3">
                 <ComboBox x:Name="RecipeComboBox"
                           DisplayMemberPath="Name"
-                          Margin="0,0,0,10"
+                          Margin="{StaticResource SpacingBottomMedium}"
                           IsEditable="False"/>
             </StackPanel>
 
@@ -53,7 +53,7 @@
         <StackPanel Grid.Row="1"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right"
-                    Margin="0,15,0,0">
+                    Margin="{StaticResource SpacingTopLarge}">
 
             <Button Content="Abbrechen"
                     Width="100"
@@ -63,6 +63,7 @@
 
             <Button Content="OK"
                     Width="100"
+                    Margin="0,0,10,0"
                     IsDefault="True"
                     Click="OkButton_Click"/>
         </StackPanel>

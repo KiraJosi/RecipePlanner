@@ -7,7 +7,7 @@
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize">
 
-    <Grid Margin="15">
+    <Grid Margin="{StaticResource SpacingLarge}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -15,7 +15,8 @@
         </Grid.RowDefinitions>
 
         <!-- Scrollbarer Inhalt -->
-        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="0" 
+                      VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -26,29 +27,33 @@
 
                 <!-- Name -->
                 <StackPanel Grid.Row="0">
-                    <TextBlock Text="Name:" Style="{StaticResource LabelStyle}"/>
+                    <TextBlock Text="Name:" 
+                               Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="NameTextBox"/>
                 </StackPanel>
 
                 <!-- Zutaten -->
                 <StackPanel Grid.Row="1">
-                    <TextBlock Text="Zutaten:" Style="{StaticResource LabelStyle}"/>
+                    <TextBlock Text="Zutaten:" 
+                               Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="IngredientsTextBox"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"/>
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"/>
                 </StackPanel>
 
                 <!-- Schritte -->
                 <StackPanel Grid.Row="2">
-                    <TextBlock Text="Schritte:" Style="{StaticResource LabelStyle}"/>
+                    <TextBlock Text="Schritte:" 
+                               Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="StepsTextBox"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"/>
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"/>
                 </StackPanel>
 
                 <!-- Quelle -->
                 <StackPanel Grid.Row="3">
-                    <TextBlock Text="Quelle:" Style="{StaticResource LabelStyle}"/>
+                    <TextBlock Text="Quelle:" 
+                               Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="SourceTextBox"/>
                 </StackPanel>
             </Grid>
@@ -58,7 +63,7 @@
         <StackPanel Grid.Row="1"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right"
-                    Margin="0,15,0,0">
+                    Margin="{StaticResource SpacingTopLarge}">
 
             <Button Content="Abbrechen"
                     Width="100"
