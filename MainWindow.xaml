@@ -109,18 +109,21 @@
                                 Orientation="Vertical"
                                 HorizontalAlignment="Right">
 
-                        <Button Content="Vorrat speichern"
+                        <Button Content="💾"
                                 Command="{Binding SavePantryCommand}"
-                                Margin="{StaticResource SpacingBottomSmall}"/>
+                                Margin="{StaticResource SpacingBottomSmall}"
+                                ToolTip="{StaticResource TT_SavePantry}"/>
 
-                        <Button Content="Vorrat bearbeiten"
+                        <Button Content="✏"
                                 Command="{Binding EditPantryCommand}"
-                                Margin="{StaticResource SpacingBottomSmall}"/>
+                                Margin="{StaticResource SpacingBottomSmall}"
+                                ToolTip="{StaticResource TT_EditPantry}"/>
 
-                        <Button Content="Vorrat löschen"
+                        <Button Content="🗑"
                                 Command="{Binding DeletePantryCommand}"
                                 Margin="{StaticResource SpacingBottomMedium}"
-                                Style="{StaticResource SecondaryButtonStyle}"/>
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                ToolTip="{StaticResource TT_DeletePantry}"/>
 
                         <Separator Margin="0,5"/>
 
@@ -223,13 +226,15 @@
                                 HorizontalAlignment="Right" 
                                 Grid.Row="1">
                         <StackPanel Margin="0,0,5,0">
-                            <Button Content="Rezept bearbeiten" 
+                            <Button Content="✏" 
                                     Command="{Binding EditRecipeCommand}" 
-                                    Margin="0,0,0,2"/>
-                            <Button Content="Rezept löschen" 
+                                    Margin="0,0,0,2"
+                                    ToolTip="{StaticResource TT_EditRecipe}"/>
+                            <Button Content="🗑" 
                                     Command="{Binding DeleteRecipeCommand}"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    Margin="0,0,0,2"/>
+                                    Margin="0,0,0,2"
+                                    ToolTip="{StaticResource TT_DeleteRecipe}"/>
                         </StackPanel>
                     </StackPanel>
                 </Grid>
@@ -271,13 +276,16 @@
                     <StackPanel Grid.Row="1" 
                                 Orientation="Horizontal" 
                                 HorizontalAlignment="Right">
-                        <Button Content="Rezept planen" 
-                                Command="{Binding PlanRecipeCommand}"/>
-                        <Button Content="Kochplan bearbeiten" 
-                                Command="{Binding EditPlannedMealCommand}" />
-                        <Button Content="Kochplan löschen" 
+                        <Button Content="➕" 
+                                Command="{Binding PlanRecipeCommand}"
+                                ToolTip="{StaticResource TT_PlanRecipe}"/>
+                        <Button Content="✏" 
+                                Command="{Binding EditPlannedMealCommand}" 
+                                ToolTip="{StaticResource TT_EditPlannedMeal}"/>
+                        <Button Content="🗑" 
                                 Command="{Binding DeletePlannedMealCommand}"
-                                Style="{StaticResource SecondaryButtonStyle}"/>
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                ToolTip="{StaticResource TT_DeletePlannedMeal}"/>
                     </StackPanel>
                 </Grid>
             </GroupBox>
@@ -291,8 +299,9 @@
                 Padding="{StaticResource SpacingSmall}">
             <StackPanel Orientation="Horizontal" 
                         HorizontalAlignment="Right">
-                <Button Content="Rezept hinzufügen" 
-                        Command="{Binding AddRecipeCommand}"/>
+                <Button Content="➕" 
+                        Command="{Binding AddRecipeCommand}"
+                        ToolTip="{StaticResource TT_AddRecipe}" Cursor="Hand"/>
             </StackPanel>
         </Border>
     </Grid>

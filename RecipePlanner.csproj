@@ -8,4 +8,14 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Page Remove="Resources\Strings.xaml" />
+    <Page Remove="Resources\Styles.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Strings.xaml" />
+    <Resource Include="Resources\Styles.xaml" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,19 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="TT_AddRecipe">Neues Rezept hinzufügen</sys:String>
+    <sys:String x:Key="TT_DeleteRecipe">Ausgewähltes Rezept löschen</sys:String>
+    <sys:String x:Key="TT_EditRecipe">Rezept bearbeiten</sys:String>
+    <sys:String x:Key="TT_SaveRecipe">Rezept speichern</sys:String>
+
+    <sys:String x:Key="TT_EditPlannedMeal">Kochplan bearbeiten</sys:String>
+    <sys:String x:Key="TT_DeletePlannedMeal">Kochplan löschen</sys:String>
+    <sys:String x:Key="TT_PlanRecipe">Rezept planen</sys:String>
+
+    <sys:String x:Key="TT_DeletePantry">Vorrat löschen</sys:String>
+    <sys:String x:Key="TT_EditPantry">Vorrat bearbeiten</sys:String>
+    <sys:String x:Key="TT_SavePantry">Vorrat speichern</sys:String>
+
+</ResourceDictionary>
