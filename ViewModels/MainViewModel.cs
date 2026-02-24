@@ -2,7 +2,9 @@
 using RecipePlanner.Models;
 using RecipePlanner.Services;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace RecipePlanner.ViewModels
@@ -10,7 +12,6 @@ namespace RecipePlanner.ViewModels
     public class MainViewModel : BaseViewModel
     {
         private readonly JsonDataService _dataService;
-        private readonly List<Recipe> _allRecipes;
 
         public ObservableCollection<Recipe> Recipes { get; }
         public ObservableCollection<string> PantryItems { get; }
@@ -66,13 +67,17 @@ namespace RecipePlanner.ViewModels
         public ICommand DeletePlannedMealCommand { get; }
         public ICommand EditPlannedMealCommand { get; }
 
+        public ICollectionView RecipesView { get; }
+
 
         public MainViewModel()
         {
             _dataService = new JsonDataService();
-            _allRecipes = _dataService.Load<List<Recipe>>("recipes.json") ?? new List<Recipe>();
 
-            Recipes = new ObservableCollection<Recipe>(_allRecipes);
+            Recipes = new ObservableCollection<Recipe>(
+                _dataService.Load<List<Recipe>>("recipes.json") ?? new List<Recipe>()
+            );
+            RecipesView = CollectionViewSource.GetDefaultView(Recipes);
 
             PantryItems = new ObservableCollection<string>(
                 _dataService.Load<List<string>>("pantry.json") ?? new List<string>()
@@ -119,7 +124,6 @@ namespace RecipePlanner.ViewModels
 
             if (result == true && addWindow.NewRecipe != null)
             {
-                _allRecipes.Add(addWindow.NewRecipe);   
                 Recipes.Add(addWindow.NewRecipe);
 
                 SelectedRecipe = addWindow.NewRecipe;
@@ -130,7 +134,6 @@ namespace RecipePlanner.ViewModels
         {
             if (SelectedRecipe != null)
             {
-                _allRecipes.Remove(SelectedRecipe);  
                 Recipes.Remove(SelectedRecipe);
             }
         }
@@ -213,20 +216,18 @@ namespace RecipePlanner.ViewModels
                 return;
             }
 
-            var filtered = _allRecipes.Where(r =>
-                r.Ingredients.Any(i =>
-                    PantryItems.Contains(i, StringComparer.OrdinalIgnoreCase))
-            ).ToList();
+            RecipesView.Filter = obj =>
+            {
+                if (obj is not Recipe r)
+                    return false;
 
-            Recipes.Clear();
-            foreach (var recipe in filtered)
-                Recipes.Add(recipe);
+                return r.Ingredients.Any(i =>
+                    PantryItems.Contains(i, StringComparer.OrdinalIgnoreCase));
+            };
         }
         private void ShowAllRecipes()
         {
-            Recipes.Clear();
-            foreach (var recipe in _allRecipes)
-                Recipes.Add(recipe);
+            RecipesView.Filter = null;
         }
         private void EditPantry()
         {

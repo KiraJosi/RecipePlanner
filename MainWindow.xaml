@@ -41,7 +41,7 @@
                                    Style="{StaticResource GroupHeaderTextStyle}"/>
                     </StackPanel>
                 </GroupBox.Header>
-                <ListBox ItemsSource="{Binding Recipes}" 
+                <ListBox ItemsSource="{Binding RecipesView}" 
                          SelectedItem="{Binding SelectedRecipe}"
                          Margin="{StaticResource SpacingTopSmall}">
                     <ListBox.ItemTemplate>
