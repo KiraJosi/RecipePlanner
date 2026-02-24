@@ -83,18 +83,21 @@ namespace RecipePlanner.ViewModels
                 _dataService.Load<List<string>>("pantry.json") ?? new List<string>()
             );
 
-            PlannedMeals = new ObservableCollection<PlannedMeal>(
-                _dataService.Load<List<PlannedMeal>>("plannedMeals.json") ?? new List<PlannedMeal>()
-            );
+            // PlannedMeals laden
+            var loadedPlannedMeals = _dataService.Load<List<PlannedMeal>>("plannedMeals.json") ?? new List<PlannedMeal>();
+            PlannedMeals = new ObservableCollection<PlannedMeal>(loadedPlannedMeals);
+
+            // Bei Änderungen in der Collection speichern
+            PlannedMeals.CollectionChanged += (_, __) => SavePlannedMeals();
+
+            // Bei Änderungen an einem Element speichern
+            foreach (var meal in PlannedMeals)
+                meal.PropertyChanged += PlannedMeal_PropertyChanged;
+
 
             Recipes.CollectionChanged += (_, __) =>
             {
                 _dataService.Save("recipes.json", Recipes);
-            };
-
-            PlannedMeals.CollectionChanged += (_, __) =>
-            {
-                _dataService.Save("plannedMeals.json", PlannedMeals);
             };
 
             PantryItems.CollectionChanged += (_, __) =>
@@ -155,6 +158,7 @@ namespace RecipePlanner.ViewModels
             if (result == true)
             {
                 PlannedMeals.Add(newMeal);
+                newMeal.PropertyChanged += PlannedMeal_PropertyChanged;
             }
         }
 
@@ -194,7 +198,6 @@ namespace RecipePlanner.ViewModels
             if (SelectedRecipe == null)
                 return;
 
-            // Neues Fenster mit bestehendem Rezept öffnen
             var editWindow = new AddRecipeWindow(SelectedRecipe);
 
             bool? result = editWindow.ShowDialog();
@@ -234,10 +237,8 @@ namespace RecipePlanner.ViewModels
             if (!PantryItems.Any())
                 return;
 
-            // Dialog oder Input-Box für Bearbeitung
             var editText = string.Join(", ", PantryItems);
 
-            // Beispiel: InputDialog öffnen (kann selbst erstellt werden)
             var inputDialog = new InputDialog("Vorrat bearbeiten:", editText);
             bool? result = inputDialog.ShowDialog();
 
@@ -256,18 +257,25 @@ namespace RecipePlanner.ViewModels
             }
         }
 
+        private void PlannedMeal_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            SavePlannedMeals();
+        }
+        private void SavePlannedMeals()
+        {
+            _dataService.Save("plannedMeals.json", PlannedMeals.ToList());
+        }
+
         private void EditPlannedMeal()
         {
             if (SelectedPlannedMeal == null)
                 return;
 
-            // Dialog mit bestehendem Meal öffnen
             var editWindow = new PlannedMealWindow(SelectedPlannedMeal, Recipes.ToList());
             bool? result = editWindow.ShowDialog();
 
             if (result == true)
             {
-                // PlannedMeal ist direkt aktualisiert
                 OnPropertyChanged(nameof(PlannedMeals));
                 OnPropertyChanged(nameof(SelectedPlannedMeal));
             }

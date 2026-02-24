@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace RecipePlanner.Models
 {
-    public class PlannedMeal : INotifyPropertyChanged
+    public class PlannedMeal : BaseViewModel
     {
         private DateTime _date;
         public DateTime Date
@@ -19,8 +19,8 @@ namespace RecipePlanner.Models
                 if (_date != value)
                 {
                     _date = value;
-                    OnPropertyChanged(nameof(Date));
-                    OnPropertyChanged(nameof(DisplayText)); // UI aktualisieren
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(DisplayText)); 
                 }
             }
         }
@@ -34,18 +34,18 @@ namespace RecipePlanner.Models
                 if (_recipe != value)
                 {
                     _recipe = value;
-                    OnPropertyChanged(nameof(Recipe));
-                    OnPropertyChanged(nameof(DisplayText)); // UI aktualisieren
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(DisplayText)); 
                 }
             }
         }
 
         public string DisplayText => $"{Date:dd.MM.yyyy} - {Recipe?.Name}";
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        //public event PropertyChangedEventHandler? PropertyChanged;
+        //protected void OnPropertyChanged(string propertyName)
+        //{
+         //   PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
     }
 }
