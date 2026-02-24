@@ -83,14 +83,11 @@ namespace RecipePlanner.ViewModels
                 _dataService.Load<List<string>>("pantry.json") ?? new List<string>()
             );
 
-            // PlannedMeals laden
             var loadedPlannedMeals = _dataService.Load<List<PlannedMeal>>("plannedMeals.json") ?? new List<PlannedMeal>();
             PlannedMeals = new ObservableCollection<PlannedMeal>(loadedPlannedMeals);
 
-            // Bei Änderungen in der Collection speichern
             PlannedMeals.CollectionChanged += (_, __) => SavePlannedMeals();
 
-            // Bei Änderungen an einem Element speichern
             foreach (var meal in PlannedMeals)
                 meal.PropertyChanged += PlannedMeal_PropertyChanged;
 
@@ -204,9 +201,6 @@ namespace RecipePlanner.ViewModels
 
             if (result == true)
             {
-                // SelectedRecipe wurde direkt im Dialog geändert
-                // CollectionChanged Event sorgt dafür, dass JSON gespeichert wird
-                // Optional: PropertyChanged feuern, damit UI aktualisiert wird
                 OnPropertyChanged(nameof(Recipes));
                 OnPropertyChanged(nameof(SelectedRecipe));
             }

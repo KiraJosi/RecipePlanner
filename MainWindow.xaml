@@ -82,7 +82,7 @@
                         <!-- Liste -->
                     </Grid.RowDefinitions>
 
-                    <!-- Eingabe oben über der Liste -->
+                    <!-- Eingabe -->
                     <StackPanel Grid.Row="0" 
                                 Grid.Column="0">
                         <TextBlock Text="Zutaten eingeben (kommagetrennt):"
@@ -90,7 +90,7 @@
                         <TextBox Text="{Binding NewPantryText, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
 
-                    <!-- Vorratsliste links -->
+                    <!-- Vorratsliste -->
                     <ListBox Grid.Row="1"
                              Grid.Column="0"
                              ItemsSource="{Binding PantryItems}">
@@ -102,7 +102,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <!-- Buttons rechts -->
+                    <!-- Buttons -->
                     <StackPanel Grid.Row="0"
                                 Grid.RowSpan="2"
                                 Grid.Column="2"
@@ -176,7 +176,6 @@
                                   CanContentScroll="True"
                                   Margin="{StaticResource SpacingBottomSmall}">
                         <StackPanel>
-                            <!-- Rezeptname groß und fett -->
                             <TextBlock Text="{Binding SelectedRecipe.Name}" 
                                        FontWeight="Bold" 
                                        FontSize="18" 
@@ -221,7 +220,7 @@
                         </StackPanel>
                     </ScrollViewer>
 
-                    <!-- Buttons unten, logisch gruppiert -->
+                    <!-- Buttons -->
                     <StackPanel Orientation="Horizontal" 
                                 HorizontalAlignment="Right" 
                                 Grid.Row="1">
@@ -254,12 +253,12 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
-                        <!-- ListBox nimmt verfügbaren Platz -->
+                        <!-- ListBox -->
                         <RowDefinition Height="Auto"/>
-                        <!-- Buttons unten -->
+                        <!-- Buttons -->
                     </Grid.RowDefinitions>
 
-                    <!-- Scrollbare ListBox -->
+                    <!-- ListBox -->
                     <ListBox Grid.Row="0" 
                              ItemsSource="{Binding PlannedMeals}" 
                              SelectedItem="{Binding SelectedPlannedMeal}" 
@@ -272,7 +271,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <!-- Buttons unten -->
+                    <!-- Buttons -->
                     <StackPanel Grid.Row="1" 
                                 Orientation="Horizontal" 
                                 HorizontalAlignment="Right">
@@ -291,7 +290,7 @@
             </GroupBox>
         </Grid>
 
-        <!-- Buttons unten -->
+        <!-- Buttons -->
         <Border Grid.Row="1" 
                 Grid.ColumnSpan="2" 
                 BorderThickness="0,1,0,0" 

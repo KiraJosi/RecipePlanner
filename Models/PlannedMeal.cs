@@ -42,10 +42,5 @@ namespace RecipePlanner.Models
 
         public string DisplayText => $"{Date:dd.MM.yyyy} - {Recipe?.Name}";
 
-        //public event PropertyChangedEventHandler? PropertyChanged;
-        //protected void OnPropertyChanged(string propertyName)
-        //{
-         //   PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
     }
 }

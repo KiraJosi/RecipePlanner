@@ -15,23 +15,18 @@ using RecipePlanner.Models;
 
 namespace RecipePlanner
 {
-    /// <summary>
-    /// Interaktionslogik für AddRecipeWindow.xaml
-    /// </summary>
     public partial class AddRecipeWindow : Window
     {
         private readonly Recipe? _recipeToEdit;
 
         public Recipe? NewRecipe { get; private set; }
 
-        // ADD
         public AddRecipeWindow()
         {
             InitializeComponent();
             Title = "Neues Rezept hinzufügen";
         }
 
-        // EDIT
         public AddRecipeWindow(Recipe recipeToEdit)
         {
             InitializeComponent();
@@ -63,7 +58,6 @@ namespace RecipePlanner
                 .Select(s => s.Trim())
                 .ToList();
 
-            // EDIT
             if (_recipeToEdit != null)
             {
                 _recipeToEdit.Name = NameTextBox.Text;
@@ -71,7 +65,6 @@ namespace RecipePlanner
                 _recipeToEdit.Steps = steps;
                 _recipeToEdit.Source = SourceTextBox.Text;
             }
-            // ADD
             else
             {
                 NewRecipe = new Recipe
