@@ -94,6 +94,7 @@ namespace RecipePlanner.ViewModels
 
             PantryItems.CollectionChanged += (_, __) =>
             {
+                _dataService.Save("pantry.json", PantryItems);
                 (DeletePantryCommand as RelayCommand)?.RaiseCanExecuteChanged();
             };
 
@@ -113,18 +114,14 @@ namespace RecipePlanner.ViewModels
 
         private void AddRecipe()
         {
-            // Neues Fenster erstellen
             var addWindow = new AddRecipeWindow();
-
-            // Modal öffnen
             bool? result = addWindow.ShowDialog();
 
             if (result == true && addWindow.NewRecipe != null)
             {
-                // Neues Rezept zur Collection hinzufügen
+                _allRecipes.Add(addWindow.NewRecipe);   
                 Recipes.Add(addWindow.NewRecipe);
 
-                // Optional: direkt selektieren
                 SelectedRecipe = addWindow.NewRecipe;
             }
         }
@@ -133,6 +130,7 @@ namespace RecipePlanner.ViewModels
         {
             if (SelectedRecipe != null)
             {
+                _allRecipes.Remove(SelectedRecipe);  
                 Recipes.Remove(SelectedRecipe);
             }
         }
@@ -216,7 +214,8 @@ namespace RecipePlanner.ViewModels
             }
 
             var filtered = _allRecipes.Where(r =>
-                PantryItems.All(p => r.Ingredients.Contains(p, StringComparer.OrdinalIgnoreCase))
+                r.Ingredients.Any(i =>
+                    PantryItems.Contains(i, StringComparer.OrdinalIgnoreCase))
             ).ToList();
 
             Recipes.Clear();
