@@ -100,7 +100,9 @@ namespace RecipePlanner.ViewModels
             PantryItems.CollectionChanged += (_, __) =>
             {
                 _dataService.Save("pantry.json", PantryItems);
+
                 (DeletePantryCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                (FindRecipesCommand as RelayCommand)?.RaiseCanExecuteChanged();
             };
 
             AddRecipeCommand = new RelayCommand(AddRecipe);
@@ -110,7 +112,7 @@ namespace RecipePlanner.ViewModels
             DeletePantryCommand = new RelayCommand(DeletePantry, () => PantryItems.Any());
             DeletePlannedMealCommand = new RelayCommand(DeletePlannedMeal, () => SelectedPlannedMeal != null);
             EditRecipeCommand = new RelayCommand(EditRecipe, () => SelectedRecipe != null);
-            FindRecipesCommand = new RelayCommand(FindRecipes);
+            FindRecipesCommand = new RelayCommand(FindRecipes, CanFindRecipes);
             ShowAllRecipesCommand = new RelayCommand(ShowAllRecipes);
             EditPantryCommand = new RelayCommand(EditPantry);
             EditPlannedMealCommand = new RelayCommand(EditPlannedMeal, () => SelectedPlannedMeal != null);
@@ -205,14 +207,14 @@ namespace RecipePlanner.ViewModels
                 OnPropertyChanged(nameof(SelectedRecipe));
             }
         }
+
+        private bool CanFindRecipes()
+        {
+            return PantryItems.Any();
+        }
+
         private void FindRecipes()
         {
-            if (PantryItems.Count == 0)
-            {
-                MessageBox.Show("Keine Vorratszutaten vorhanden!");
-                return;
-            }
-
             RecipesView.Filter = obj =>
             {
                 if (obj is not Recipe r)
@@ -255,6 +257,7 @@ namespace RecipePlanner.ViewModels
         {
             SavePlannedMeals();
         }
+
         private void SavePlannedMeals()
         {
             _dataService.Save("plannedMeals.json", PlannedMeals.ToList());
