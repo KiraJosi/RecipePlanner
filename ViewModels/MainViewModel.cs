@@ -39,6 +39,8 @@ namespace RecipePlanner.ViewModels
             {
                 _newPantryText = value;
                 OnPropertyChanged();
+
+                (SavePantryCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -108,7 +110,7 @@ namespace RecipePlanner.ViewModels
             AddRecipeCommand = new RelayCommand(AddRecipe);
             DeleteRecipeCommand = new RelayCommand(DeleteRecipe, CanDeleteRecipe);
             PlanRecipeCommand = new RelayCommand(PlanRecipe, CanPlanRecipe);
-            SavePantryCommand = new RelayCommand(SavePantry);
+            SavePantryCommand = new RelayCommand(SavePantry, CanSavePantry);
             DeletePantryCommand = new RelayCommand(DeletePantry, () => PantryItems.Any());
             DeletePlannedMealCommand = new RelayCommand(DeletePlannedMeal, () => SelectedPlannedMeal != null);
             EditRecipeCommand = new RelayCommand(EditRecipe, () => SelectedRecipe != null);
@@ -145,6 +147,11 @@ namespace RecipePlanner.ViewModels
             return SelectedRecipe != null;
         }
 
+        private bool CanPlanRecipe()
+        {
+            return SelectedRecipe != null;
+        }
+
         private void PlanRecipe()
         {
             if (SelectedRecipe == null)
@@ -161,15 +168,13 @@ namespace RecipePlanner.ViewModels
             }
         }
 
-        private bool CanPlanRecipe()
+        private bool CanSavePantry()
         {
-            return SelectedRecipe != null;
+            return !string.IsNullOrWhiteSpace(NewPantryText);
         }
+
         private void SavePantry()
         {
-            if (string.IsNullOrWhiteSpace(NewPantryText))
-                return;
-
             var items = NewPantryText
                 .Split(',')
                 .Select(i => i.Trim())
