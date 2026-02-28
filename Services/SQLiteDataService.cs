@@ -88,5 +88,58 @@ namespace RecipePlanner.Services
             }
             transaction.Commit();
         }
+
+        public List<Recipe> GetRecipes()
+        {
+            var recipes = new List<Recipe>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT Id, Name FROM Recipes";
+
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var recipe = new Recipe
+                {
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                };
+
+                recipe.Ingredients = new ObservableCollection<string>(
+                    GetIngredientsForRecipe(recipe.Id)
+                    );
+
+                recipes.Add(recipe);
+
+            }
+            return recipes;
+        }
+
+        private List<string> GetIngredientsForRecipe(int recipeId)
+        {
+            var ingredients = new List<string>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT Name FROM Ingredients WHERE RecipeId = $id";
+
+            command.Parameters.AddWithValue("$id", recipeId);
+
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                ingredients.Add(reader.GetString(0));
+            }
+
+            return ingredients;
+
+        }
     }
 }
