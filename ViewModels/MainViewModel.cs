@@ -11,7 +11,7 @@ namespace RecipePlanner.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        private readonly JsonDataService _dataService;
+        private readonly SQLiteDataService _dataService;
         private readonly IDialogService _dialogService;
 
         public ObservableCollection<Recipe> Recipes { get; }
@@ -75,11 +75,11 @@ namespace RecipePlanner.ViewModels
 
         public MainViewModel()
         {
-            _dataService = new JsonDataService();
+            _dataService = new SQLiteDataService();
             _dialogService = new DialogService();
 
             Recipes = new ObservableCollection<Recipe>(
-                _dataService.Load<List<Recipe>>("recipes.json") ?? new List<Recipe>()
+                _dataService.GetRecipes()
             );
             RecipesView = CollectionViewSource.GetDefaultView(Recipes);
 
@@ -94,20 +94,6 @@ namespace RecipePlanner.ViewModels
 
             foreach (var meal in PlannedMeals)
                 meal.PropertyChanged += PlannedMeal_PropertyChanged;
-
-
-            Recipes.CollectionChanged += (_, __) =>
-            {
-                _dataService.Save("recipes.json", Recipes);
-            };
-
-            PantryItems.CollectionChanged += (_, __) =>
-            {
-                _dataService.Save("pantry.json", PantryItems);
-
-                (DeletePantryCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (FindRecipesCommand as RelayCommand)?.RaiseCanExecuteChanged();
-            };
 
             AddRecipeCommand = new RelayCommand(AddRecipe);
             DeleteRecipeCommand = new RelayCommand(DeleteRecipe, CanDeleteRecipe);
@@ -128,6 +114,7 @@ namespace RecipePlanner.ViewModels
             if (_dialogService.ShowAddRecipeDialog(out Recipe? recipe) == true
                 && recipe != null)
             {
+                _dataService.AddRecipe(recipe);
                 Recipes.Add(recipe);
                 SelectedRecipe = recipe;
             }
@@ -260,11 +247,6 @@ namespace RecipePlanner.ViewModels
         private void PlannedMeal_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             SavePlannedMeals();
-        }
-
-        private void SavePlannedMeals()
-        {
-            _dataService.Save("plannedMeals.json", PlannedMeals.ToList());
         }
 
         private void EditPlannedMeal()
