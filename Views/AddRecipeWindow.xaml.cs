@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,15 +49,18 @@ namespace RecipePlanner
                 return;
             }
 
-            var ingredients = IngredientsTextBox.Text
+            var ingredients = new ObservableCollection<string>(
+                IngredientsTextBox.Text
                 .Split(',', StringSplitOptions.RemoveEmptyEntries)
                 .Select(i => i.Trim())
-                .ToList();
+                );
+                
 
-            var steps = StepsTextBox.Text
+            var steps = new ObservableCollection<string> (
+                StepsTextBox.Text
                 .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => s.Trim())
-                .ToList();
+            );
 
             if (_recipeToEdit != null)
             {

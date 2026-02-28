@@ -14,7 +14,8 @@ namespace RecipePlanner.Models
         public string Name { get; set; } = string.Empty;
         public ObservableCollection<string> Ingredients { get; set; }
             = new ObservableCollection<string>();
-        public List<string> Steps { get; set; } = new();
+        public ObservableCollection<string> Steps { get; set; } 
+            = new ObservableCollection<string>();
         public string Source { get; set; } = "";
     }
 }
