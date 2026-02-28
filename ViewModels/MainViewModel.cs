@@ -12,6 +12,7 @@ namespace RecipePlanner.ViewModels
     public class MainViewModel : BaseViewModel
     {
         private readonly JsonDataService _dataService;
+        private readonly IDialogService _dialogService;
 
         public ObservableCollection<Recipe> Recipes { get; }
         public ObservableCollection<string> PantryItems { get; }
@@ -75,6 +76,7 @@ namespace RecipePlanner.ViewModels
         public MainViewModel()
         {
             _dataService = new JsonDataService();
+            _dialogService = new DialogService();
 
             Recipes = new ObservableCollection<Recipe>(
                 _dataService.Load<List<Recipe>>("recipes.json") ?? new List<Recipe>()
@@ -123,14 +125,11 @@ namespace RecipePlanner.ViewModels
 
         private void AddRecipe()
         {
-            var addWindow = new AddRecipeWindow();
-            bool? result = addWindow.ShowDialog();
-
-            if (result == true && addWindow.NewRecipe != null)
+            if (_dialogService.ShowAddRecipeDialog(out Recipe? recipe) == true
+                && recipe != null)
             {
-                Recipes.Add(addWindow.NewRecipe);
-
-                SelectedRecipe = addWindow.NewRecipe;
+                Recipes.Add(recipe);
+                SelectedRecipe = recipe;
             }
         }
 
@@ -157,11 +156,13 @@ namespace RecipePlanner.ViewModels
             if (SelectedRecipe == null)
                 return;
 
-            var newMeal = new PlannedMeal { Recipe = SelectedRecipe, Date = DateTime.Today };
-            var addWindow = new PlannedMealWindow(newMeal, Recipes.ToList());
-            bool? result = addWindow.ShowDialog();
+            var newMeal = new PlannedMeal 
+            { 
+                Recipe = SelectedRecipe, 
+                Date = DateTime.Today 
+            };
 
-            if (result == true)
+            if (_dialogService.ShowPlannedMealDialog(newMeal, Recipes.ToList()) == true)
             {
                 PlannedMeals.Add(newMeal);
                 newMeal.PropertyChanged += PlannedMeal_PropertyChanged;
@@ -175,6 +176,9 @@ namespace RecipePlanner.ViewModels
 
         private void SavePantry()
         {
+            if (string.IsNullOrWhiteSpace(NewPantryText))
+                return;
+
             var items = NewPantryText
                 .Split(',')
                 .Select(i => i.Trim())
@@ -202,11 +206,7 @@ namespace RecipePlanner.ViewModels
             if (SelectedRecipe == null)
                 return;
 
-            var editWindow = new AddRecipeWindow(SelectedRecipe);
-
-            bool? result = editWindow.ShowDialog();
-
-            if (result == true)
+            if (_dialogService.ShowEditRecipeDialog(SelectedRecipe) == true)
             {
                 OnPropertyChanged(nameof(Recipes));
                 OnPropertyChanged(nameof(SelectedRecipe));
@@ -240,13 +240,12 @@ namespace RecipePlanner.ViewModels
 
             var editText = string.Join(", ", PantryItems);
 
-            var inputDialog = new InputDialog("Vorrat bearbeiten:", editText);
-            bool? result = inputDialog.ShowDialog();
-
-            if (result == true)
+            if (_dialogService.ShowEditPantryDialog(editText, out string? updatedText) == true
+                && updatedText != null)
             {
                 PantryItems.Clear();
-                var items = inputDialog.InputText
+
+                var items = updatedText
                     .Split(',', StringSplitOptions.RemoveEmptyEntries)
                     .Select(i => i.Trim())
                     .Where(i => !string.IsNullOrWhiteSpace(i));
@@ -273,10 +272,7 @@ namespace RecipePlanner.ViewModels
             if (SelectedPlannedMeal == null)
                 return;
 
-            var editWindow = new PlannedMealWindow(SelectedPlannedMeal, Recipes.ToList());
-            bool? result = editWindow.ShowDialog();
-
-            if (result == true)
+            if (_dialogService.ShowPlannedMealDialog(SelectedPlannedMeal, Recipes.ToList()) == true)
             {
                 OnPropertyChanged(nameof(PlannedMeals));
                 OnPropertyChanged(nameof(SelectedPlannedMeal));

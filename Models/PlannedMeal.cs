@@ -10,6 +10,8 @@ namespace RecipePlanner.Models
 {
     public class PlannedMeal : BaseViewModel
     {
+        public int ID { get; set; }
+
         private DateTime _date;
         public DateTime Date
         {
