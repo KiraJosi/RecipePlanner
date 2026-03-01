@@ -98,9 +98,73 @@ namespace RecipePlanner.Services
             transaction.Commit();
         }
 
+        public void DeleteRecipe(int id)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = "DELETE FROM Recipes WHERE ID = $id";
+            command.Parameters.AddWithValue("$id", id);
+
+            command.ExecuteNonQuery();
+        }
+
         public void SavePlannedMeals(List<PlannedMeal> meals)
         {
-            
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            using var transaction = connection.BeginTransaction();
+
+            var deleteCommand = connection.CreateCommand();
+            deleteCommand.Transaction = transaction;
+            deleteCommand.CommandText = "DELETE FROM PlannedMeals";
+            deleteCommand.ExecuteNonQuery();
+
+            foreach (var meal in meals)
+            {
+                if (meal.Recipe == null)
+                    continue;
+
+                var insertCommand = connection.CreateCommand();
+                insertCommand.Transaction = transaction;
+
+                insertCommand.CommandText = @"
+                    INSERT INTO PlannedMeals (RecipeID, Date)
+                    VALUES ($rid, $date);
+                    ";
+
+                insertCommand.Parameters.AddWithValue("$rid", meal.Recipe.Id);
+                insertCommand.Parameters.AddWithValue("$date", meal.Date.ToString("yyyy-MM-dd"));
+
+                insertCommand.ExecuteNonQuery();
+            }
+
+            transaction.Commit();
+        }
+
+        public void SavePantryItems(List<string> items)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            using var transaction = connection.BeginTransaction();
+
+            var deleteCommand = connection.CreateCommand();
+            deleteCommand.CommandText = "DELETE FROM PantryItems";
+            deleteCommand.ExecuteNonQuery();
+
+            foreach (var item in items)
+            {
+                var insertCommand = connection.CreateCommand();
+                insertCommand.Transaction = transaction;
+                insertCommand.CommandText = "INSERT INTO PantryItems (Name) VALUES ($name)";
+                insertCommand.Parameters.AddWithValue("$name", item);
+                insertCommand.ExecuteNonQuery();
+            }
+
+            transaction.Commit();
         }
 
         public List<Recipe> GetRecipes()

@@ -85,13 +85,19 @@ namespace RecipePlanner.ViewModels
 
             PantryItems = new ObservableCollection<string>(
                 _dataService.GetPantryItems()
-            );
+                );
+
+            PantryItems.CollectionChanged += (_, __) =>
+            {
+                _dataService.SavePantryItems(PantryItems.ToList());
+            };
 
             PlannedMeals = new ObservableCollection<PlannedMeal>(
                 _dataService.GetPlannedMeals()
             );
 
-            PlannedMeals.CollectionChanged += (_, __) => SavePlannedMeals();
+            PlannedMeals.CollectionChanged += (_, __) => 
+                SavePlannedMeals();
 
             foreach (var meal in PlannedMeals)
                 meal.PropertyChanged += PlannedMeal_PropertyChanged;
@@ -125,6 +131,7 @@ namespace RecipePlanner.ViewModels
         {
             if (SelectedRecipe != null)
             {
+                _dataService.DeleteRecipe(SelectedRecipe.Id);
                 Recipes.Remove(SelectedRecipe);
             }
         }
