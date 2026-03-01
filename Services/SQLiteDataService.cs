@@ -10,7 +10,7 @@ using System.Windows.Media.Media3D;
 
 namespace RecipePlanner.Services
 {
-    internal class SQLiteDataService
+    public class SQLiteDataService
     {
         private readonly string _connectionString;
 
@@ -276,6 +276,15 @@ namespace RecipePlanner.Services
 
             while (reader.Read())
             {
+                DateTime date;
+                try
+                {
+                    date = DateTime.ParseExact(reader.GetString(2), "yyyy-MM-dd", null);
+                }
+                catch (FormatException)
+                {
+                    date = DateTime.Today;
+                }
                 var meal = new PlannedMeal
                 {
                     ID = reader.GetInt32(0),
@@ -284,7 +293,7 @@ namespace RecipePlanner.Services
                         Id = reader.GetInt32(1),
                         Name = reader.GetString(3)
                     },
-                    Date = DateTime.Parse(reader.GetString(2))
+                    Date = date
                 };
 
                 meals.Add(meal);

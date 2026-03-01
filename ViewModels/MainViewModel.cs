@@ -11,7 +11,9 @@ namespace RecipePlanner.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        private readonly SQLiteDataService _dataService;
+        private readonly IRecipeService _recipeService;
+        private readonly IPantryService _pantryService;
+        private readonly IPlannedMealsService _plannedMealsService;
         private readonly IDialogService _dialogService;
 
         public ObservableCollection<Recipe> Recipes { get; }
@@ -75,25 +77,29 @@ namespace RecipePlanner.ViewModels
 
         public MainViewModel()
         {
-            _dataService = new SQLiteDataService();
+            var dataService = new SQLiteDataService();
+            _recipeService = new RecipeService(dataService);
+            _pantryService = new PantryService(dataService);
+            _plannedMealsService = new PlannedMealsService(dataService);
+
             _dialogService = new DialogService();
 
             Recipes = new ObservableCollection<Recipe>(
-                _dataService.GetRecipes()
+                _recipeService.GetAll()
             );
             RecipesView = CollectionViewSource.GetDefaultView(Recipes);
 
             PantryItems = new ObservableCollection<string>(
-                _dataService.GetPantryItems()
+                _pantryService.GetAll()
                 );
 
             PantryItems.CollectionChanged += (_, __) =>
             {
-                _dataService.SavePantryItems(PantryItems.ToList());
+                _pantryService.Save(PantryItems.ToList());
             };
 
             PlannedMeals = new ObservableCollection<PlannedMeal>(
-                _dataService.GetPlannedMeals()
+                _plannedMealsService.GetAll()
             );
 
             PlannedMeals.CollectionChanged += (s, e) =>
@@ -128,7 +134,7 @@ namespace RecipePlanner.ViewModels
             if (_dialogService.ShowAddRecipeDialog(out Recipe? recipe) == true
                 && recipe != null)
             {
-                _dataService.AddRecipe(recipe);
+                _recipeService.Add(recipe);
                 Recipes.Add(recipe);
                 SelectedRecipe = recipe;
             }
@@ -138,7 +144,7 @@ namespace RecipePlanner.ViewModels
         {
             if (SelectedRecipe != null)
             {
-                _dataService.DeleteRecipe(SelectedRecipe.Id);
+                _recipeService.Delete(SelectedRecipe.Id);
                 Recipes.Remove(SelectedRecipe);
             }
         }
@@ -210,7 +216,7 @@ namespace RecipePlanner.ViewModels
 
             if (_dialogService.ShowEditRecipeDialog(SelectedRecipe) == true)
             {
-                _dataService.UpdateRecipe(SelectedRecipe);
+                _recipeService.Update(SelectedRecipe);
             }
         }
 
@@ -260,7 +266,7 @@ namespace RecipePlanner.ViewModels
 
         private void SavePlannedMeals()
         {
-            _dataService.SavePlannedMeals(PlannedMeals.ToList());
+            _plannedMealsService.Save(PlannedMeals.ToList());
         }
 
         private void PlannedMeal_PropertyChanged(object? sender, PropertyChangedEventArgs e)
