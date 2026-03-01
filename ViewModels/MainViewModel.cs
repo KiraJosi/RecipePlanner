@@ -232,8 +232,8 @@ namespace RecipePlanner.ViewModels
                 if (obj is not Recipe r)
                     return false;
 
-                return r.Ingredients.Any(i =>
-                    PantryItems.Contains(i, StringComparer.OrdinalIgnoreCase));
+                return PantryItems.Any(p =>
+                    r.HasIngredient(p));
             };
         }
         private void ShowAllRecipes()

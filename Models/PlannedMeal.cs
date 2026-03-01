@@ -44,5 +44,8 @@ namespace RecipePlanner.Models
 
         public string DisplayText => $"{Date:dd.MM.yyyy} - {Recipe?.Name}";
 
+        public bool IsToday() =>
+            Date.Date == DateTime.Today;
+
     }
 }

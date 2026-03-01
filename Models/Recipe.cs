@@ -17,5 +17,14 @@ namespace RecipePlanner.Models
         public ObservableCollection<string> Steps { get; set; } 
             = new ObservableCollection<string>();
         public string Source { get; set; } = "";
+
+        public bool HasIngredient(string ingredient)
+        {
+            if (string.IsNullOrWhiteSpace(ingredient)) 
+                return false;
+
+            return Ingredients.Any(i =>
+                string.Equals(i, ingredient, StringComparison.OrdinalIgnoreCase));
+        }
     }
 }
