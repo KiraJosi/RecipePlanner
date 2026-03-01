@@ -84,11 +84,12 @@ namespace RecipePlanner.ViewModels
             RecipesView = CollectionViewSource.GetDefaultView(Recipes);
 
             PantryItems = new ObservableCollection<string>(
-                _dataService.Load<List<string>>("pantry.json") ?? new List<string>()
+                _dataService.GetPantryItems()
             );
 
-            var loadedPlannedMeals = _dataService.Load<List<PlannedMeal>>("plannedMeals.json") ?? new List<PlannedMeal>();
-            PlannedMeals = new ObservableCollection<PlannedMeal>(loadedPlannedMeals);
+            PlannedMeals = new ObservableCollection<PlannedMeal>(
+                _dataService.GetPlannedMeals()
+            );
 
             PlannedMeals.CollectionChanged += (_, __) => SavePlannedMeals();
 
@@ -242,6 +243,11 @@ namespace RecipePlanner.ViewModels
 
                 NewPantryText = string.Empty;
             }
+        }
+
+        private void SavePlannedMeals()
+        {
+            _dataService.SavePlannedMeals(PlannedMeals.ToList());
         }
 
         private void PlannedMeal_PropertyChanged(object? sender, PropertyChangedEventArgs e)

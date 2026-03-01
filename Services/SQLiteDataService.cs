@@ -42,7 +42,7 @@ namespace RecipePlanner.Services
 
                 CREATE TABLE IF NOT EXISTS PantryItems (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Name TEXT NOT NULL,
+                    Name TEXT NOT NULL
                 );
 
                 CREATE TABLE IF NOT EXISTS PlannedMeals (
@@ -89,6 +89,11 @@ namespace RecipePlanner.Services
             transaction.Commit();
         }
 
+        public void SavePlannedMeals(List<PlannedMeal> meals)
+        {
+            
+        }
+
         public List<Recipe> GetRecipes()
         {
             var recipes = new List<Recipe>();
@@ -117,6 +122,60 @@ namespace RecipePlanner.Services
 
             }
             return recipes;
+        }
+
+        public List<string> GetPantryItems()
+        {
+            var items = new List<string>();
+
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT Name FROM PantryItems";
+
+            using var reader = command.ExecuteReader();
+            while(reader.Read())
+            {
+                items.Add(reader.GetString(0));
+            }
+
+            return items;
+        }
+
+        public List<PlannedMeal> GetPlannedMeals()
+        {
+            var meals = new List<PlannedMeal>();
+
+            using var connection = new SqliteConnection( _connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = @"
+                SELECT PM.ID, PM.RecipeID, PM.Date, R.Name
+                FROM PlannedMeals PM
+                JOIN Recipes R ON PM.RecipeID = R.ID
+                ";
+
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var meal = new PlannedMeal
+                {
+                    ID = reader.GetInt32(0),
+                    Recipe = new Recipe
+                    {
+                        Id = reader.GetInt32(1),
+                        Name = reader.GetString(3)
+                    },
+                    Date = DateTime.Parse(reader.GetString(2))
+                };
+
+                meals.Add(meal);
+            }
+
+            return meals;
         }
 
         private List<string> GetIngredientsForRecipe(int recipeId)
