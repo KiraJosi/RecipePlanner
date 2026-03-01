@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.Data.Sqlite;
+using RecipePlanner.Models;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Data.Sqlite;
-using RecipePlanner.Models;
-using System.Collections.ObjectModel;
+using System.Windows.Media.Media3D;
 
 namespace RecipePlanner.Services
 {
@@ -70,8 +71,16 @@ namespace RecipePlanner.Services
                 "INSERT INTO Recipes (Name) VALUES ($name); SELECT last_insert_rowid();";
             command.Parameters.AddWithValue("$name", recipe.Name);
 
-            long newID = (long)command.ExecuteScalar();
-            recipe.Id = (int)newID;
+            var result = command.ExecuteScalar();
+
+            if (result is long newID)
+            {
+                recipe.Id = (int)newID;
+            }
+            else
+            {
+                throw new InvalidOperationException("Konnte neue Rezept - ID nicht ermitteln.");
+            }
 
             foreach (var ingredient in recipe.Ingredients)
             {
