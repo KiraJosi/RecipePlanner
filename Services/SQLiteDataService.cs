@@ -21,8 +21,7 @@ namespace RecipePlanner.Services
         }
         private void InitializeDatabase()
         {
-            using var connection = new SqliteConnection(_connectionString);
-            connection.Open();
+            using var connection = CreateConnection();
 
             var command = connection.CreateCommand();
 
@@ -57,10 +56,21 @@ namespace RecipePlanner.Services
             command.ExecuteNonQuery();
         }
 
+        private SqliteConnection CreateConnection()
+        {
+            var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            var pragma = connection.CreateCommand();
+            pragma.CommandText = "PRAGMA foreign_keys = ON;";
+            pragma.ExecuteNonQuery();
+
+            return connection;
+        }
+
         public void AddRecipe(Recipe recipe)
         {
-            using var connection = new SqliteConnection(_connectionString);
-            connection.Open();
+            using var connection = CreateConnection();
 
             using var transaction = connection.BeginTransaction();
 
@@ -100,8 +110,7 @@ namespace RecipePlanner.Services
 
         public void DeleteRecipe(int id)
         {
-            using var connection = new SqliteConnection(_connectionString);
-            connection.Open();
+            using var connection = CreateConnection();
 
             var command = connection.CreateCommand();
             command.CommandText = "DELETE FROM Recipes WHERE ID = $id";
@@ -110,10 +119,46 @@ namespace RecipePlanner.Services
             command.ExecuteNonQuery();
         }
 
+        public void UpdateRecipe(Recipe recipe)
+        {
+            using var connection = CreateConnection();
+            using var transaction = connection.BeginTransaction();
+
+            var updateCommand = connection.CreateCommand();
+            updateCommand.Transaction = transaction;
+            updateCommand.CommandText =
+                "UPDATE Recipes SET Name = $name WHERE ID = $id";
+
+            updateCommand.Parameters.AddWithValue("$name", recipe.Name);
+            updateCommand.Parameters.AddWithValue("$id", recipe.Id);
+            updateCommand.ExecuteNonQuery();
+
+            var deleteIngredients = connection.CreateCommand();
+            deleteIngredients.Transaction = transaction;
+            deleteIngredients.CommandText =
+                "DELETE FROM Ingredients WHERE RecipeID = $id";
+            deleteIngredients.Parameters.AddWithValue("$id", recipe.Id);
+            deleteIngredients.ExecuteNonQuery();
+
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                var insertCommand = connection.CreateCommand();
+                insertCommand.Transaction = transaction;
+
+                insertCommand.CommandText =
+                    "INSERT INTO Ingredients (RecipeID,Name) VALUES ($rid, $name)";
+                insertCommand.Parameters.AddWithValue("$rid", recipe.Id);
+                insertCommand.Parameters.AddWithValue("$name", ingredient);
+
+                insertCommand.ExecuteNonQuery();
+            }
+
+            transaction.Commit();
+        }
+
         public void SavePlannedMeals(List<PlannedMeal> meals)
         {
-            using var connection = new SqliteConnection(_connectionString);
-            connection.Open();
+            using var connection = CreateConnection();
 
             using var transaction = connection.BeginTransaction();
 
@@ -146,12 +191,12 @@ namespace RecipePlanner.Services
 
         public void SavePantryItems(List<string> items)
         {
-            using var connection = new SqliteConnection(_connectionString);
-            connection.Open();
+            using var connection = CreateConnection();
 
             using var transaction = connection.BeginTransaction();
 
             var deleteCommand = connection.CreateCommand();
+            deleteCommand.Transaction = transaction;
             deleteCommand.CommandText = "DELETE FROM PantryItems";
             deleteCommand.ExecuteNonQuery();
 
@@ -171,8 +216,7 @@ namespace RecipePlanner.Services
         {
             var recipes = new List<Recipe>();
 
-            using var connection = new SqliteConnection(_connectionString);
-            connection.Open();
+            using var connection = CreateConnection();
 
             var command = connection.CreateCommand();
             command.CommandText = "SELECT Id, Name FROM Recipes";
@@ -201,8 +245,7 @@ namespace RecipePlanner.Services
         {
             var items = new List<string>();
 
-            using var connection = new SqliteConnection(_connectionString);
-            connection.Open();
+            using var connection = CreateConnection();
 
             var command = connection.CreateCommand();
             command.CommandText = "SELECT Name FROM PantryItems";
@@ -220,8 +263,7 @@ namespace RecipePlanner.Services
         {
             var meals = new List<PlannedMeal>();
 
-            using var connection = new SqliteConnection( _connectionString);
-            connection.Open();
+            using var connection = CreateConnection();
 
             var command = connection.CreateCommand();
             command.CommandText = @"
@@ -255,8 +297,7 @@ namespace RecipePlanner.Services
         {
             var ingredients = new List<string>();
 
-            using var connection = new SqliteConnection(_connectionString);
-            connection.Open();
+            using var connection = CreateConnection();
 
             var command = connection.CreateCommand();
             command.CommandText = "SELECT Name FROM Ingredients WHERE RecipeId = $id";

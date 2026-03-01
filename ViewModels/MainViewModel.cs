@@ -96,11 +96,18 @@ namespace RecipePlanner.ViewModels
                 _dataService.GetPlannedMeals()
             );
 
-            PlannedMeals.CollectionChanged += (_, __) => 
-                SavePlannedMeals();
+            PlannedMeals.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                    foreach (PlannedMeal meal in e.NewItems)
+                        meal.PropertyChanged += PlannedMeal_PropertyChanged;
 
-            foreach (var meal in PlannedMeals)
-                meal.PropertyChanged += PlannedMeal_PropertyChanged;
+                if (e.OldItems != null)
+                    foreach (PlannedMeal meal in e.OldItems)
+                        meal.PropertyChanged -= PlannedMeal_PropertyChanged;
+
+                SavePlannedMeals();
+            };
 
             AddRecipeCommand = new RelayCommand(AddRecipe);
             DeleteRecipeCommand = new RelayCommand(DeleteRecipe, CanDeleteRecipe);
@@ -160,7 +167,6 @@ namespace RecipePlanner.ViewModels
             if (_dialogService.ShowPlannedMealDialog(newMeal, Recipes.ToList()) == true)
             {
                 PlannedMeals.Add(newMeal);
-                newMeal.PropertyChanged += PlannedMeal_PropertyChanged;
             }
         }
 
@@ -193,6 +199,7 @@ namespace RecipePlanner.ViewModels
         {
             if (SelectedPlannedMeal != null)
             {
+                SelectedPlannedMeal.PropertyChanged -= PlannedMeal_PropertyChanged;
                 PlannedMeals.Remove(SelectedPlannedMeal);
             }
         }
@@ -203,8 +210,7 @@ namespace RecipePlanner.ViewModels
 
             if (_dialogService.ShowEditRecipeDialog(SelectedRecipe) == true)
             {
-                OnPropertyChanged(nameof(Recipes));
-                OnPropertyChanged(nameof(SelectedRecipe));
+                _dataService.UpdateRecipe(SelectedRecipe);
             }
         }
 
