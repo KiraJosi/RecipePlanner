@@ -73,6 +73,7 @@ namespace RecipePlanner.ViewModels
         public ICommand EditPlannedMealCommand { get; }
 
         public ICollectionView RecipesView { get; }
+        public ICollectionView PlannedMealsView { get; }
 
 
         public MainViewModel()
@@ -100,6 +101,18 @@ namespace RecipePlanner.ViewModels
 
             PlannedMeals = new ObservableCollection<PlannedMeal>(
                 _plannedMealsService.GetAll()
+            );
+
+            PlannedMealsView = CollectionViewSource.GetDefaultView(PlannedMeals);
+
+            PlannedMealsView.GroupDescriptions.Clear();
+            PlannedMealsView.SortDescriptions.Clear();
+
+            PlannedMealsView.GroupDescriptions.Add(
+                new PropertyGroupDescription(nameof(PlannedMeal.DateOnly))
+            );
+            PlannedMealsView.SortDescriptions.Add(
+                new SortDescription(nameof(PlannedMeal.Date), ListSortDirection.Ascending)
             );
 
             PlannedMeals.CollectionChanged += (s, e) =>

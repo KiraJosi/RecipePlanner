@@ -27,6 +27,8 @@ namespace RecipePlanner.Models
             }
         }
 
+        public DateTime DateOnly => Date.Date;
+
         private Recipe? _recipe;
         public Recipe? Recipe
         {
