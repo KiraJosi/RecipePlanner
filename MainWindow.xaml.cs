@@ -22,5 +22,49 @@ namespace RecipePlanner
             InitializeComponent();
             DataContext = new MainViewModel();
         }
+        
+        private Point _startPoint;
+
+        private void Recipe_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            _startPoint = e.GetPosition(null);
+        }
+
+        private void Recipe_MouseMove (object sender, MouseEventArgs e)
+        {
+            Point mousePos = e.GetPosition(null);
+            Vector diff = _startPoint - mousePos;
+
+            if (e.LeftButton == MouseButtonState.Pressed &&
+                (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
+            {
+                var listBoxItem = sender as ListBoxItem;
+                if (listBoxItem == null) return;
+
+                var recipe = listBoxItem.DataContext as Recipe;
+                if (recipe != null)
+                {
+                    DragDrop.DoDragDrop((DependencyObject)sender, recipe, DragDropEffects.Copy);
+                }
+            }
+        }
+
+        private void Day_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(Recipe)))
+            {
+                var recipe = (Recipe)e.Data.GetData((typeof(Recipe)));
+                
+                if (DataContext is MainViewModel vm)
+                {
+                    vm.PlannedMeals.Add(new PlannedMeal
+                    {
+                        Recipe = recipe,
+                        Date = DateTime.Now
+                    });
+                }
+            }
+        }
     }
 }

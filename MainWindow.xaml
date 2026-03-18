@@ -44,6 +44,12 @@
                 <ListBox ItemsSource="{Binding RecipesView}" 
                          SelectedItem="{Binding SelectedRecipe}"
                          Margin="{StaticResource SpacingTopSmall}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Recipe_PreviewMouseLeftButtonDown"/>
+                            <EventSetter Event="PreviewMouseMove" Handler="Recipe_MouseMove"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}" 
@@ -260,8 +266,10 @@
 
                     <!-- ListBox -->
                     <ListBox Grid.Row="0" 
-                             ItemsSource="{Binding PlannedMeals}" 
+                             ItemsSource="{Binding PlannedMealsView}" 
                              SelectedItem="{Binding SelectedPlannedMeal}" 
+                             AllowDrop="True"
+                             Drop="Day_Drop"
                              Margin="{StaticResource SpacingBottomSmall}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -269,6 +277,17 @@
                                            Text="{Binding DisplayText}" />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
+                        <ListBox.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"/>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListBox.GroupStyle>
                     </ListBox>
 
                     <!-- Buttons -->
