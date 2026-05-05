@@ -124,7 +124,7 @@ namespace RecipePlanner.Services
                     "INSERT INTO Steps (RecipeID, SortOrder, Text) VALUES ($rid, $order, $text);";
 
                 stepCommand.Parameters.AddWithValue("$rid", recipe.Id);
-                stepCommand.Parameters.AddWithValue("$order", stepOrder++)
+                stepCommand.Parameters.AddWithValue("$order", stepOrder++);
                 stepCommand.Parameters.AddWithValue("$text", step);
 
                 stepCommand.ExecuteNonQuery();
@@ -194,7 +194,7 @@ namespace RecipePlanner.Services
                     "INSERT INTO Steps (RecipeID, SortOrder, Text) VALUES ($rid, $order, $text);";
 
                 stepCommand.Parameters.AddWithValue("$rid", recipe.Id);
-                stepCommand.Parameters.AddWithValue("$order", stepOrder++)
+                stepCommand.Parameters.AddWithValue("$order", stepOrder++);
                 stepCommand.Parameters.AddWithValue("$text", step);
 
                 stepCommand.ExecuteNonQuery();
