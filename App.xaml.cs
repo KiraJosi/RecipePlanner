@@ -24,7 +24,7 @@ namespace RecipePlanner
                 new DialogService()
                 );
 
-            var window = new MainWindow(DataContext = vm);
+            var window = new MainWindow(vm);
             window.Show();
         }
     }
