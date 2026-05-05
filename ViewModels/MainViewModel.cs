@@ -331,8 +331,7 @@ namespace RecipePlanner.ViewModels
 
             if (_dialogService.ShowPlannedMealDialog(SelectedPlannedMeal, Recipes.ToList()) == true)
             {
-                OnPropertyChanged(nameof(PlannedMeals));
-                OnPropertyChanged(nameof(SelectedPlannedMeal));
+                PlannedMealsView.Refresh();
             }
         }
 
