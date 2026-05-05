@@ -60,6 +60,17 @@ namespace RecipePlanner.ViewModels
             }
         }
 
+        private List<DateTime> _currentWeek;
+        public List<DateTime> CurrentWeek
+        {
+            get => _currentWeek;
+            set
+            {
+                _currentWeek = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand AddRecipeCommand { get; }
         public ICommand DeleteRecipeCommand { get; }
         public ICommand PlanRecipeCommand { get; }
@@ -74,7 +85,10 @@ namespace RecipePlanner.ViewModels
 
         public ICollectionView RecipesView { get; }
         public ICollectionView PlannedMealsView { get; }
-
+        public IEnumerable<PlannedMeal> GetMealsForDay(DateTime day)
+        {
+            return PlannedMeals.Where(m => m.Date.Date == day);
+        }
 
         public MainViewModel()
         {
@@ -140,6 +154,15 @@ namespace RecipePlanner.ViewModels
             EditPantryCommand = new RelayCommand(EditPantry);
             EditPlannedMealCommand = new RelayCommand(EditPlannedMeal, () => SelectedPlannedMeal != null);
 
+            GenerateWeek(DateTime.Today.StartOfWeek(DayOfWeek.Monday));
+
+        }
+
+        public void GenerateWeek(DateTime start)
+        {
+            CurrentWeek = Enumerable.Range(0, 7)
+                .Select(i => start.Date.AddDays(i))
+                .ToList();
         }
 
         private void AddRecipe()
@@ -299,5 +322,14 @@ namespace RecipePlanner.ViewModels
             }
         }
 
+    }
+
+    public static class DateTimeExtension
+    {
+        public static DateTime StartOfWeek(this DateTime dt, DayOfWeek startOfWeek)
+        {
+            int diff = (7 + (dt.DayOfWeek - startOfWeek)) % 7;
+            return dt.AddDays(-1 * diff).Date;
+        }
     }
 }

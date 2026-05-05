@@ -40,6 +40,14 @@ namespace RecipePlanner.Services
                     FOREIGN KEY (RecipeID) REFERENCES Recipes(ID) ON DELETE CASCADE
                 );
 
+                CREATE TABLE IF NOT EXISTS Steps (
+                    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    RecipeID INTEGER NOT NULL, 
+                    SortOrder INTEGER NOT NULL,
+                    Text TEXT NOT NULL,
+                    FOREIGN KEY (RecipeID) REFERENCES Recipes(ID) ON DELETE CASCADE
+                );
+
                 CREATE TABLE IF NOT EXISTS PantryItems (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     Name TEXT NOT NULL
@@ -105,6 +113,22 @@ namespace RecipePlanner.Services
 
                 ingredientCommand.ExecuteNonQuery();
             }
+
+            int stepOrder = 0;
+            foreach (var step in recipe.Steps)
+            { 
+                var stepCommand = connection.CreateCommand();
+                stepCommand.Transaction = transaction;
+
+                stepCommand.CommandText =
+                    "INSERT INTO Steps (RecipeID, SortOrder, Text) VALUES ($rid, $order, $text);";
+
+                stepCommand.Parameters.AddWithValue("$rid", recipe.Id);
+                stepCommand.Parameters.AddWithValue("$order", stepOrder++)
+                stepCommand.Parameters.AddWithValue("$text", step);
+
+                stepCommand.ExecuteNonQuery();
+            }
             transaction.Commit();
         }
 
@@ -151,6 +175,29 @@ namespace RecipePlanner.Services
                 insertCommand.Parameters.AddWithValue("$name", ingredient);
 
                 insertCommand.ExecuteNonQuery();
+            }
+
+            var deleteSteps = connection.CreateCommand();
+            deleteSteps.Transaction = transaction;
+            deleteSteps.CommandText =
+                "DELETE FROM Steps WHERE RecipeID = $id";
+            deleteSteps.Parameters.AddWithValue("$id", recipe.Id);
+            deleteSteps.ExecuteNonQuery();
+
+            int stepOrder = 0;
+            foreach (var step in recipe.Steps)
+            {
+                var stepCommand = connection.CreateCommand();
+                stepCommand.Transaction = transaction;
+
+                stepCommand.CommandText =
+                    "INSERT INTO Steps (RecipeID, SortOrder, Text) VALUES ($rid, $order, $text);";
+
+                stepCommand.Parameters.AddWithValue("$rid", recipe.Id);
+                stepCommand.Parameters.AddWithValue("$order", stepOrder++)
+                stepCommand.Parameters.AddWithValue("$text", step);
+
+                stepCommand.ExecuteNonQuery();
             }
 
             transaction.Commit();
@@ -233,6 +280,10 @@ namespace RecipePlanner.Services
 
                 recipe.Ingredients = new ObservableCollection<string>(
                     GetIngredientsForRecipe(recipe.Id)
+                    );
+
+                recipe.Steps = new ObservableCollection<string>(
+                    GetStepsForRecipe(recipe.Id)
                     );
 
                 recipes.Add(recipe);
@@ -321,6 +372,28 @@ namespace RecipePlanner.Services
             }
 
             return ingredients;
+
+        }
+
+        private List<string> GetStepsForRecipe(int recipeId)
+        {
+            var steps = new List<string>();
+
+            using var connection = CreateConnection();
+
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT Text FROM Steps WHERE RecipeId = $id ORDER BY SortOrder";
+
+            command.Parameters.AddWithValue("$id", recipeId);
+
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                steps.Add(reader.GetString(0));
+            }
+
+            return steps;
 
         }
     }
