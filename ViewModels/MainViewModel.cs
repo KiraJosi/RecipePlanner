@@ -111,6 +111,7 @@ namespace RecipePlanner.ViewModels
             PantryItems.CollectionChanged += (_, __) =>
             {
                 _pantryService.Save(PantryItems.ToList());
+                (DeletePantryCommand as RelayCommand)?.RaiseCanExecuteChanged();
             };
 
             PlannedMeals = new ObservableCollection<PlannedMeal>(
