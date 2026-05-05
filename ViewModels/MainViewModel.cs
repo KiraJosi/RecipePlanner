@@ -90,14 +90,17 @@ namespace RecipePlanner.ViewModels
             return PlannedMeals.Where(m => m.Date.Date == day);
         }
 
-        public MainViewModel()
+        public MainViewModel(
+            IRecipeService recipeService,
+            IPantryService pantryService,
+            IPlannedMealsService plannedMealsService,
+            IDialogService dialogService
+        )
         {
-            var dataService = new SQLiteDataService();
-            _recipeService = new RecipeService(dataService);
-            _pantryService = new PantryService(dataService);
-            _plannedMealsService = new PlannedMealsService(dataService);
-
-            _dialogService = new DialogService();
+            _recipeService = recipeService;
+            _pantryService = pantryService;
+            _plannedMealsService = plannedMealsService;
+            _dialogService = dialogService;
 
             Recipes = new ObservableCollection<Recipe>(
                 _recipeService.GetAll()
