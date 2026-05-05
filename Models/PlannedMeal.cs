@@ -13,6 +13,7 @@ namespace RecipePlanner.Models
         public int ID { get; set; }
 
         private DateTime _date;
+
         public DateTime Date
         {
             get => _date;
@@ -22,6 +23,7 @@ namespace RecipePlanner.Models
                 {
                     _date = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(DateOnly));
                     OnPropertyChanged(nameof(DisplayText)); 
                 }
             }
