@@ -41,8 +41,8 @@
                                    Style="{StaticResource GroupHeaderTextStyle}"/>
                     </StackPanel>
                 </GroupBox.Header>
-                <ListBox ItemsSource="{Binding RecipesView}" 
-                         SelectedItem="{Binding SelectedRecipe}"
+                <ListBox ItemsSource="{Binding Recipes.RecipesView}" 
+                         SelectedItem="{Binding Recipes.SelectedRecipe}"
                          Margin="{StaticResource SpacingTopSmall}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
@@ -99,7 +99,7 @@
                     <!-- Vorratsliste -->
                     <ListBox Grid.Row="1"
                              Grid.Column="0"
-                             ItemsSource="{Binding PantryItems}">
+                             ItemsSource="{Binding Pantry.PantryItems}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}" 
@@ -116,17 +116,17 @@
                                 HorizontalAlignment="Right">
 
                         <Button Content="💾"
-                                Command="{Binding SavePantryCommand}"
+                                Command="{Binding Pantry.SavePantryCommand}"
                                 Margin="{StaticResource SpacingBottomSmall}"
                                 ToolTip="{StaticResource TT_SavePantry}"/>
 
                         <Button Content="✏"
-                                Command="{Binding EditPantryCommand}"
+                                Command="{Binding Pantry.EditPantryCommand}"
                                 Margin="{StaticResource SpacingBottomSmall}"
                                 ToolTip="{StaticResource TT_EditPantry}"/>
 
                         <Button Content="🗑"
-                                Command="{Binding DeletePantryCommand}"
+                                Command="{Binding Pantry.DeletePantryCommand}"
                                 Margin="{StaticResource SpacingBottomMedium}"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 ToolTip="{StaticResource TT_DeletePantry}"/>
@@ -134,11 +134,11 @@
                         <Separator Margin="0,5"/>
 
                         <Button Content="Rezepte finden"
-                                Command="{Binding FindRecipesCommand}"
+                                Command="{Binding Recipes.FindRecipesCommand}"
                                 Margin="0,5,0,5"/>
 
                         <Button Content="Alle Rezepte anzeigen"
-                                Command="{Binding ShowAllRecipesCommand}"
+                                Command="{Binding Recipes.ShowAllRecipesCommand}"
                                 Margin="0,5,0,5"/>
                     </StackPanel>
 
@@ -182,7 +182,7 @@
                                   CanContentScroll="True"
                                   Margin="{StaticResource SpacingBottomSmall}">
                         <StackPanel>
-                            <TextBlock Text="{Binding SelectedRecipe.Name}" 
+                            <TextBlock Text="{Binding Recipes.SelectedRecipe.Name}" 
                                        FontWeight="Bold" 
                                        FontSize="18" 
                                        Margin="{StaticResource SpacingBottomMedium}"/>  
@@ -191,7 +191,7 @@
                             <TextBlock Text="Zutaten:" 
                                        FontWeight="SemiBold" 
                                        Margin="{StaticResource SpacingBottomSmall}"/>
-                            <ItemsControl ItemsSource="{Binding SelectedRecipe.Ingredients}" 
+                            <ItemsControl ItemsSource="{Binding PRecipes.SelectedRecipe.Ingredients}" 
                                           Margin="10,0,0,10">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -207,7 +207,7 @@
                             <TextBlock Text="Zubereitung:" 
                                        FontWeight="SemiBold" 
                                        Margin="{StaticResource SpacingBottomSmall}"/>
-                            <ItemsControl ItemsSource="{Binding SelectedRecipe.Steps}" 
+                            <ItemsControl ItemsSource="{Binding Recipes.SelectedRecipe.Steps}" 
                                           Margin="10,0,0,10">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -220,7 +220,7 @@
                             </ItemsControl>
 
                             <!-- Quelle -->
-                            <TextBlock Text="{Binding SelectedRecipe.Source}" 
+                            <TextBlock Text="{Binding Recipes.SelectedRecipe.Source}" 
                                        FontStyle="Italic" 
                                        Margin="{StaticResource SpacingTopSmall}"/>
                         </StackPanel>
@@ -232,11 +232,11 @@
                                 Grid.Row="1">
                         <StackPanel Margin="0,0,5,0">
                             <Button Content="✏" 
-                                    Command="{Binding EditRecipeCommand}" 
+                                    Command="{Binding Recipes.EditRecipeCommand}" 
                                     Margin="0,0,0,2"
                                     ToolTip="{StaticResource TT_EditRecipe}"/>
                             <Button Content="🗑" 
-                                    Command="{Binding DeleteRecipeCommand}"
+                                    Command="{Binding Recipes.DeleteRecipeCommand}"
                                     Style="{StaticResource SecondaryButtonStyle}"
                                     Margin="0,0,0,2"
                                     ToolTip="{StaticResource TT_DeleteRecipe}"/>
@@ -263,44 +263,43 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <ItemsControl ItemsSource="{Binding CurrentWeek}">
+                    <ItemsControl ItemsSource="{Binding MealPlan.CurrentWeek}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="7"/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel AllowDrop="True"
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel AllowDrop="True"
                                         Drop="Day_Drop"
                                         Margin="2">
-                                <!-- Tag anzeigen -->
-                                <TextBlock Text="{Binding Date, StringFormat=d}"
+                                    <!-- Tag anzeigen -->
+                                    <TextBlock Text="{Binding Date, StringFormat=d}"
                                            FontWeight="Bold"
                                            Margin="0,0,0,5"/>
-                                <!-- Mahlzeiten des Tages -->
-                                <ItemsControl ItemsSource="{Binding DataContext.PlannedMeals,
+                                    <!-- Mahlzeiten des Tages -->
+                                    <ItemsControl ItemsSource="{Binding DataContext.PlannedMeals,
                                                             RelativeSource={RelativeSource 
                                                             AncestorType=Window}}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayText}">
-                                                <TextBlock.Visibility>
-                                                    <MultiBinding Converter="{StaticResource DayFilterConverter}">
-                                                        <Binding Path="."/>
-                                                        <Binding Path="Date"
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding DisplayText}">
+                                                    <TextBlock.Visibility>
+                                                        <MultiBinding Converter="{StaticResource DayFilterConverter}">
+                                                            <Binding Path="."/>
+                                                            <Binding Path="Date"
                                                                  RelativeSource="{RelativeSource AncestorType=StackPanel}"/>
-                                                    </MultiBinding>
-                                                </TextBlock.Visibility>
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                   
+                                                        </MultiBinding>
+                                                    </TextBlock.Visibility>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <!-- ListBox -->
@@ -310,8 +309,8 @@
 
                     <!-- ListBox -->
                     <ListBox Grid.Row="0" 
-                             ItemsSource="{Binding PlannedMealsView}" 
-                             SelectedItem="{Binding SelectedPlannedMeal}" 
+                             ItemsSource="{Binding MealPlan.PlannedMealsView}" 
+                             SelectedItem="{Binding MealPlan.SelectedPlannedMeal}" 
                              AllowDrop="True"
                              Drop="Day_Drop"
                              Margin="{StaticResource SpacingBottomSmall}">
@@ -339,13 +338,13 @@
                                 Orientation="Horizontal" 
                                 HorizontalAlignment="Right">
                         <Button Content="➕" 
-                                Command="{Binding PlanRecipeCommand}"
+                                Command="{Binding MealPlan.PlanRecipeCommand}"
                                 ToolTip="{StaticResource TT_PlanRecipe}"/>
                         <Button Content="✏" 
-                                Command="{Binding EditPlannedMealCommand}" 
+                                Command="{Binding MealPlan.EditPlannedMealCommand}" 
                                 ToolTip="{StaticResource TT_EditPlannedMeal}"/>
                         <Button Content="🗑" 
-                                Command="{Binding DeletePlannedMealCommand}"
+                                Command="{Binding MealPlan.DeletePlannedMealCommand}"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 ToolTip="{StaticResource TT_DeletePlannedMeal}"/>
                     </StackPanel>
@@ -362,7 +361,7 @@
             <StackPanel Orientation="Horizontal" 
                         HorizontalAlignment="Right">
                 <Button Content="➕" 
-                        Command="{Binding AddRecipeCommand}"
+                        Command="{Binding Recipes.AddRecipeCommand}"
                         ToolTip="{StaticResource TT_AddRecipe}" Cursor="Hand"/>
             </StackPanel>
         </Border>

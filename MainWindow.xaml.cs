@@ -20,7 +20,6 @@ namespace RecipePlanner
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
         }
         
         private Point _startPoint;
