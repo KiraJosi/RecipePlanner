@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RecipePlanner.Services
 {
-    internal interface IRecipeService
+    public interface IRecipeService
     {
         List<Recipe> GetAll();
         void Add (Recipe recipe);

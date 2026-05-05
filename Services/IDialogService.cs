@@ -7,7 +7,7 @@ using RecipePlanner.Models;
 
 namespace RecipePlanner.Services
 {
-    interface IDialogService
+    public interface IDialogService
     {
         bool? ShowAddRecipeDialog(out Recipe? recipe);
         bool? ShowEditRecipeDialog(Recipe recipe);

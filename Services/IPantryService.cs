@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RecipePlanner.Services
 {
-    internal interface IPantryService
+    public interface IPantryService
     {
         List<string> GetAll();
         void Save(List<string> items);

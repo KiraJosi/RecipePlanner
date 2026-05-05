@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RecipePlanner.Services
 {
-    internal interface IPlannedMealsService
+    public interface IPlannedMealsService
     {
         List<PlannedMeal> GetAll();
         void Save(List<PlannedMeal> meals);
