@@ -212,6 +212,20 @@ namespace RecipePlanner.ViewModels
             }
         }
 
+        private void PlanRecipeFromDrop(Recipe recipe)
+        {
+            var newMeal = new PlannedMeal
+            {
+                Recipe = recipe,
+                Date = DateTime.Today
+            };
+
+            if (_dialogService.ShowPlannedMealDialog(newMeal, Recipes.ToList()) == true)
+            {
+                PlannedMeals.Add(newMeal);
+            }
+        }
+
         private bool CanSavePantry()
         {
             return !string.IsNullOrWhiteSpace(NewPantryText);

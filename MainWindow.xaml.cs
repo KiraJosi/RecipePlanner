@@ -58,11 +58,7 @@ namespace RecipePlanner
                 
                 if (DataContext is MainViewModel vm)
                 {
-                    vm.PlannedMeals.Add(new PlannedMeal
-                    {
-                        Recipe = recipe,
-                        Date = DateTime.Now
-                    });
+                    vm.PlanRecipeFromDrop(recipe);
                 }
             }
         }
