@@ -15,7 +15,6 @@ namespace RecipePlanner.ViewModels
         private readonly IRecipeService _recipeService;
         private readonly IDialogService _dialogService;
         private readonly PantryViewModell _pantry;
-        private readonly MealPlanViewModell _mealPlan;
         public ObservableCollection<Recipe> Recipes { get; }
 
         private Recipe? _selectedRecipe;
@@ -31,6 +30,12 @@ namespace RecipePlanner.ViewModels
                 (EditRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
+        public void SetMealPlan(MealPlanViewModell mealPlan)
+        {
+            _mealPlanCommand = mealPlan.PlanRecipeCommand as RelayCommand;
+        }
+        private RelayCommand? _mealPlanCommand;
+
         public ICommand AddRecipeCommand { get; }
         public ICommand DeleteRecipeCommand { get; }
         public ICommand EditRecipeCommand { get; }
@@ -53,6 +58,7 @@ namespace RecipePlanner.ViewModels
             EditRecipeCommand = new RelayCommand(EditRecipe, () => SelectedRecipe != null);
             FindRecipesCommand = new RelayCommand(FindRecipes, CanFindRecipes);
             ShowAllRecipesCommand = new RelayCommand(ShowAllRecipes);
+            _mealPlanCommand?.RaiseCanExecuteChanged();
         }
         private void AddRecipe()
         {

@@ -24,6 +24,7 @@ namespace RecipePlanner.ViewModels
             Pantry = new PantryViewModell(pantryService, dialogService);
             Recipes = new RecipesViewModell(recipeService, dialogService, Pantry);
             MealPlan = new MealPlanViewModell(plannedMealsService, dialogService, Recipes);
+            Recipes.SetMealPlan(MealPlan);
         }
     }
 }
