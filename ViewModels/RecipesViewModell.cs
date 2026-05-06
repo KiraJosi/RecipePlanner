@@ -26,7 +26,6 @@ namespace RecipePlanner.ViewModels
                 _selectedRecipe = value;
                 OnPropertyChanged();
                 (DeleteRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (_mealPlan.PlanRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 (EditRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
