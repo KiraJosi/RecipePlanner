@@ -14,7 +14,7 @@ namespace RecipePlanner.ViewModels
     {
         private readonly IPlannedMealsService _plannedMealsService;
         private readonly IDialogService _dialogService;
-        private readonly IRecipeService _recipeService;
+        private readonly RecipesViewModell _recipes;
         public ObservableCollection<PlannedMeal> PlannedMeals { get; }
 
         private PlannedMeal? _selectedPlannedMeal;
@@ -44,16 +44,17 @@ namespace RecipePlanner.ViewModels
         public ICommand DeletePlannedMealCommand { get; }
         public ICommand EditPlannedMealCommand { get; }
         public ICollectionView PlannedMealsView { get; }
+        public ICommand PlanRecipeCommand { get; }
         public IEnumerable<PlannedMeal> GetMealsForDay(DateTime day)
         {
             return PlannedMeals.Where(m => m.Date.Date == day);
         }
 
-        public MealPlanViewModell(IPlannedMealsService plannedMealsService, IDialogService dialogService)
+        public MealPlanViewModell(IPlannedMealsService plannedMealsService, IDialogService dialogService, RecipesViewModell recipes)
         {
             _plannedMealsService = plannedMealsService;
             _dialogService = dialogService;
-            _recipeService = recipeService;
+            _recipes = recipes;
 
             PlannedMeals = new ObservableCollection<PlannedMeal>(_plannedMealsService.GetAll());
 
@@ -80,6 +81,7 @@ namespace RecipePlanner.ViewModels
                 SavePlannedMeals();
             };
 
+            PlanRecipeCommand = new RelayCommand(PlanRecipe, CanPlanRecipe);
             DeletePlannedMealCommand = new RelayCommand(DeletePlannedMeal, () => SelectedPlannedMeal != null);
             EditPlannedMealCommand = new RelayCommand(EditPlannedMeal, () => SelectedPlannedMeal != null);
             GenerateWeek(DateTime.Today.StartOfWeek(DayOfWeek.Monday));
@@ -94,18 +96,22 @@ namespace RecipePlanner.ViewModels
                 .Select(i => start.Date.AddDays(i))
                 .ToList();
         }
+        private bool CanPlanRecipe()
+        {
+            return _recipes.SelectedRecipe != null;
+        }
         private void PlanRecipe()
         {
-            if (SelectedRecipe == null)
+            if (_recipes.SelectedRecipe == null)
                 return;
 
             var newMeal = new PlannedMeal
             {
-                Recipe = SelectedRecipe,
+                Recipe = _recipes.SelectedRecipe,
                 Date = DateTime.Today
             };
 
-            if (_dialogService.ShowPlannedMealDialog(newMeal, Recipes.ToList()) == true)
+            if (_dialogService.ShowPlannedMealDialog(newMeal, _recipes.Recipes.ToList()) == true)
             {
                 PlannedMeals.Add(newMeal);
             }
@@ -118,7 +124,7 @@ namespace RecipePlanner.ViewModels
                 Date = DateTime.Today
             };
 
-            if (_dialogService.ShowPlannedMealDialog(newMeal, Recipes.ToList()) == true)
+            if (_dialogService.ShowPlannedMealDialog(newMeal, _recipes.Recipes.ToList()) == true)
             {
                 PlannedMeals.Add(newMeal);
             }
@@ -140,7 +146,7 @@ namespace RecipePlanner.ViewModels
             if (SelectedPlannedMeal == null)
                 return;
 
-            if (_dialogService.ShowPlannedMealDialog(SelectedPlannedMeal, Recipes.ToList()) == true)
+            if (_dialogService.ShowPlannedMealDialog(SelectedPlannedMeal, _recipes.Recipes.ToList()) == true)
             {
                 PlannedMealsView.Refresh();
             }

@@ -57,7 +57,7 @@ namespace RecipePlanner
                 
                 if (DataContext is MainViewModel vm)
                 {
-                    vm.PlanRecipeFromDrop(recipe);
+                    vm.MealPlan.PlanRecipeFromDrop(recipe);
                 }
             }
         }

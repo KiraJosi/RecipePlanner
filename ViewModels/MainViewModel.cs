@@ -15,6 +15,15 @@ namespace RecipePlanner.ViewModels
         public RecipesViewModell Recipes {  get; }
         public PantryViewModell Pantry { get; }
         public MealPlanViewModell MealPlan { get; }
-        public MainViewModel() {}
+        public MainViewModel(
+            IRecipeService recipeService,
+            IPantryService pantryService,
+            IPlannedMealsService plannedMealsService,
+            IDialogService dialogService) 
+        {
+            Pantry = new PantryViewModell(pantryService, dialogService);
+            Recipes = new RecipesViewModell(recipeService, dialogService, Pantry);
+            MealPlan = new MealPlanViewModell(plannedMealsService, dialogService, Recipes);
+        }
     }
 }

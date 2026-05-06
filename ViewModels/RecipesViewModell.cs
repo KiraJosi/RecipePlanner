@@ -10,9 +10,12 @@ using System.Windows.Input;
 
 namespace RecipePlanner.ViewModels
 {
-    public class RecipesViewModell
+    public class RecipesViewModell : BaseViewModel
     {
         private readonly IRecipeService _recipeService;
+        private readonly IDialogService _dialogService;
+        private readonly PantryViewModell _pantry;
+        private readonly MealPlanViewModell _mealPlan;
         public ObservableCollection<Recipe> Recipes { get; }
 
         private Recipe? _selectedRecipe;
@@ -24,21 +27,22 @@ namespace RecipePlanner.ViewModels
                 _selectedRecipe = value;
                 OnPropertyChanged();
                 (DeleteRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (PlanRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                (_mealPlan.PlanRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 (EditRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
         public ICommand AddRecipeCommand { get; }
         public ICommand DeleteRecipeCommand { get; }
-        public ICommand PlanRecipeCommand { get; }
         public ICommand EditRecipeCommand { get; }
         public ICommand ShowAllRecipesCommand { get; }
         public ICommand FindRecipesCommand { get; }
         public ICollectionView RecipesView { get; }
 
-        public RecipesViewModell(IRecipeService recipeService)
+        public RecipesViewModell(IRecipeService recipeService, IDialogService dialogService, PantryViewModell pantry)
         {
             _recipeService = recipeService;
+            _dialogService = dialogService;
+            _pantry = pantry;
 
             Recipes = new ObservableCollection<Recipe>(_recipeService.GetAll());
 
@@ -46,7 +50,6 @@ namespace RecipePlanner.ViewModels
 
             AddRecipeCommand = new RelayCommand(AddRecipe);
             DeleteRecipeCommand = new RelayCommand(DeleteRecipe, CanDeleteRecipe);
-            PlanRecipeCommand = new RelayCommand(PlanRecipe, CanPlanRecipe);
             EditRecipeCommand = new RelayCommand(EditRecipe, () => SelectedRecipe != null);
             FindRecipesCommand = new RelayCommand(FindRecipes, CanFindRecipes);
             ShowAllRecipesCommand = new RelayCommand(ShowAllRecipes);
@@ -73,10 +76,6 @@ namespace RecipePlanner.ViewModels
         {
             return SelectedRecipe != null;
         }
-        private bool CanPlanRecipe()
-        {
-            return SelectedRecipe != null;
-        }
         private void EditRecipe()
         {
             if (SelectedRecipe == null)
@@ -89,7 +88,7 @@ namespace RecipePlanner.ViewModels
         }
         private bool CanFindRecipes()
         {
-            return PantryItems.Any();
+            return _pantry.PantryItems.Any();
         }
         private void FindRecipes()
         {
@@ -98,7 +97,7 @@ namespace RecipePlanner.ViewModels
                 if (obj is not Recipe r)
                     return false;
 
-                return PantryItems.Any(p =>
+                return _pantry.PantryItems.Any(p =>
                     r.HasIngredient(p));
             };
         }

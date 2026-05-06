@@ -10,9 +10,11 @@ using System.Windows.Input;
 
 namespace RecipePlanner.ViewModels
 {
-    public class PantryViewModell
+    public class PantryViewModell : BaseViewModel
     {
         private readonly IPantryService _pantryService;
+        private readonly IDialogService _dialogService;
+
         public ObservableCollection<string> PantryItems { get; }
 
         private string? _newPantryText;
@@ -31,9 +33,10 @@ namespace RecipePlanner.ViewModels
         public ICommand DeletePantryCommand { get; }
         public ICommand EditPantryCommand { get; }
 
-        public PantryViewModell(IPantryService pantryService)
+        public PantryViewModell(IPantryService pantryService, IDialogService dialogService)
         {
             _pantryService = pantryService;
+            _dialogService = dialogService;
 
             PantryItems = new ObservableCollection<string>(_pantryService.GetAll());
 
