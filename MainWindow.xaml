@@ -312,7 +312,7 @@
                                                             AncestorType=Window}}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="{Binding DisplayText}">
+                                                <TextBlock Text="{Binding Recipe.Name}">
                                                     <TextBlock.Visibility>
                                                         <MultiBinding Converter="{StaticResource DayFilterConverter}">
                                                             <Binding Path="."/>
@@ -329,32 +329,66 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <!-- ListBox -->
-                    <ListBox Grid.Row="1" 
-                             ItemsSource="{Binding MealPlan.PlannedMealsView}" 
-                             SelectedItem="{Binding MealPlan.SelectedPlannedMeal}" 
-                             AllowDrop="True"
-                             Drop="Day_Drop"
-                             Margin="{StaticResource SpacingBottomSmall}">
+                    <ListBox Grid.Row="1" Grid.ColumnSpan="7"
+                             ItemsSource="{Binding MealPlan.CurrentWeek}"
+                             HorizontalContentAlignment="Stretch"
+                             BorderThickness="0"
+                             Background="Transparent">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="7"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <ContentPresenter/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Margin="0,0,0,2" 
-                                           Text="{Binding DisplayText}" />
+                                <StackPanel AllowDrop="True"
+                                            Drop="Day_Drop"
+                                            Margin="2">
+                                    <TextBlock Text="{Binding Date, StringFormat=ddd dd.MM.}"
+                                               FontWeight="Bold"
+                                               Margin="0,0,0,5"/>
+                                    <ListBox ItemsSource="{Binding DataContext.MealPlan.PlannedMeals,
+                                             RelativeSource={RelativeSource AncestorType=Window}}"
+                                             SelectedItem="{Binding DataContext.MealPlan.SelectedPlannedMeal,
+                                             RelativeSource={RelativeSource AncestorType=Window}}"
+                                             BorderThickness="0"
+                                             Background="Transparent">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="ListBoxItem">
+                                                <Setter Property="Padding" Value="2"/>
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Recipe.Name}">
+                                                    <TextBlock.Visibility>
+                                                        <MultiBinding Converter="{StaticResource DayFilterConverter}">
+                                                            <Binding Path="."/>
+                                                            <Binding Path="Date"
+                                                                     RelativeSource="{RelativeSource AncestorType=StackPanel}"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Visibility>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
-                        <ListBox.GroupStyle>
-                            <GroupStyle>
-                                <GroupStyle.HeaderTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Name}"
-                                                   FontWeight="Bold"
-                                                   FontSize="14"/>
-                                    </DataTemplate>
-                                </GroupStyle.HeaderTemplate>
-                            </GroupStyle>
-                        </ListBox.GroupStyle>
                     </ListBox>
-
+                    
                     <!-- Buttons -->
                     <StackPanel Grid.Row="2" 
                                 Orientation="Horizontal" 
