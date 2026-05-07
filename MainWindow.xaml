@@ -274,7 +274,8 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <ItemsControl ItemsSource="{Binding MealPlan.CurrentWeek}">
+                    <ItemsControl Grid.Row="0" Grid.Column="7" 
+                                  ItemsSource="{Binding MealPlan.CurrentWeek}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="7"/>
@@ -286,7 +287,7 @@
                                         Drop="Day_Drop"
                                         Margin="2">
                                     <!-- Tag anzeigen -->
-                                    <TextBlock Text="{Binding Date, StringFormat=d}"
+                                    <TextBlock Text="{Binding Date, StringFormat=ddd dd.MM.}"
                                            FontWeight="Bold"
                                            Margin="0,0,0,5"/>
                                     <!-- Mahlzeiten des Tages -->
