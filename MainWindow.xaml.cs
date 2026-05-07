@@ -17,9 +17,10 @@ namespace RecipePlanner
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(MainViewModel vm)
         {
             InitializeComponent();
+            DataContext = vm;
         }
         
         private Point _startPoint;
