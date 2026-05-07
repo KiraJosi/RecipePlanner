@@ -10,11 +10,11 @@ using System.Windows.Input;
 
 namespace RecipePlanner.ViewModels
 {
-    public class RecipesViewModell : BaseViewModel
+    public class RecipesViewModel : BaseViewModel
     {
         private readonly IRecipeService _recipeService;
         private readonly IDialogService _dialogService;
-        private readonly PantryViewModell _pantry;
+        private readonly PantryViewModel _pantry;
         public ObservableCollection<Recipe> Recipes { get; }
 
         private Recipe? _selectedRecipe;
@@ -29,7 +29,7 @@ namespace RecipePlanner.ViewModels
                 (EditRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
-        public void SetMealPlan(MealPlanViewModell mealPlan)
+        public void SetMealPlan(MealPlanViewModel mealPlan)
         {
             _mealPlanCommand = mealPlan.PlanRecipeCommand as RelayCommand;
         }
@@ -42,7 +42,7 @@ namespace RecipePlanner.ViewModels
         public ICommand FindRecipesCommand { get; }
         public ICollectionView RecipesView { get; }
 
-        public RecipesViewModell(IRecipeService recipeService, IDialogService dialogService, PantryViewModell pantry)
+        public RecipesViewModel(IRecipeService recipeService, IDialogService dialogService, PantryViewModel pantry)
         {
             _recipeService = recipeService;
             _dialogService = dialogService;

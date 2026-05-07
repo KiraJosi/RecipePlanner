@@ -59,11 +59,21 @@ namespace RecipePlanner.Services
                     Date TEXT NOT NULL,
                     FOREIGN KEY (RecipeID) REFERENCES Recipes(ID) ON DELETE CASCADE
                 );
-
-                ALTER TABLE Recipes ADD COLUMN Source TEXT NOT NULL DEFAULT '';
             ";
 
             command.ExecuteNonQuery();
+
+            try
+            {
+                var migrationCommand = connection.CreateCommand();
+                migrationCommand.CommandText =
+                    "ALTER TABLE Recipes ADD COLUMN Source TEXT NOT NULL DEFAULT '';";
+                migrationCommand.ExecuteNonQuery();
+            }
+            catch
+            {
+
+            }
         }
 
         private SqliteConnection CreateConnection()

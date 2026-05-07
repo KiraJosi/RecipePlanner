@@ -12,18 +12,18 @@ namespace RecipePlanner.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        public RecipesViewModell Recipes {  get; }
-        public PantryViewModell Pantry { get; }
-        public MealPlanViewModell MealPlan { get; }
+        public RecipesViewModel Recipes {  get; }
+        public PantryViewModel Pantry { get; }
+        public MealPlanViewModel MealPlan { get; }
         public MainViewModel(
             IRecipeService recipeService,
             IPantryService pantryService,
             IPlannedMealsService plannedMealsService,
             IDialogService dialogService) 
         {
-            Pantry = new PantryViewModell(pantryService, dialogService);
-            Recipes = new RecipesViewModell(recipeService, dialogService, Pantry);
-            MealPlan = new MealPlanViewModell(plannedMealsService, dialogService, Recipes);
+            Pantry = new PantryViewModel(pantryService, dialogService);
+            Recipes = new RecipesViewModel(recipeService, dialogService, Pantry);
+            MealPlan = new MealPlanViewModel(plannedMealsService, dialogService, Recipes);
             Recipes.SetMealPlan(MealPlan);
         }
     }

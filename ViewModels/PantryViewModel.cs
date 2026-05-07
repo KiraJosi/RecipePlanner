@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace RecipePlanner.ViewModels
 {
-    public class PantryViewModell : BaseViewModel
+    public class PantryViewModel : BaseViewModel
     {
         private readonly IPantryService _pantryService;
         private readonly IDialogService _dialogService;
@@ -33,7 +33,7 @@ namespace RecipePlanner.ViewModels
         public ICommand DeletePantryCommand { get; }
         public ICommand EditPantryCommand { get; }
 
-        public PantryViewModell(IPantryService pantryService, IDialogService dialogService)
+        public PantryViewModel(IPantryService pantryService, IDialogService dialogService)
         {
             _pantryService = pantryService;
             _dialogService = dialogService;

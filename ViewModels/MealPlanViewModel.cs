@@ -10,11 +10,11 @@ using System.Windows.Input;
 
 namespace RecipePlanner.ViewModels
 {
-    public  class MealPlanViewModell : BaseViewModel
+    public  class MealPlanViewModel : BaseViewModel
     {
         private readonly IPlannedMealsService _plannedMealsService;
         private readonly IDialogService _dialogService;
-        private readonly RecipesViewModell _recipes;
+        private readonly RecipesViewModel _recipes;
         public ObservableCollection<PlannedMeal> PlannedMeals { get; }
 
         private PlannedMeal? _selectedPlannedMeal;
@@ -54,7 +54,7 @@ namespace RecipePlanner.ViewModels
             return PlannedMeals.Where(m => m.Date.Date == day);
         }
 
-        public MealPlanViewModell(IPlannedMealsService plannedMealsService, IDialogService dialogService, RecipesViewModell recipes)
+        public MealPlanViewModel(IPlannedMealsService plannedMealsService, IDialogService dialogService, RecipesViewModel recipes)
         {
             _plannedMealsService = plannedMealsService;
             _dialogService = dialogService;
