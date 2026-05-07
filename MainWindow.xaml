@@ -290,45 +290,6 @@
 
                     </StackPanel>
 
-                    <ItemsControl Grid.Row="1" Grid.Column="7" 
-                                  ItemsSource="{Binding MealPlan.CurrentWeek}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="7"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel AllowDrop="True"
-                                        Drop="Day_Drop"
-                                        Margin="2">
-                                    <!-- Tag anzeigen -->
-                                    <TextBlock Text="{Binding Date, StringFormat=ddd dd.MM.}"
-                                           FontWeight="Bold"
-                                           Margin="0,0,0,5"/>
-                                    <!-- Mahlzeiten des Tages -->
-                                    <ItemsControl ItemsSource="{Binding DataContext.MealPlan.PlannedMeals,
-                                                            RelativeSource={RelativeSource 
-                                                            AncestorType=Window}}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Recipe.Name}">
-                                                    <TextBlock.Visibility>
-                                                        <MultiBinding Converter="{StaticResource DayFilterConverter}">
-                                                            <Binding Path="."/>
-                                                            <Binding Path="Date"
-                                                                 RelativeSource="{RelativeSource AncestorType=StackPanel}"/>
-                                                        </MultiBinding>
-                                                    </TextBlock.Visibility>
-                                                </TextBlock>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-
                     <ListBox Grid.Row="1" Grid.ColumnSpan="7"
                              ItemsSource="{Binding MealPlan.CurrentWeek}"
                              HorizontalContentAlignment="Stretch"
