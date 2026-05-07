@@ -1,4 +1,5 @@
 ﻿using RecipePlanner.Models;
+using RecipePlanner.Services.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,23 +10,16 @@ namespace RecipePlanner.Services
 {
     public class RecipeService : IRecipeService
     {
-        private readonly SQLiteDataService _data;
+        private readonly RecipeRepository _repo;
 
-        public RecipeService(SQLiteDataService data)
+        public RecipeService(RecipeRepository repo)
         {
-            _data = data;
+            _repo = repo;
         }
 
-        public List<Recipe> GetAll() =>
-            _data.GetRecipes();
-
-        public void Add(Recipe recipe) =>
-            _data.AddRecipe(recipe);
-
-        public void Update(Recipe recipe) =>
-            _data.UpdateRecipe(recipe);
-
-        public void Delete(int id) =>
-            _data.DeleteRecipe(id);
+        public List<Recipe> GetAll() => _repo.GetAll();
+        public void Add(Recipe recipe) => _repo.Add(recipe);
+        public void Update(Recipe recipe) => _repo.Update(recipe);
+        public void Delete(int id) => _repo.Delete(id);
     }
 }
