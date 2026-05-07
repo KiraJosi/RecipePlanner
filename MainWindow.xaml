@@ -259,6 +259,8 @@
                 </GroupBox.Header>
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <!-- Navigation -->
                         <RowDefinition Height="*"/>
                         <!-- ListBox -->
                         <RowDefinition Height="Auto"/>
@@ -274,7 +276,21 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <ItemsControl Grid.Row="0" Grid.Column="7" 
+                    <StackPanel Grid.Row="0" Grid.ColumnSpan="7"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Margin="0,0,0,5">
+                        <Button Content="◀" Width="30"
+                                Command="{Binding MealPlan.PreviousWeekCommand}"/>
+                        <TextBlock VerticalAlignment="Center" Margin="10,0"
+                                   FontWeight="SemiBold"
+                                   Text="{Binding MealPlan.CurrentWeek[0], StringFormat=KW ab dd.MM.yyyy}"/>
+                        <Button Content="▶" Width="30"
+                                Command="{Binding MealPlan.NextWeekCommand}"/>
+
+                    </StackPanel>
+
+                    <ItemsControl Grid.Row="1" Grid.Column="7" 
                                   ItemsSource="{Binding MealPlan.CurrentWeek}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -314,7 +330,7 @@
                     </ItemsControl>
 
                     <!-- ListBox -->
-                    <ListBox Grid.Row="0" 
+                    <ListBox Grid.Row="1" 
                              ItemsSource="{Binding MealPlan.PlannedMealsView}" 
                              SelectedItem="{Binding MealPlan.SelectedPlannedMeal}" 
                              AllowDrop="True"
@@ -340,7 +356,7 @@
                     </ListBox>
 
                     <!-- Buttons -->
-                    <StackPanel Grid.Row="1" 
+                    <StackPanel Grid.Row="2" 
                                 Orientation="Horizontal" 
                                 HorizontalAlignment="Right">
                         <Button Content="➕" 

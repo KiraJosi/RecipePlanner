@@ -41,10 +41,14 @@ namespace RecipePlanner.ViewModels
             }
         }
 
+        private DateTime _weekStart;
+
         public ICommand DeletePlannedMealCommand { get; }
         public ICommand EditPlannedMealCommand { get; }
         public ICollectionView PlannedMealsView { get; }
         public ICommand PlanRecipeCommand { get; }
+        public ICommand PreviousWeekCommand { get; }
+        public ICommand NextWeekCommand { get; }
         public IEnumerable<PlannedMeal> GetMealsForDay(DateTime day)
         {
             return PlannedMeals.Where(m => m.Date.Date == day);
@@ -84,6 +88,8 @@ namespace RecipePlanner.ViewModels
             PlanRecipeCommand = new RelayCommand(PlanRecipe, CanPlanRecipe);
             DeletePlannedMealCommand = new RelayCommand(DeletePlannedMeal, () => SelectedPlannedMeal != null);
             EditPlannedMealCommand = new RelayCommand(EditPlannedMeal, () => SelectedPlannedMeal != null);
+            PreviousWeekCommand = new RelayCommand(() => GenerateWeek(_weekStart.AddDays(-7)));
+            NextWeekCommand = new RelayCommand (() => GenerateWeek(_weekStart.AddDays(7)));
             GenerateWeek(DateTime.Today.StartOfWeek(DayOfWeek.Monday));
         }
         private void PlannedMeal_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -92,8 +98,9 @@ namespace RecipePlanner.ViewModels
         }
         public void GenerateWeek(DateTime start)
         {
+            _weekStart = start.Date;
             CurrentWeek = Enumerable.Range(0, 7)
-                .Select(i => start.Date.AddDays(i))
+                .Select(i => _weekStart.AddDays(i))
                 .ToList();
         }
         private bool CanPlanRecipe()
