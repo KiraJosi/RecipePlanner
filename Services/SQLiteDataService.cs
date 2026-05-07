@@ -59,6 +59,8 @@ namespace RecipePlanner.Services
                     Date TEXT NOT NULL,
                     FOREIGN KEY (RecipeID) REFERENCES Recipes(ID) ON DELETE CASCADE
                 );
+
+                ALTER TABLE Recipes ADD COLUMN Source TEXT NOT NULL DEFAULT '';
             ";
 
             command.ExecuteNonQuery();
@@ -86,8 +88,9 @@ namespace RecipePlanner.Services
             command.Transaction = transaction;
 
             command.CommandText =
-                "INSERT INTO Recipes (Name) VALUES ($name); SELECT last_insert_rowid();";
+                "INSERT INTO Recipes (Name, Source) VALUES ($name, $source); SELECT last_insert_rowid();";
             command.Parameters.AddWithValue("$name", recipe.Name);
+            command.Parameters.AddWithValue("$source", recipe.Source ?? "");
 
             var result = command.ExecuteScalar();
 
@@ -151,9 +154,10 @@ namespace RecipePlanner.Services
             var updateCommand = connection.CreateCommand();
             updateCommand.Transaction = transaction;
             updateCommand.CommandText =
-                "UPDATE Recipes SET Name = $name WHERE ID = $id";
+                "UPDATE Recipes SET Name = $name, Source = $source WHERE ID = $id";
 
             updateCommand.Parameters.AddWithValue("$name", recipe.Name);
+            updateCommand.Parameters.AddWithValue("$source", recipe.Source ?? "");
             updateCommand.Parameters.AddWithValue("$id", recipe.Id);
             updateCommand.ExecuteNonQuery();
 
@@ -266,7 +270,7 @@ namespace RecipePlanner.Services
             using var connection = CreateConnection();
 
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT Id, Name FROM Recipes";
+            command.CommandText = "SELECT Id, Name, Source FROM Recipes";
 
             using var reader = command.ExecuteReader();
 
@@ -276,6 +280,7 @@ namespace RecipePlanner.Services
                 {
                     Id = reader.GetInt32(0),
                     Name = reader.GetString(1),
+                    Source = reader.IsDBNull(2) ? "" : reader.GetString(2),
                 };
 
                 recipe.Ingredients = new ObservableCollection<string>(
