@@ -392,6 +392,7 @@
                     
                     <!-- Buttons -->
                     <StackPanel Grid.Row="2" 
+                                Grid.ColumnSpan="7"
                                 Orientation="Horizontal" 
                                 HorizontalAlignment="Right">
                         <Button Content="🛒"
