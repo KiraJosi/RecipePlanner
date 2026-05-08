@@ -102,7 +102,7 @@ namespace RecipePlanner.Services.Data
             var delTags = connection.CreateCommand();
             delTags.Transaction = transaction;
             delTags.CommandText = "DELETE FROM Tags WHERE RecipeID = $id";
-            delTags.Parameters.AddWithValue("$rid", recipe.Id);
+            delTags.Parameters.AddWithValue("$id", recipe.Id);
             delTags.ExecuteNonQuery();
 
             InsertIngredients(connection, transaction, recipe);
