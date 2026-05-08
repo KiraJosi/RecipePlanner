@@ -15,6 +15,7 @@ namespace RecipePlanner.ViewModels
         private readonly IRecipeService _recipeService;
         private readonly IDialogService _dialogService;
         private readonly PantryViewModel _pantry;
+        private bool _pantryFilterActive = false;
         public ObservableCollection<Recipe> Recipes { get; }
 
         private Recipe? _selectedRecipe;
@@ -27,6 +28,18 @@ namespace RecipePlanner.ViewModels
                 OnPropertyChanged();
                 (DeleteRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 (EditRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
+            }
+        }
+
+        private string _searchText = "";
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged();
+                ApplyFilter();
             }
         }
         public void SetMealPlan(MealPlanViewModel mealPlan)
@@ -97,19 +110,29 @@ namespace RecipePlanner.ViewModels
         }
         private void FindRecipes()
         {
+            _pantryFilterActive = true;
+            ApplyFilter();
+        }
+        private void ShowAllRecipes()
+        {
+            _pantryFilterActive = false;
+            ApplyFilter();
+        }
+        private void ApplyFilter()
+        {
             RecipesView.Filter = obj =>
             {
                 if (obj is not Recipe r)
                     return false;
 
-                return _pantry.PantryItems.Any(p =>
-                    r.HasIngredient(p));
+                bool matchesSearch = string.IsNullOrWhiteSpace(_searchText)
+                    || r.Name.Contains(_searchText, StringComparison.OrdinalIgnoreCase);
+
+                bool matchesPantry = !_pantryFilterActive
+                    || _pantry.PantryItems.Any(p => r.HasIngredient(p));
+
+                return matchesSearch && matchesPantry;
             };
         }
-        private void ShowAllRecipes()
-        {
-            RecipesView.Filter = null;
-        }
-
     }
 }

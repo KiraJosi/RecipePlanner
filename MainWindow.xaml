@@ -39,11 +39,17 @@
             <GroupBox Grid.Row="0" 
                       MinHeight="150">
                 <GroupBox.Header>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
                         <TextBlock Text="🍲" 
                                    Margin="0,0,5,0"/>
                         <TextBlock Text="Rezepte"
                                    Style="{StaticResource GroupHeaderTextStyle}"/>
+                        </StackPanel>
+                        <TextBox Width=" 160"
+                                 HorizontalAlignment="Left"
+                                 Text="{Binding Recipes.SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="0,4,0,0"/>
                     </StackPanel>
                 </GroupBox.Header>
                 <ListBox ItemsSource="{Binding Recipes.RecipesView}" 
