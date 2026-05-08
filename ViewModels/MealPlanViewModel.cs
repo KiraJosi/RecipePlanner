@@ -49,10 +49,6 @@ namespace RecipePlanner.ViewModels
         public ICommand PlanRecipeCommand { get; }
         public ICommand PreviousWeekCommand { get; }
         public ICommand NextWeekCommand { get; }
-        public IEnumerable<PlannedMeal> GetMealsForDay(DateTime day)
-        {
-            return PlannedMeals.Where(m => m.Date.Date == day);
-        }
 
         public MealPlanViewModel(IPlannedMealsService plannedMealsService, IDialogService dialogService, RecipesViewModel recipes)
         {
