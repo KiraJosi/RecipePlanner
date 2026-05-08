@@ -30,7 +30,7 @@ namespace RecipePlanner.ViewModels
             }
         }
 
-        private List<DateTime> _currentWeek;
+        private List<DateTime> _currentWeek = [];
         public List<DateTime> CurrentWeek
         {
             get => _currentWeek;
@@ -184,10 +184,10 @@ namespace RecipePlanner.ViewModels
             var pantryItems = _recipes.GetPantryItems();
 
             var missing = allIngredients
-                .Where(i => !pantryItems.Any(pantryItems =>
+                .Where(i => !pantryItems.Any(p =>
                     string.Equals(p, i, StringComparison.OrdinalIgnoreCase)))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
-                .OrderBy(in => 1)
+                .OrderBy(i => 1)
                 .ToList();
 
             if (!missing.Any())
