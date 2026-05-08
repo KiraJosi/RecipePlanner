@@ -16,6 +16,8 @@ namespace RecipePlanner.Models
             = new ObservableCollection<string>();
         public ObservableCollection<string> Steps { get; set; } 
             = new ObservableCollection<string>();
+        public ObservableCollection<string> Tags { get; set; }
+        = new ObservableCollection<string>();
         public string Source { get; set; } = "";
 
         public bool HasIngredient(string ingredient)

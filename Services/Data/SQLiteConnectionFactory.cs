@@ -67,6 +67,13 @@ namespace RecipePlanner.Services.Data
                         Date TEXT NOT NULL,
                         FOREIGN KEY (RecipeID) REFERENCES Recipes(ID) ON DELETE CASCADE
                     );
+
+                    CREATE TABLE IF NOT EXISTS Tags (
+                        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        RecipeID INTEGER NOT NULL,
+                        Name TEXT NOT NULL,
+                        FOREIGN KEY (RecipeID) REFERENCES Recipes(ID) ON DELETE CASCADE
+                    );
                 ";
 
             command.ExecuteNonQuery();
@@ -77,6 +84,23 @@ namespace RecipePlanner.Services.Data
                 migration.CommandText =
                     "ALTER TABLE Recipes ADD COLUMN Source TEXT NOT NULL DEFAULT '';";
                 migration.ExecuteNonQuery();
+            }
+            catch
+            {
+
+            }
+
+            try
+            {
+                var createTags = connection.CreateCommand();
+                createTags.CommandText = @"
+                    CREATE TABLE IF NOT EXISTS Tags (
+                        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        RecipeID INTEGER NOT NULL,
+                        Name TEXT NOT NULL,
+                        FOREIGN KEY (RecipeID) REFERENCES Recipes(ID) ON DELETE CASCADE
+                    );";
+                createTags.ExecuteNonQuery();
             }
             catch
             {

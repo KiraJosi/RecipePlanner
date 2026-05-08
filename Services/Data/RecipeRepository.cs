@@ -40,6 +40,8 @@ namespace RecipePlanner.Services.Data
                     GetIngredientsForRecipe(recipe.Id));
                 recipe.Steps = new ObservableCollection<string>(
                     GetStepsForRecipe(recipe.Id));
+                recipe.Tags = new ObservableCollection<string>(
+                    GetTagsForRecipe(recipe.Id));
 
                 recipes.Add(recipe);
             }
@@ -66,6 +68,7 @@ namespace RecipePlanner.Services.Data
 
             InsertIngredients(connection, transaction, recipe);
             InsertSteps(connection, transaction, recipe);
+            InsertTags(connection, transaction, recipe);
 
             transaction.Commit();
         }
@@ -96,8 +99,15 @@ namespace RecipePlanner.Services.Data
             delSteps.Parameters.AddWithValue("$id", recipe.Id);
             delSteps.ExecuteNonQuery();
 
+            var delTags = connection.CreateCommand();
+            delTags.Transaction = transaction;
+            delTags.CommandText = "DELETE FROM Tags WHERE RecipeID = $id";
+            delTags.Parameters.AddWithValue("$rid", recipe.Id);
+            delTags.ExecuteNonQuery();
+
             InsertIngredients(connection, transaction, recipe);
             InsertSteps(connection, transaction, recipe);
+            InsertTags(connection, transaction, recipe);
 
             transaction.Commit();
         }
@@ -141,6 +151,20 @@ namespace RecipePlanner.Services.Data
             }
         }
 
+        private void InsertTags(SqliteConnection connection, SqliteTransaction transaction, Recipe recipe)
+        {
+            foreach (var tag in recipe.Tags)
+            {
+                var cmd = connection.CreateCommand();
+                cmd.Transaction = transaction;
+                cmd.CommandText =
+                    "INSERT INTO Tags (RecipeID, Name) VALUES ($rid, $name);";
+                cmd.Parameters.AddWithValue("$rid", recipe.Id);
+                cmd.Parameters.AddWithValue("$name", tag);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         private List<string> GetIngredientsForRecipe(int recipeId)
         {
             var list = new List<string>();
@@ -168,6 +192,19 @@ namespace RecipePlanner.Services.Data
             {
                 list.Add(reader.GetString(0));
             }
+            return list;
+        }
+
+        private List<string> GetTagsForRecipe(int recipeId)
+        {
+            var list = new List<string>();
+            using var connection = _factory.CreateConnection();
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = "SELECT Name FROM Tags WHERE RecipeId = $id";
+            cmd.Parameters.AddWithValue("$id", recipeId);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+                list.Add(reader.GetString(0));
             return list;
         }
     }

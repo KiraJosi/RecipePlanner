@@ -19,10 +19,11 @@
                       VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>  <!-- Name -->
+                    <RowDefinition Height="Auto"/>  <!-- Zutaten -->
+                    <RowDefinition Height="*"/>     <!-- Schritte -->
+                    <RowDefinition Height="Auto"/>  <!-- Quelle -->
+                    <RowDefinition Height="Auto"/>  <!-- Tags -->
                 </Grid.RowDefinitions>
 
                 <!-- Name -->
@@ -55,6 +56,13 @@
                     <TextBlock Text="Quelle:" 
                                Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="SourceTextBox"/>
+                </StackPanel>
+                
+                <!-- Tags -->
+                <StackPanel Grid.Row="4">
+                    <TextBlock Text="Tags (kommagetrennt):"
+                               Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="TagsTextBox"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>
