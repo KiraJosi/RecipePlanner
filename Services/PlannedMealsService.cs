@@ -10,7 +10,7 @@ namespace RecipePlanner.Services
 {
     public class PlannedMealsService : IPlannedMealsService
     {
-        public readonly PlannedMealRepository _repo;
+        private readonly PlannedMealRepository _repo;
 
         public PlannedMealsService(PlannedMealRepository repo) 
         {

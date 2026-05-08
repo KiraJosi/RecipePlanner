@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace RecipePlanner.Services.Data
 {
-    internal class RecipeRepository
+    public class RecipeRepository
     {
         private readonly SQLiteConnectionFactory _factory;
 

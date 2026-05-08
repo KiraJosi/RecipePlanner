@@ -7,7 +7,7 @@ using RecipePlanner.Models;
 
 namespace RecipePlanner.Services.Data
 {
-    internal class PlannedMealRepository
+    public class PlannedMealRepository
     {
         private readonly SQLiteConnectionFactory _factory;
 

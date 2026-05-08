@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RecipePlanner.Services.Data
 {
-    internal class SQLiteConnectionFactory
+    public class SQLiteConnectionFactory
     {
         private readonly string _connectionString;
 
@@ -53,7 +53,7 @@ namespace RecipePlanner.Services.Data
                         RecipeID INTEGER NOT NULL,
                         SortOrder INTEGER NOT NULL,
                         Text TEXT NOT NULL,
-                        FOREIGN KEY (RecipeID) REFERNCES Recipes(ID) ON DELETE CASCADE
+                        FOREIGN KEY (RecipeID) REFERENCES Recipes(ID) ON DELETE CASCADE
                     );
 
                     CREATE TABLE IF NOT EXISTS PantryItems (

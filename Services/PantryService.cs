@@ -19,6 +19,6 @@ namespace RecipePlanner.Services
         public List<string> GetAll() => _repo.GetAll();
 
         public void Save(List<string> items) => _repo.Save(items);
-        }
+        
     }
 }
