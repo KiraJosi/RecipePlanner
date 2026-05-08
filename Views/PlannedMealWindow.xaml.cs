@@ -41,7 +41,9 @@ namespace RecipePlanner.Views
             else if (_recipes.Any())
                 RecipeComboBox.SelectedIndex = 0;
 
-            DatePicker.DisplayDateStart = DateTime.Today;
+            DatePicker.DisplayDateStart = meal.Date == default
+                ? DateTime.Today
+                : meal.Date < DateTime.Today ? meal.Date : DateTime.Today;
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
