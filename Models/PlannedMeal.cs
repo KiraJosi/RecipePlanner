@@ -46,7 +46,7 @@ namespace RecipePlanner.Models
             }
         }
 
-        public string DisplayText => Recipe.Name ?? "(kein Rezept)";
+        public string DisplayText => Recipe?.Name ?? "(kein Rezept)";
 
         public bool IsToday() =>
             Date.Date == DateTime.Today;

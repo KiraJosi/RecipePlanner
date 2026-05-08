@@ -62,7 +62,6 @@ namespace RecipePlanner.ViewModels
             _pantry = pantry;
 
             Recipes = new ObservableCollection<Recipe>(_recipeService.GetAll());
-
             RecipesView = CollectionViewSource.GetDefaultView(Recipes);
 
             AddRecipeCommand = new RelayCommand(AddRecipe);
@@ -70,6 +69,12 @@ namespace RecipePlanner.ViewModels
             EditRecipeCommand = new RelayCommand(EditRecipe, () => SelectedRecipe != null);
             FindRecipesCommand = new RelayCommand(FindRecipes, CanFindRecipes);
             ShowAllRecipesCommand = new RelayCommand(ShowAllRecipes);
+
+            _pantry.PantryItems.CollectionChanged += (_, __) =>
+            {
+                (FindRecipesCommand as RelayCommand)?.RaiseCanExecuteChanged();
+            };
+
             _mealPlanCommand?.RaiseCanExecuteChanged();
         }
         private void AddRecipe()
