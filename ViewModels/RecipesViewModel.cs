@@ -131,7 +131,8 @@ namespace RecipePlanner.ViewModels
                     return false;
 
                 bool matchesSearch = string.IsNullOrWhiteSpace(_searchText)
-                    || r.Name.Contains(_searchText, StringComparison.OrdinalIgnoreCase);
+                    || r.Name.Contains(_searchText, StringComparison.OrdinalIgnoreCase)
+                    || r.Tags.Any(t => t.Contains(_searchText, StringComparison.OrdinalIgnoreCase));
 
                 bool matchesPantry = !_pantryFilterActive
                     || _pantry.PantryItems.Any(p => r.HasIngredient(p));
@@ -139,5 +140,7 @@ namespace RecipePlanner.ViewModels
                 return matchesSearch && matchesPantry;
             };
         }
+
+        public IEnumerable<string> GetPantryItems() => _pantry.PantryItems;
     }
 }

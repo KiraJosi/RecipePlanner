@@ -49,6 +49,7 @@ namespace RecipePlanner.ViewModels
         public ICommand PlanRecipeCommand { get; }
         public ICommand PreviousWeekCommand { get; }
         public ICommand NextWeekCommand { get; }
+        public ICommand GenerateShoppingListCommand { get; }
 
         public MealPlanViewModel(IPlannedMealsService plannedMealsService, IDialogService dialogService, RecipesViewModel recipes)
         {
@@ -86,6 +87,8 @@ namespace RecipePlanner.ViewModels
             EditPlannedMealCommand = new RelayCommand(EditPlannedMeal, () => SelectedPlannedMeal != null);
             PreviousWeekCommand = new RelayCommand(() => GenerateWeek(_weekStart.AddDays(-7)));
             NextWeekCommand = new RelayCommand (() => GenerateWeek(_weekStart.AddDays(7)));
+            GenerateShoppingListCommand = new RelayCommand(GenerateShoppingList);
+
             GenerateWeek(DateTime.Today.StartOfWeek(DayOfWeek.Monday));
         }
         private void PlannedMeal_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -153,6 +156,56 @@ namespace RecipePlanner.ViewModels
             {
                 PlannedMealsView.Refresh();
             }
+        }
+
+        private void GenerateShoppingList()
+        {
+            var mealsThisWeek = PlannedMeals
+                .Where(m => CurrentWeek.Contains(m.Date.Date))
+                .ToList();
+
+            if (!mealsThisWeek.Any())
+            {
+                MessageBox.Show(
+                    "Für diese Woche sind keine Mahlzeiten geplant.",
+                    "Einkaufsliste",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+                return;
+            }
+
+            var allIngredients = mealsThisWeek
+                .Where(m => m.Recipe != null)
+                .SelectMany(m => m.Recipe!.Ingredients)
+                .Select(i => i.Trim())
+                .Where(i => !string.IsNullOrEmpty(i))
+                .ToList();
+
+            var pantryItems = _recipes.GetPantryItems();
+
+            var missing = allIngredients
+                .Where(i => !pantryItems.Any(pantryItems =>
+                    string.Equals(p, i, StringComparison.OrdinalIgnoreCase)))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(in => 1)
+                .ToList();
+
+            if (!missing.Any())
+            {
+                MessageBox.Show(
+                    "Alle Zutaten für diese Woche sind bereits im Vorrat!",
+                    "Einkaufsliste",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+                return;
+            }
+
+            var list = string.Join(Environment.NewLine, missing.Select(i => $"• {i}"));
+            MessageBox.Show(
+                $"Fehlende Zutaten für diese Woche: \n\n{list}",
+                "Einkaufsliste",
+                MessageBoxButton.OK,
+                MessageBoxImage.None);
         }
 
     }

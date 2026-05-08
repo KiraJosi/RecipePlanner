@@ -11,6 +11,7 @@
     <sys:String x:Key="TT_EditPlannedMeal">Kochplan bearbeiten</sys:String>
     <sys:String x:Key="TT_DeletePlannedMeal">Kochplan löschen</sys:String>
     <sys:String x:Key="TT_PlanRecipe">Rezept planen</sys:String>
+    <sys:String x:Key="TT_ShoppingList">Einkaufsliste für diese Woche generieren</sys:String>
 
     <sys:String x:Key="TT_DeletePantry">Vorrat löschen</sys:String>
     <sys:String x:Key="TT_EditPantry">Vorrat bearbeiten</sys:String>

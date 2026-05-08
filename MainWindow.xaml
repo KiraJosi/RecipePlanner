@@ -394,6 +394,9 @@
                     <StackPanel Grid.Row="2" 
                                 Orientation="Horizontal" 
                                 HorizontalAlignment="Right">
+                        <Button Content="🛒"
+                                Command="{Binding MealPlan.GenerateShoppingListCommand}"
+                                ToolTip="{StaticResource TT_ShoppingList}"/>
                         <Button Content="➕" 
                                 Command="{Binding MealPlan.PlanRecipeCommand}"
                                 ToolTip="{StaticResource TT_PlanRecipe}"/>
