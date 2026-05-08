@@ -11,6 +11,7 @@
 
     <Window.Resources>
         <helpers:DayFilterConverter x:Key="DayFilterConverter"/>
+        <helpers:IsTodayConverter x:Key="IsTodayConverter"/>
     </Window.Resources>
 
     <Grid Margin="{StaticResource SpacingMedium}">
@@ -345,6 +346,17 @@
                                 <StackPanel AllowDrop="True"
                                             Drop="Day_Drop"
                                             Margin="2">
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Date, Converter={StaticResource IsTodayConverter}}" Value="True">
+                                                    <Setter Property="Background" Value="#1A0078D4"/>
+                                                    <Setter Property="TextElement.FontWeight" Value="Bold"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    
                                     <TextBlock Text="{Binding Date, StringFormat=ddd dd.MM.}"
                                                FontWeight="Bold"
                                                Margin="0,0,0,5"/>
