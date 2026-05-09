@@ -23,6 +23,7 @@
                     <RowDefinition Height="Auto"/>  <!-- Zutaten -->
                     <RowDefinition Height="*"/>     <!-- Schritte -->
                     <RowDefinition Height="Auto"/>  <!-- Quelle -->
+                    <RowDefinition Height="Auto"/>  <!-- Portionen -->
                     <RowDefinition Height="Auto"/>  <!-- Tags -->
                 </Grid.RowDefinitions>
 
@@ -57,9 +58,17 @@
                                Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="SourceTextBox"/>
                 </StackPanel>
+
+                <!-- Portionen -->
+                <StackPanel Grid.Row="4">
+                    <TextBlock Text="Portionen:"
+                               Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="ServingsTextBox"
+                             Text="4"/>
+                </StackPanel>
                 
                 <!-- Tags -->
-                <StackPanel Grid.Row="4">
+                <StackPanel Grid.Row="5">
                     <TextBlock Text="Tags (kommagetrennt):"
                                Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="TagsTextBox"/>

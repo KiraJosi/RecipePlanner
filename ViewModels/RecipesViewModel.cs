@@ -28,6 +28,9 @@ namespace RecipePlanner.ViewModels
                 OnPropertyChanged();
                 (DeleteRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 (EditRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
+
+                CurrentServings = _selectedRecipe?.Servings ?? 4;
+                OnPropertyChanged(nameof(ScaledIngredients));
             }
         }
 
@@ -42,6 +45,31 @@ namespace RecipePlanner.ViewModels
                 ApplyFilter();
             }
         }
+
+        private int _currentServings = 4;
+        public int CurrentServings
+        {
+            get => _currentServings;
+            set
+            {
+                if (value < 1) return;
+                _currentServings = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ScalingFactor));
+                OnPropertyChanged(nameof(ScaledIngredients));
+            }
+        }
+
+        public double ScalingFactor =>
+            SelectedRecipe == null || SelectedRecipe.Servings == 0
+            ? 1.0
+            : (double)CurrentServings /SelectedRecipe.Servings;
+
+        public IEnumerable<string> ScaledIngredients =>
+            SelectedRecipe?.Ingredients
+                .Select(i => IngredientScaler.Scale(i, ScalingFactor))
+            ?? [];
+
         public void SetMealPlan(MealPlanViewModel mealPlan)
         {
             _mealPlanCommand = mealPlan.PlanRecipeCommand as RelayCommand;
@@ -53,6 +81,8 @@ namespace RecipePlanner.ViewModels
         public ICommand EditRecipeCommand { get; }
         public ICommand ShowAllRecipesCommand { get; }
         public ICommand FindRecipesCommand { get; }
+        public ICommand IncrementServingsCommand { get; }
+        public ICommand DecrementServingsCommand { get; }
         public ICollectionView RecipesView { get; }
 
         public RecipesViewModel(IRecipeService recipeService, IDialogService dialogService, PantryViewModel pantry)
@@ -69,6 +99,8 @@ namespace RecipePlanner.ViewModels
             EditRecipeCommand = new RelayCommand(EditRecipe, () => SelectedRecipe != null);
             FindRecipesCommand = new RelayCommand(FindRecipes, CanFindRecipes);
             ShowAllRecipesCommand = new RelayCommand(ShowAllRecipes);
+            IncrementServingsCommand = new RelayCommand(() => CurrentServings++);
+            DecrementServingsCommand = new RelayCommand(() => CurrentServings--);
 
             _pantry.PantryItems.CollectionChanged += (_, __) =>
             {

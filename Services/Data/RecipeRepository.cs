@@ -24,7 +24,7 @@ namespace RecipePlanner.Services.Data
             using var connection = _factory.CreateConnection();
 
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT Id, Name, Source FROM Recipes";
+            command.CommandText = "SELECT Id, Name, Source, Servings FROM Recipes";
 
             using var reader = command.ExecuteReader();
             while (reader.Read())
@@ -34,6 +34,7 @@ namespace RecipePlanner.Services.Data
                     Id = reader.GetInt32(0),
                     Name = reader.GetString(1),
                     Source = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    Servings = reader.IsDBNull(3) ? 4 : reader.GetInt32(3),
                 };
 
                 recipe.Ingredients = new ObservableCollection<string>(
@@ -56,9 +57,10 @@ namespace RecipePlanner.Services.Data
             var command = connection.CreateCommand();
             command.Transaction = transaction;
             command.CommandText =
-                "INSERT INTO Recipes (Name, Source) VALUES ($name, $source); SELECT last_insert_rowid();";
+                "INSERT INTO Recipes (Name, Source, Servings) VALUES ($name, $source, $servings); SELECT last_insert_rowid();";
             command.Parameters.AddWithValue("$name", recipe.Name);
             command.Parameters.AddWithValue("$source", recipe.Source ?? "");
+            command.Parameters.AddWithValue("$servings", recipe.Servings);
 
             var result = command.ExecuteScalar();
             if (result is long newId)
@@ -81,9 +83,10 @@ namespace RecipePlanner.Services.Data
             var update = connection.CreateCommand();
             update.Transaction = transaction;
             update.CommandText =
-                "UPDATE Recipes SET Name = $name, Source = $source WHERE ID = $id";
+                "UPDATE Recipes SET Name = $name, Source = $source, Servings = $servings WHERE ID = $id";
             update.Parameters.AddWithValue("$name", recipe.Name);
             update.Parameters.AddWithValue("$source", recipe.Source ?? "");
+            update.Parameters.AddWithValue("$servings", recipe.Servings);
             update.Parameters.AddWithValue("$id", recipe.Id);
             update.ExecuteNonQuery();
 

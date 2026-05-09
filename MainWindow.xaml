@@ -200,10 +200,28 @@
                                        Margin="{StaticResource SpacingBottomMedium}"/>  
 
                             <!-- Zutaten -->
-                            <TextBlock Text="Zutaten:" 
+                            <StackPanel Orientation="Horizontal" Margin="{StaticResource SpacingBottomSmall}">
+                                <TextBlock Text="Zutaten:" 
                                        FontWeight="SemiBold" 
-                                       Margin="{StaticResource SpacingBottomSmall}"/>
-                            <ItemsControl ItemsSource="{Binding Recipes.SelectedRecipe.Ingredients}" 
+                                       VerticalAlignment="Center"/>
+                                <Button Content="-"
+                                        Command="{Binding Recipes.DecrementServingsCommand}"
+                                        Width="24" Margin="10,0,4,0" Padding="0"/>
+                                <TextBlock Text="{Binding Recipes.CurrentServings}"
+                                           VerticalAlignment="Center"
+                                           FontWeight="SemiBold"
+                                           MinWidth="16"
+                                           TextAlignment="Center"/>
+                                <Button Content="+"
+                                        Command="{Binding Recipes.IncrementServingsCommand}"
+                                        Width="24" Margin="4,0,0,0" Padding="0"/>
+                                <TextBlock Text="Portionen"
+                                           VerticalAlignment="Center"
+                                           Margin="6,0,0,0"
+                                           Foreground="{StaticResource TextBrush}"/>
+                            </StackPanel>
+
+                            <ItemsControl ItemsSource="{Binding Recipes.ScaledIngredients}" 
                                           Margin="10,0,0,10">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>

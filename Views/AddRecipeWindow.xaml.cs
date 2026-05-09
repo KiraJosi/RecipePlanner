@@ -39,6 +39,7 @@ namespace RecipePlanner.Views
             IngredientsTextBox.Text = string.Join(", ", recipeToEdit.Ingredients);
             StepsTextBox.Text = string.Join(Environment.NewLine, recipeToEdit.Steps);
             SourceTextBox.Text = recipeToEdit.Source;
+            ServingsTextBox.Text = recipeToEdit.Servings.ToString();
             TagsTextBox.Text = string.Join(", ", recipeToEdit?.Tags);
         }
 
@@ -70,12 +71,15 @@ namespace RecipePlanner.Views
                 .Where(t => !string.IsNullOrWhiteSpace(t))
                 );
 
+            int servings = int.TryParse(ServingsTextBox.Text, out int s) && s > 0 ? s : 4;
+
             if (_recipeToEdit != null)
             {
                 _recipeToEdit.Name = NameTextBox.Text;
                 _recipeToEdit.Ingredients = ingredients;
                 _recipeToEdit.Steps = steps;
                 _recipeToEdit.Source = SourceTextBox.Text;
+                _recipeToEdit.Servings = servings;
                 _recipeToEdit.Tags = tags;
             }
             else
@@ -86,7 +90,8 @@ namespace RecipePlanner.Views
                     Ingredients = ingredients,
                     Steps = steps,
                     Source = SourceTextBox.Text,
-                    Tags = tags
+                    Tags = tags,
+                    Servings = servings
                 };
             }
 

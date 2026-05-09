@@ -89,6 +89,18 @@ namespace RecipePlanner.Services.Data
             {
 
             }
+
+            try
+            {
+                var migration = connection.CreateCommand();
+                migration.CommandText =
+                    "ALTER TABLE Recipes ADD COLUMN Servings INTEGER NOT NULL DEFAULT 4;";
+                migration.ExecuteNonQuery();
+            }
+            catch(Microsoft.Data.Sqlite.SqliteException ex) when (ex.SqliteErrorCode == 1)
+            {
+
+            }
         }
     }
 }
