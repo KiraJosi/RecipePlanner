@@ -19,6 +19,7 @@
                       VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>  <!-- URL Import -->
                     <RowDefinition Height="Auto"/>  <!-- Name -->
                     <RowDefinition Height="Auto"/>  <!-- Zutaten -->
                     <RowDefinition Height="*"/>     <!-- Schritte -->
@@ -26,16 +27,24 @@
                     <RowDefinition Height="Auto"/>  <!-- Portionen -->
                     <RowDefinition Height="Auto"/>  <!-- Tags -->
                 </Grid.RowDefinitions>
+                
+                <!-- URL Import -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,5">
+                    <Button x:Name="ImportFromUrlButton"
+                            Content="🌐 Aus URL importieren"
+                            Click="ImportFromUrlButton_Click"
+                            HorizontalAlignment="Left"/>
+                </StackPanel>
 
                 <!-- Name -->
-                <StackPanel Grid.Row="0">
+                <StackPanel Grid.Row="1">
                     <TextBlock Text="Name:" 
                                Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="NameTextBox"/>
                 </StackPanel>
 
                 <!-- Zutaten -->
-                <StackPanel Grid.Row="1">
+                <StackPanel Grid.Row="2">
                     <TextBlock Text="Zutaten:" 
                                Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="IngredientsTextBox"
@@ -44,7 +53,7 @@
                 </StackPanel>
 
                 <!-- Schritte -->
-                <StackPanel Grid.Row="2">
+                <StackPanel Grid.Row="3">
                     <TextBlock Text="Schritte:" 
                                Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="StepsTextBox"
@@ -53,14 +62,14 @@
                 </StackPanel>
 
                 <!-- Quelle -->
-                <StackPanel Grid.Row="3">
+                <StackPanel Grid.Row="4">
                     <TextBlock Text="Quelle:" 
                                Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="SourceTextBox"/>
                 </StackPanel>
 
                 <!-- Portionen -->
-                <StackPanel Grid.Row="4">
+                <StackPanel Grid.Row="5">
                     <TextBlock Text="Portionen:"
                                Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="ServingsTextBox"
@@ -68,7 +77,7 @@
                 </StackPanel>
                 
                 <!-- Tags -->
-                <StackPanel Grid.Row="5">
+                <StackPanel Grid.Row="6">
                     <TextBlock Text="Tags (kommagetrennt):"
                                Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="TagsTextBox"/>
