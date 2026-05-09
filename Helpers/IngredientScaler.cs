@@ -13,7 +13,7 @@ namespace RecipePlanner.Helpers
                 return ingredient;
 
             var match = _numberPattern.Match(ingredient);
-            if (match.Success)
+            if (!match.Success)
                 return ingredient;
 
             var raw = match.Groups[1].Value.Replace(',', '.');
