@@ -60,6 +60,13 @@ namespace RecipePlanner.ViewModels
             }
         }
 
+        private string _statusMessage = "";
+        public string StatusMessage
+        {
+            get => _statusMessage;
+            set { _statusMessage = value; OnPropertyChanged(); }
+        }
+
         public double ScalingFactor =>
             SelectedRecipe == null || SelectedRecipe.Servings == 0
             ? 1.0
@@ -111,21 +118,28 @@ namespace RecipePlanner.ViewModels
         }
         private void AddRecipe()
         {
-            if (_dialogService.ShowAddRecipeDialog(out Recipe? recipe) == true
-                && recipe != null)
+            if (_dialogService.ShowAddRecipeDialog(out Recipe? recipe) == true && recipe != null)
             {
                 _recipeService.Add(recipe);
                 Recipes.Add(recipe);
                 SelectedRecipe = recipe;
+                ShowStatus("✓ Rezept gespeichert");
             }
         }
         private void DeleteRecipe()
         {
-            if (SelectedRecipe != null)
-            {
+            if (SelectedRecipe == null) return;
+
+            var result = MessageBox.Show(
+                $"Rezept \"{SelectedRecipe.Name}\"wirklich löschen?",
+                "Rezept löschen",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes) return;
+
                 _recipeService.Delete(SelectedRecipe.Id);
                 Recipes.Remove(SelectedRecipe);
-            }
         }
         private bool CanDeleteRecipe()
         {
@@ -133,12 +147,12 @@ namespace RecipePlanner.ViewModels
         }
         private void EditRecipe()
         {
-            if (SelectedRecipe == null)
-                return;
+            if (SelectedRecipe == null) return;
 
             if (_dialogService.ShowEditRecipeDialog(SelectedRecipe) == true)
             {
                 _recipeService.Update(SelectedRecipe);
+                ShowStatus("✓ Rezept aktualisiert");
             }
         }
         private bool CanFindRecipes()
@@ -171,6 +185,17 @@ namespace RecipePlanner.ViewModels
 
                 return matchesSearch && matchesPantry;
             };
+        }
+
+        private void ShowStatus(string message)
+        {
+            StatusMessage = message;
+            var timer = new System.Windows.Threading.DispatcherTimer()
+            {
+                Interval = TimeSpan.FromSeconds(2)
+            };
+            timer.Tick += (_, __) => { StatusMessage = ""; timer.Stop(); };
+            timer.Start();
         }
 
         public IEnumerable<string> GetPantryItems() => _pantry.PantryItems;

@@ -29,6 +29,14 @@ namespace RecipePlanner.ViewModels
                 (SavePantryCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
+
+        private string _statusMessage = "";
+        public string StatusMessage
+        {
+            get => _statusMessage;
+            set { _statusMessage = value; OnPropertyChanged(); }
+        }
+
         public ICommand SavePantryCommand { get; }
         public ICommand DeletePantryCommand { get; }
         public ICommand EditPantryCommand { get; }
@@ -56,8 +64,7 @@ namespace RecipePlanner.ViewModels
         }
         private void SavePantry()
         {
-            if (string.IsNullOrWhiteSpace(NewPantryText))
-                return;
+            if (string.IsNullOrWhiteSpace(NewPantryText)) return;
 
             var items = NewPantryText
                 .Split(',')
@@ -68,9 +75,20 @@ namespace RecipePlanner.ViewModels
                 PantryItems.Add(item);
 
             NewPantryText = string.Empty;
+            ShowStatus("✓ Vorrat gespeichert");
         }
         private void DeletePantry()
         {
+            if (!PantryItems.Any()) return;
+
+            var result = MessageBox.Show(
+                "Gesamten Vorrat wirklich löschen?",
+                "Vorrat löschen",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes) return;
+
             PantryItems.Clear();
         }
         private void EditPantry()
@@ -95,6 +113,17 @@ namespace RecipePlanner.ViewModels
 
                 NewPantryText = string.Empty;
             }
+        }
+
+        private void ShowStatus(string message)
+        {
+            StatusMessage = message;
+            var timer = new System.Windows.Threading.DispatcherTimer()
+            {
+                Interval = TimeSpan.FromSeconds(2)
+            };
+            timer.Tick += (_, __) => { StatusMessage = ""; timer.Stop(); };
+            timer.Start();
         }
 
     }
