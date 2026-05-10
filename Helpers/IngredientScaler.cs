@@ -5,7 +5,7 @@ namespace RecipePlanner.Helpers
     public static class IngredientScaler
     {
         private static readonly Regex _numberPattern =
-            new(@"^(\d+(?:[.,]\d+)?)\s*", RegexOptions.Compiled);
+            new(@"^(\d+(?:[.,]\d+)?)", RegexOptions.Compiled);
 
         public static string Scale(string ingredient, double factor)
         {

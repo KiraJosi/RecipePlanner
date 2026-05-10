@@ -10,7 +10,6 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<!-- NEU: Testdateien aus der Hauptkompilierung ausschließen -->
 		<Compile Remove="RecipePlanner.Tests\**\*.cs" />
     </ItemGroup>
 

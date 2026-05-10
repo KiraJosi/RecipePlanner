@@ -32,7 +32,7 @@ namespace RecipePlanner.Views
             StepsTextBox.Text = string.Join(Environment.NewLine, recipeToEdit.Steps);
             SourceTextBox.Text = recipeToEdit.Source;
             ServingsTextBox.Text = recipeToEdit.Servings.ToString();
-            TagsTextBox.Text = string.Join(", ", recipeToEdit?.Tags);
+            TagsTextBox.Text = string.Join(", ", recipeToEdit.Tags);
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
