@@ -6,7 +6,13 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
+	<ItemGroup>
+		<!-- NEU: Testdateien aus der Hauptkompilierung ausschließen -->
+		<Compile Remove="RecipePlanner.Tests\**\*.cs" />
+    </ItemGroup>
 
   <ItemGroup>
     <Page Remove="Resources\Strings.xaml" />
