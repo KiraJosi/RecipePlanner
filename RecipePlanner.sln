@@ -5,7 +5,7 @@ VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipePlanner", "RecipePlanner.csproj", "{3CB9D3EE-C289-4698-B5E9-DB1C423FF1F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipePlanner.Tests", "..\RecipePlanner.Tests\RecipePlanner.Tests.csproj", "{786A6208-288A-4691-90C0-1292B8BC9231}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipePlanner.Tests", "RecipePlanner.Tests\RecipePlanner.Tests.csproj", "{9EAF1109-0340-FDF7-25C8-667E1CC96B33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{3CB9D3EE-C289-4698-B5E9-DB1C423FF1F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CB9D3EE-C289-4698-B5E9-DB1C423FF1F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CB9D3EE-C289-4698-B5E9-DB1C423FF1F0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{786A6208-288A-4691-90C0-1292B8BC9231}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{786A6208-288A-4691-90C0-1292B8BC9231}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{786A6208-288A-4691-90C0-1292B8BC9231}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{786A6208-288A-4691-90C0-1292B8BC9231}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EAF1109-0340-FDF7-25C8-667E1CC96B33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EAF1109-0340-FDF7-25C8-667E1CC96B33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EAF1109-0340-FDF7-25C8-667E1CC96B33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EAF1109-0340-FDF7-25C8-667E1CC96B33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
