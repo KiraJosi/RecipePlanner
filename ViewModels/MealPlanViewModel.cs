@@ -41,6 +41,13 @@ namespace RecipePlanner.ViewModels
             }
         }
 
+        private List<WeekDay> _currentWeekDays = [];
+        public List<WeekDay> CurrentWeekDays
+        {
+            get => _currentWeekDays;
+            set { _currentWeekDays = value; OnPropertyChanged(); }
+        }
+
         private DateTime _weekStart;
 
         public ICommand DeletePlannedMealCommand { get; }
@@ -58,6 +65,13 @@ namespace RecipePlanner.ViewModels
             _recipes = recipes;
 
             PlannedMeals = new ObservableCollection<PlannedMeal>(_plannedMealsService.GetAll());
+            foreach (var meal in PlannedMeals)
+            {
+                if (meal.Recipe == null) continue;
+                var fullRecipe = _recipes.Recipes.FirstOrDefault(r => r.Id == meal.Recipe.Id);
+                if (fullRecipe != null)
+                    meal.Recipe = fullRecipe;
+            }
 
             PlannedMealsView = CollectionViewSource.GetDefaultView(PlannedMeals);
             PlannedMealsView.GroupDescriptions.Clear();
@@ -80,6 +94,7 @@ namespace RecipePlanner.ViewModels
                         meal.PropertyChanged -= PlannedMeal_PropertyChanged;
 
                 SavePlannedMeals();
+                RefreshWeekDays();
             };
 
             PlanRecipeCommand = new RelayCommand(PlanRecipe, CanPlanRecipe);
@@ -94,12 +109,25 @@ namespace RecipePlanner.ViewModels
         private void PlannedMeal_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             SavePlannedMeals();
+            RefreshWeekDays() ;
         }
         public void GenerateWeek(DateTime start)
         {
             _weekStart = start.Date;
             CurrentWeek = Enumerable.Range(0, 7)
                 .Select(i => _weekStart.AddDays(i))
+                .ToList();
+            RefreshWeekDays();
+        }
+        private void RefreshWeekDays()
+        {
+            CurrentWeekDays = CurrentWeek
+                .Select(day => new WeekDay()
+                {
+                    Date = day,
+                    Meals = new ObservableCollection<PlannedMeal>(
+                        PlannedMeals.Where(m => m.Date.Date == day.Date))
+                })
                 .ToList();
         }
         private bool CanPlanRecipe()
@@ -122,18 +150,16 @@ namespace RecipePlanner.ViewModels
                 PlannedMeals.Add(newMeal);
             }
         }
-        public void PlanRecipeFromDrop(Recipe recipe)
+        public void PlanRecipeFromDrop(Recipe recipe, DateTime targetDate)
         {
             var newMeal = new PlannedMeal
             {
                 Recipe = recipe,
-                Date = DateTime.Today
+                Date = targetDate
             };
 
             if (_dialogService.ShowPlannedMealDialog(newMeal, _recipes.Recipes.ToList()) == true)
-            {
                 PlannedMeals.Add(newMeal);
-            }
         }
         private void DeletePlannedMeal()
         {

@@ -10,7 +10,6 @@
         MinWidth="900">
 
     <Window.Resources>
-        <helpers:DayFilterConverter x:Key="DayFilterConverter"/>
         <helpers:IsTodayConverter x:Key="IsTodayConverter"/>
     </Window.Resources>
 
@@ -58,8 +57,7 @@
                          Margin="{StaticResource SpacingTopSmall}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
-                            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Recipe_PreviewMouseLeftButtonDown"/>
-                            <EventSetter Event="PreviewMouseMove" Handler="Recipe_MouseMove"/>
+                            <Setter Property="helpers:DragDropBehavior.EnableDrag" Value="True"/>
                         </Style>
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
@@ -377,7 +375,9 @@
                                     <StackPanel.Style>
                                         <Style TargetType="StackPanel">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Date, Converter={StaticResource IsTodayConverter}}" Value="True">
+                                                <DataTrigger Binding="{Binding Date, 
+                                                             Converter={StaticResource IsTodayConverter}}" 
+                                                             Value="True">
                                                     <Setter Property="Background" Value="#1A0078D4"/>
                                                     <Setter Property="TextElement.FontWeight" Value="Bold"/>
                                                 </DataTrigger>
@@ -388,10 +388,9 @@
                                     <TextBlock Text="{Binding Date, StringFormat=ddd dd.MM.}"
                                                FontWeight="Bold"
                                                Margin="0,0,0,5"/>
-                                    <ListBox ItemsSource="{Binding DataContext.MealPlan.PlannedMeals,
-                                             RelativeSource={RelativeSource AncestorType=Window}}"
+                                    <ListBox ItemsSource="{Binding Meals}"
                                              SelectedItem="{Binding DataContext.MealPlan.SelectedPlannedMeal,
-                                             RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            RelativeSource={RelativeSource AncestorType=Window}}"
                                              BorderThickness="0"
                                              Background="Transparent">
                                         <ListBox.ItemContainerStyle>
@@ -401,15 +400,7 @@
                                         </ListBox.ItemContainerStyle>
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="{Binding Recipe.Name}">
-                                                    <TextBlock.Visibility>
-                                                        <MultiBinding Converter="{StaticResource DayFilterConverter}">
-                                                            <Binding Path="."/>
-                                                            <Binding Path="Date"
-                                                                     RelativeSource="{RelativeSource AncestorType=StackPanel}"/>
-                                                        </MultiBinding>
-                                                    </TextBlock.Visibility>
-                                                </TextBlock>
+                                                <TextBlock Text="{Binding Recipe.Name}"/>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>

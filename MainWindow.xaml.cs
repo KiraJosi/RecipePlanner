@@ -52,14 +52,13 @@ namespace RecipePlanner
 
         private void Day_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(typeof(Recipe)))
+            if (!e.Data.GetDataPresent(typeof(Recipe))) return;
             {
-                var recipe = (Recipe)e.Data.GetData((typeof(Recipe)));
+                var recipe = (Recipe)e.Data.GetData(typeof(Recipe));
+                var weekDay = (sender as FrameworkElement)?.DataContext as WeekDay;
                 
-                if (DataContext is MainViewModel vm)
-                {
-                    vm.MealPlan.PlanRecipeFromDrop(recipe);
-                }
+                if (DataContext is MainViewModel vm && weekDay != null)
+                    vm.MealPlan.PlanRecipeFromDrop(recipe, weekDay.Date);
             }
         }
     }
