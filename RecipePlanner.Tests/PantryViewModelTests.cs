@@ -39,7 +39,7 @@ namespace RecipePlanner.Tests
             var vm = CreateVm();
             vm.NewPantryText = "Mehl";
             vm.SavePantryCommand.Execute(null);
-            Assert.True(string,IsNullOrEmpty(vm.NewPantryText));
+            Assert.True(string.IsNullOrEmpty(vm.NewPantryText));
         }
 
         [Fact]

@@ -346,7 +346,7 @@
                     </StackPanel>
 
                     <ListBox Grid.Row="1" Grid.ColumnSpan="7"
-                             ItemsSource="{Binding MealPlan.CurrentWeek}"
+                             ItemsSource="{Binding MealPlan.CurrentWeekDays}"
                              HorizontalContentAlignment="Stretch"
                              BorderThickness="0"
                              Background="Transparent">

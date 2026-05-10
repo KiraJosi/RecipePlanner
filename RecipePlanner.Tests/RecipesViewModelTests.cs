@@ -40,7 +40,7 @@ namespace RecipePlanner.Tests
         [Fact]
         public void SearchText_FiltersRecipesByTag()
         {
-            var recipes = new RecipePlanner { Id = 1, Name = "Bolognese" };
+            var recipes = new Recipe { Id = 1, Name = "Bolognese" };
             recipe.Tags.Add("italienisch");
 
             var vm = CreateVm([recipe]);
