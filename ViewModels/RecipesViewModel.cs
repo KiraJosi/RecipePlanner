@@ -178,7 +178,8 @@ namespace RecipePlanner.ViewModels
 
                 bool matchesSearch = string.IsNullOrWhiteSpace(_searchText)
                     || r.Name.Contains(_searchText, StringComparison.OrdinalIgnoreCase)
-                    || r.Tags.Any(t => t.Contains(_searchText, StringComparison.OrdinalIgnoreCase));
+                    || r.Tags.Any(t => t.Contains(_searchText, StringComparison.OrdinalIgnoreCase))
+                    || r.Ingredients.Any(i => i.Contains(_searchText, StringComparison.OrdinalIgnoreCase));)
 
                 bool matchesPantry = !_pantryFilterActive
                     || _pantry.PantryItems.Any(p => r.HasIngredient(p));

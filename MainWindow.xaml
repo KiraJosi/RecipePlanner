@@ -46,10 +46,29 @@
                         <TextBlock Text="Rezepte"
                                    Style="{StaticResource GroupHeaderTextStyle}"/>
                         </StackPanel>
-                        <TextBox Width=" 160"
-                                 HorizontalAlignment="Left"
-                                 Text="{Binding Recipes.SearchText, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="0,4,0,0"/>
+                        <Grid Width="160"
+                              HorizontalAlignment="Left"
+                              Margin="0,4,0,0">
+                            <TextBox Text="{Binding Recipes.SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="0"/>
+                            <TextBlock Text="🔍 Name, Zutaten, Tags …"
+                                       IsHitTestVisible="False"
+                                       Foreground="Gray"
+                                       FontSize="13"
+                                       Padding="7,0,0,0"
+                                       VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Recipes.SearchText}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
                     </StackPanel>
                 </GroupBox.Header>
                 <ListBox ItemsSource="{Binding Recipes.RecipesView}" 

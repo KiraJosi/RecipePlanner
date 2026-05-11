@@ -74,5 +74,21 @@ namespace RecipePlanner.Tests
             var vm = CreateVm();
             Assert.False(vm.DeleteRecipeCommand.CanExecute(null));
         }
+
+        [Fact]
+        public void SearchText_FiltersRecipesByIngredient()
+        {
+            var recipe = new Recipe { Id = 1, Name = "Pasta" };
+            recipe.Ingredients.Add("200g Mehl");
+            recipe.Ingredients.Add("3 Eier");
+
+            var vm = CreateVm([recipe]);
+
+            vm.SearchText = "mehl";
+
+            var visible = vm.RecipesView.Cast<Recipe>().ToList();
+            Assert.Single(visible);
+            Assert.Equal("Pasta", visible[0].Name);
+        }
     }
 }
