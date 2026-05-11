@@ -49,5 +49,13 @@ namespace RecipePlanner.Tests
             Assert.False(vm.DeletePantryCommand.CanExecute(null));
         }
 
+        [Fact]
+        public void DeletePantryItem_RemovesSingleItem()
+        {
+            var vm = CreateVm(["Mehl", "Zucker", "Salz"]);
+            vm.DeletePantryItemCommand.Execute("Zucker");
+            Assert.Equal(2, vm.PantryItems.Count);
+            Assert.DoesNotContain("Zucker", vm.PantryItems);
+        }
     }
 }

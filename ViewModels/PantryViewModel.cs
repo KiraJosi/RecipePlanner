@@ -40,6 +40,7 @@ namespace RecipePlanner.ViewModels
         public ICommand SavePantryCommand { get; }
         public ICommand DeletePantryCommand { get; }
         public ICommand EditPantryCommand { get; }
+        public ICommand DeletePantryItemCommand { get; }
 
         public PantryViewModel(IPantryService pantryService, IDialogService dialogService)
         {
@@ -57,6 +58,7 @@ namespace RecipePlanner.ViewModels
             SavePantryCommand = new RelayCommand(SavePantry, CanSavePantry);
             DeletePantryCommand = new RelayCommand(DeletePantry, () => PantryItems.Any());
             EditPantryCommand = new RelayCommand(EditPantry);
+            DeletePantryItemCommand = new RelayCommand<string>(DeletePantryItem);
         }
         private bool CanSavePantry()
         {
@@ -126,5 +128,9 @@ namespace RecipePlanner.ViewModels
             timer.Start();
         }
 
+        private void DeletePantryItem(string item)
+        {
+            PantryItems.Remove(item);
+        }
     }
 }
