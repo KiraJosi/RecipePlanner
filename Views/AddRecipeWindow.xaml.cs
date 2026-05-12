@@ -216,7 +216,7 @@ namespace RecipePlanner.Views
                             : step.TryGetProperty("text", out var t) ? t.GetString() : null;
 
                         if (!string.IsNullOrEmpty(text))
-                            recipe.Steps.Add(WebUtility.HtmlEncode(text.Trim()));
+                            recipe.Steps.Add(WebUtility.HtmlDecode(text.Trim()));
                     }
                 else if (steps.ValueKind == JsonValueKind.String)
                 {
