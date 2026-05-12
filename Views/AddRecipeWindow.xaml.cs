@@ -222,7 +222,7 @@ namespace RecipePlanner.Views
                 {
                     var text = steps.GetString()?.Trim();
                     if (!string.IsNullOrEmpty(text))
-                        recipe.Steps.Add(text);
+                        recipe.Steps.Add(WebUtility.HtmlDecode(text));
                 }
             }
 
