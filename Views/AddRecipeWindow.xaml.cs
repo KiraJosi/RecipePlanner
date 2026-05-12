@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using RecipePlanner.Models;
+using System.Net;
 
 namespace RecipePlanner.Views
 {
@@ -195,14 +196,14 @@ namespace RecipePlanner.Views
             var recipe = new Recipe();
 
             if (el.TryGetProperty("name", out var name))
-                recipe.Name = name.GetString() ?? "";
+                recipe.Name = WebUtility.HtmlDecode(name.GetString() ?? "");
 
             if (el.TryGetProperty("recipeIngredient", out var ings))
                 foreach (var ing in ings.EnumerateArray())
                 {
                     var s = ing.GetString()?.Trim();
                     if (!string.IsNullOrEmpty(s))
-                        recipe.Ingredients.Add(s);
+                        recipe.Ingredients.Add(WebUtility.HtmlDecode(s));
                 }
 
             if (el.TryGetProperty("recipeInstructions", out var steps))
@@ -215,7 +216,7 @@ namespace RecipePlanner.Views
                             : step.TryGetProperty("text", out var t) ? t.GetString() : null;
 
                         if (!string.IsNullOrEmpty(text))
-                            recipe.Steps.Add(text.Trim());
+                            recipe.Steps.Add(WebUtility.HtmlEncode(text.Trim()));
                     }
                 else if (steps.ValueKind == JsonValueKind.String)
                 {
