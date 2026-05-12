@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RecipePlanner.Models;
 using RecipePlanner.Services.Data;
 
 namespace RecipePlanner.Services
@@ -16,9 +12,9 @@ namespace RecipePlanner.Services
             _repo = repo;
         }
 
-        public List<string> GetAll() => _repo.GetAll();
+        public List<PantryItem> GetAll() => _repo.GetAll();
 
-        public void Save(List<string> items) => _repo.Save(items);
+        public void Save(List<PantryItem> items) => _repo.Save(items);
         
     }
 }

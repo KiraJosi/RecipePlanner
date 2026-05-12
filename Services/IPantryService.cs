@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RecipePlanner.Models;
 
 namespace RecipePlanner.Services
 {
     public interface IPantryService
     {
-        List<string> GetAll();
-        void Save(List<string> items);
+        List<PantryItem> GetAll();
+        void Save(List<PantryItem> items);
     }
 }

@@ -101,6 +101,18 @@ namespace RecipePlanner.Services.Data
             {
 
             }
+
+            try
+            {
+                var migration = connection.CreateCommand();
+                migration.CommandText =
+                    "ALTER TABLE PantryItems ADD COLUMN Amount TEXT NOT NULL DEFAULT '';";
+                migration.ExecuteNonQuery();
+            }
+            catch (Microsoft.Data.Sqlite.SqliteException ex) when (ex.SqliteErrorCode == 1)
+            {
+
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ namespace RecipePlanner.Tests
         {
             _recipeService.Setup(s => s.GetAll()).Returns(recipes ?? []);
             _pantryService.Setup(s => s.GetAll()).Returns([]);
-            _pantryService.Setup(s => s.Save(It.IsAny<List<string>>()));
+            _pantryService.Setup(s => s.Save(It.IsAny<List<PantryItem>>()));
 
             var pantryVm = new PantryViewModel(_pantryService.Object, _dialogService.Object);
             return new RecipesViewModel(_recipeService.Object, _dialogService.Object, pantryVm);

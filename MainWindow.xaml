@@ -118,11 +118,13 @@
                     </Grid.RowDefinitions>
 
                     <!-- Eingabe -->
-                    <StackPanel Grid.Row="0" 
-                                Grid.Column="0">
-                        <TextBlock Text="Zutaten eingeben (kommagetrennt):"
+                    <StackPanel Grid.Row="0" Grid.Column="0">
+                        <TextBlock Text="Menge (optional):"
                                    Style="{StaticResource LabelStyle}"/>
-                        <TextBox Text="{Binding Pantry.NewPantryText, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox Text="{Binding Pantry.NewPantryAmount, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="Zutat(en) (kommagetrennt):"
+                                   Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding Pantry.NewPantryName, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
 
                     <!-- Vorratsliste -->
@@ -138,7 +140,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock Grid.Column="0"
-                                               Text="{Binding}" 
+                                               Text="{Binding DisplayText}" 
                                                FontSize="13"
                                                VerticalAlignment="Center"/>
 

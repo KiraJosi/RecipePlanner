@@ -3,9 +3,9 @@ using RecipePlanner.Models;
 using RecipePlanner.Services;
 using RecipePlanner.ViewModels.Base;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Data;
+using System.Windows.Automation;
 using System.Windows.Input;
 
 namespace RecipePlanner.ViewModels
@@ -15,19 +15,26 @@ namespace RecipePlanner.ViewModels
         private readonly IPantryService _pantryService;
         private readonly IDialogService _dialogService;
 
-        public ObservableCollection<string> PantryItems { get; }
+        public ObservableCollection<PantryItem> PantryItems { get; }
 
-        private string? _newPantryText;
-        public string? NewPantryText
+        private string? _newPantryName;
+        public string? NewPantryName
         {
-            get => _newPantryText;
+            get => _newPantryName;
             set
             {
-                _newPantryText = value;
+                _newPantryName = value;
                 OnPropertyChanged();
 
                 (SavePantryCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
+        }
+
+        private string? _newPantryAmount;
+        public string? NewPantryAmount
+        {
+            get => _newPantryAmount;
+            set { _newPantryAmount = value; OnPropertyChanged(); }
         }
 
         private string _statusMessage = "";
@@ -47,7 +54,7 @@ namespace RecipePlanner.ViewModels
             _pantryService = pantryService;
             _dialogService = dialogService;
 
-            PantryItems = new ObservableCollection<string>(_pantryService.GetAll());
+            PantryItems = new ObservableCollection<PantryItem>(_pantryService.GetAll());
 
             PantryItems.CollectionChanged += (_, __) =>
             {
@@ -58,25 +65,34 @@ namespace RecipePlanner.ViewModels
             SavePantryCommand = new RelayCommand(SavePantry, CanSavePantry);
             DeletePantryCommand = new RelayCommand(DeletePantry, () => PantryItems.Any());
             EditPantryCommand = new RelayCommand(EditPantry);
-            DeletePantryItemCommand = new RelayCommand<string>(DeletePantryItem);
+            DeletePantryItemCommand = new RelayCommand<PantryItem>(DeletePantryItem);
         }
-        private bool CanSavePantry()
-        {
-            return !string.IsNullOrWhiteSpace(NewPantryText);
-        }
+        private bool CanSavePantry() => !string.IsNullOrWhiteSpace(NewPantryName);
         private void SavePantry()
         {
-            if (string.IsNullOrWhiteSpace(NewPantryText)) return;
+            if (string.IsNullOrWhiteSpace(NewPantryName)) return;
 
-            var items = NewPantryText
-                .Split(',')
-                .Select(i => i.Trim())
-                .Where(i => !string.IsNullOrWhiteSpace(i));
+            if (!string.IsNullOrWhiteSpace(NewPantryAmount))
+            {
+                PantryItems.Add(new PantryItem()
+                {
+                    Name = NewPantryName.Trim(),
+                    Amount = NewPantryAmount.Trim()
+                });
+            }
+            else
+            {
+                var names = NewPantryName
+                    .Split(',')
+                    .Select(n => n.Trim())
+                    .Where(n => !string.IsNullOrWhiteSpace(n));
 
-            foreach (var item in items)
-                PantryItems.Add(item);
+                foreach (var name in names)
+                    PantryItems.Add(new PantryItem {  Name = name });
+            }
 
-            NewPantryText = string.Empty;
+            NewPantryName = string.Empty;
+            _newPantryAmount = string.Empty;
             ShowStatus("✓ Vorrat gespeichert");
         }
         private void DeletePantry()
@@ -95,32 +111,47 @@ namespace RecipePlanner.ViewModels
         }
         private void EditPantry()
         {
-            if (!PantryItems.Any())
-                return;
+            if (!PantryItems.Any()) return;
 
-            var editText = string.Join(", ", PantryItems);
+            var editText = string.Join(", ", PantryItems.Select(p => p.DisplayText));
 
             if (_dialogService.ShowEditPantryDialog(editText, out string? updatedText) == true
                 && updatedText != null)
             {
                 PantryItems.Clear();
 
-                var items = updatedText
+                var parts = updatedText
                     .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(i => i.Trim())
-                    .Where(i => !string.IsNullOrWhiteSpace(i));
+                    .Select(p => p.Trim())
+                    .Where(p => !string.IsNullOrWhiteSpace(p));
 
-                foreach (var item in items)
-                    PantryItems.Add(item);
+                foreach (var part in parts)
+                    PantryItems.Add(ParsePantryItem(part));
 
-                NewPantryText = string.Empty;
+                NewPantryName = string.Empty;
+                NewPantryAmount = string.Empty;
             }
+        }
+
+        private static PantryItem ParsePantryItem(string text)
+        {
+            var match = Regex.Match(text.Trim(),
+                @"^(\d[\d.,]*\s*[a-zA-Z]*)\s+(.*)$");
+
+            if (match.Success)
+                return new PantryItem
+                {
+                    Amount = match.Groups[1].Value.Trim(),
+                    Name = match.Groups[2].Value.Trim()
+                };
+
+            return new PantryItem { Name = text.Trim() };
         }
 
         private void ShowStatus(string message)
         {
             StatusMessage = message;
-            var timer = new System.Windows.Threading.DispatcherTimer()
+            var timer = new System.Windows.Threading.DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(2)
             };
@@ -128,7 +159,7 @@ namespace RecipePlanner.ViewModels
             timer.Start();
         }
 
-        private void DeletePantryItem(string item)
+        private void DeletePantryItem(PantryItem item)
         {
             PantryItems.Remove(item);
         }

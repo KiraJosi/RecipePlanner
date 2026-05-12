@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using RecipePlanner.ViewModels.Base;
 
 namespace RecipePlanner.Models
@@ -21,13 +16,13 @@ namespace RecipePlanner.Models
         = new ObservableCollection<string>();
         public string Source { get; set; } = "";
 
-        public bool HasIngredient(string ingredient)
+        public bool HasIngredient(string ingredientName)
         {
-            if (string.IsNullOrWhiteSpace(ingredient)) 
+            if (string.IsNullOrWhiteSpace(ingredientName)) 
                 return false;
 
             return Ingredients.Any(i =>
-                string.Equals(i, ingredient, StringComparison.OrdinalIgnoreCase));
+                i.Contains(ingredientName, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

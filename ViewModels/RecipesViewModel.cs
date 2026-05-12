@@ -182,7 +182,7 @@ namespace RecipePlanner.ViewModels
                     || r.Ingredients.Any(i => i.Contains(_searchText, StringComparison.OrdinalIgnoreCase));
 
                 bool matchesPantry = !_pantryFilterActive
-                    || _pantry.PantryItems.Any(p => r.HasIngredient(p));
+                    || _pantry.PantryItems.Any(p => r.HasIngredient(p.Name));
 
                 return matchesSearch && matchesPantry;
             };
@@ -199,6 +199,6 @@ namespace RecipePlanner.ViewModels
             timer.Start();
         }
 
-        public IEnumerable<string> GetPantryItems() => _pantry.PantryItems;
+        public IEnumerable<string> GetPantryItems() => _pantry.PantryItems.Select(p => p.Name);
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RecipePlanner.Models;
+﻿using RecipePlanner.Models;
 
 namespace RecipePlanner.Services.Data
 {
@@ -16,19 +11,24 @@ namespace RecipePlanner.Services.Data
             _factory = factory;
         }
 
-        public List<string> GetAll()
+        public List<PantryItem> GetAll()
         {
-            var items = new List<string>();
+            var items = new List<PantryItem>();
             using var connection = _factory.CreateConnection();
             var cmd = connection.CreateCommand();
-            cmd.CommandText = "SELECT Name FROM PantryItems";
+            cmd.CommandText = "SELECT ID, Name, Amount FROM PantryItems";
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
-                items.Add(reader.GetString(0));
+                items.Add(new PantryItem
+                {
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    Amount = reader.IsDBNull(2) ? "" : reader.GetString(2)
+                });
             return items;
         }
 
-        public void Save(List<string> items)
+        public void Save(List<PantryItem> items)
         {
             using var connection = _factory.CreateConnection();
             using var transaction = connection.BeginTransaction();
@@ -42,8 +42,9 @@ namespace RecipePlanner.Services.Data
             {
                 var insert = connection.CreateCommand();
                 insert.Transaction = transaction;
-                insert.CommandText = "INSERT INTO PantryItems (Name) VALUES ($name)";
-                insert.Parameters.AddWithValue("$name", item);
+                insert.CommandText = "INSERT INTO PantryItems (Name, Amount) VALUES ($name, $amount)";
+                insert.Parameters.AddWithValue("$name", item.Name);
+                insert.Parameters.AddWithValue("$amount", item.Amount ?? "");
                 insert.ExecuteNonQuery();
             }
 

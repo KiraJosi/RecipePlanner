@@ -211,7 +211,7 @@ namespace RecipePlanner.ViewModels
 
             var missing = allIngredients
                 .Where(i => !pantryItems.Any(p =>
-                    string.Equals(p, i, StringComparison.OrdinalIgnoreCase)))
+                    i.Contains(p, StringComparison.OrdinalIgnoreCase)))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .OrderBy(i => i)
                 .ToList();
