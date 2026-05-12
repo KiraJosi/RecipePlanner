@@ -92,7 +92,7 @@ namespace RecipePlanner.ViewModels
             }
 
             NewPantryName = string.Empty;
-            _newPantryAmount = string.Empty;
+            NewPantryAmount = string.Empty;
             ShowStatus("✓ Vorrat gespeichert");
         }
         private void DeletePantry()
