@@ -232,7 +232,7 @@
                     <ScrollViewer Grid.Row="0" 
                                   VerticalScrollBarVisibility="Auto" 
                                   HorizontalScrollBarVisibility="Disabled"
-                                  CanContentScroll="True"
+                                  CanContentScroll="False"
                                   Margin="{StaticResource SpacingBottomSmall}">
                         <StackPanel>
                             <TextBlock Text="{Binding Recipes.SelectedRecipe.Name}" 
@@ -407,11 +407,14 @@
                         </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel AllowDrop="True"
-                                            Drop="Day_Drop"
-                                            Margin="2">
-                                    <StackPanel.Style>
-                                        <Style TargetType="StackPanel">
+                                <Border AllowDrop="True"
+                                        Drop="Day_Drop"
+                                        Margin="2"
+                                        MinHeight="60"
+                                        VerticalAlignment="Stretch">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="Transparent"/>
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Date, 
                                                              Converter={StaticResource IsTodayConverter}}" 
@@ -421,28 +424,31 @@
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
-                                    </StackPanel.Style>
-                                    
-                                    <TextBlock Text="{Binding Date, StringFormat=ddd dd.MM.}"
-                                               FontWeight="Bold"
-                                               Margin="0,0,0,5"/>
-                                    <ListBox ItemsSource="{Binding Meals}"
-                                             SelectedItem="{Binding DataContext.MealPlan.SelectedPlannedMeal,
-                                                            RelativeSource={RelativeSource AncestorType=Window}}"
-                                             BorderThickness="0"
-                                             Background="Transparent">
-                                        <ListBox.ItemContainerStyle>
-                                            <Style TargetType="ListBoxItem">
-                                                <Setter Property="Padding" Value="2"/>
-                                            </Style>
-                                        </ListBox.ItemContainerStyle>
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Recipe.Name}"/>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                </StackPanel>
+                                    </Border.Style>
+
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Date, StringFormat=ddd dd.MM.}"
+                                                   FontWeight="Bold"
+                                                   Margin="0,0,0,5"/>
+                                        <ListBox ItemsSource="{Binding Meals}"
+                                                 SelectedItem="{Binding DataContext.MealPlan.SelectedPlannedMeal,
+                                                                RelativeSource={RelativeSource AncestorType=Window}}"
+                                                 BorderThickness="0"
+                                                 Background="Transparent">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="ListBoxItem">
+                                                    <Setter Property="Padding" Value="2"/>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Recipe.Name}"
+                                                               TextWrapping="Wrap"/>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </StackPanel>
+                                </Border>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

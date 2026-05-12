@@ -45,7 +45,7 @@
 
                 <!-- Zutaten -->
                 <StackPanel Grid.Row="2">
-                    <TextBlock Text="Zutaten:" 
+                    <TextBlock Text="Zutaten (eine pro Zeile):" 
                                Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="IngredientsTextBox"
                              AcceptsReturn="True"
@@ -54,7 +54,7 @@
 
                 <!-- Schritte -->
                 <StackPanel Grid.Row="3">
-                    <TextBlock Text="Schritte:" 
+                    <TextBlock Text="Schritte (einer pro Zeile):" 
                                Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="StepsTextBox"
                              AcceptsReturn="True"

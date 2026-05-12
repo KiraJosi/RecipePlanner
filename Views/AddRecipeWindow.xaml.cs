@@ -28,7 +28,7 @@ namespace RecipePlanner.Views
             _recipeToEdit = recipeToEdit;
 
             NameTextBox.Text = recipeToEdit.Name;
-            IngredientsTextBox.Text = string.Join(", ", recipeToEdit.Ingredients);
+            IngredientsTextBox.Text = string.Join(Environment.NewLine, recipeToEdit.Ingredients);
             StepsTextBox.Text = string.Join(Environment.NewLine, recipeToEdit.Steps);
             SourceTextBox.Text = recipeToEdit.Source;
             ServingsTextBox.Text = recipeToEdit.Servings.ToString();
@@ -45,8 +45,9 @@ namespace RecipePlanner.Views
 
             var ingredients = new ObservableCollection<string>(
                 IngredientsTextBox.Text
-                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(i => i.Trim())
+                .Where(i => !string.IsNullOrWhiteSpace(i))
                 );
                 
 
@@ -123,7 +124,7 @@ namespace RecipePlanner.Views
                 if (!string.IsNullOrEmpty(imported.Name))
                     NameTextBox.Text = imported.Name;
                 if (imported.Ingredients.Any())
-                    IngredientsTextBox.Text = string.Join(", ", imported.Ingredients);
+                    IngredientsTextBox.Text = string.Join(Environment.NewLine, imported.Ingredients);
                 if (imported.Steps.Any())
                     StepsTextBox.Text = string.Join(Environment.NewLine, imported.Steps);
                 if (!string.IsNullOrEmpty(imported.Source))
