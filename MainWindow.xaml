@@ -11,6 +11,8 @@
 
     <Window.Resources>
         <helpers:IsTodayConverter x:Key="IsTodayConverter"/>
+        <helpers:IsUrlConverter x:Key="IsUrlConverter"/>
+        <helpers:IsNotUrlConverter x:Key="IsNotUrlConverter"/>
     </Window.Resources>
 
     <Grid Margin="{StaticResource SpacingMedium}">
@@ -293,9 +295,20 @@
                             </ItemsControl>
 
                             <!-- Quelle -->
+                            <TextBlock Margin="{StaticResource SpacingBottomSmall}"
+                                       Visibility="{Binding Recipes.SelectedRecipe.Source,
+                                                    Converter={StaticResource IsUrlConverter}}">
+                                <Hyperlink NavigateUri="{Binding Recipes.SelectedRecipe.Source}"
+                                           RequestNavigate="Hyperlink_RequestNavigate">
+                                    <Run Text="{Binding Recipes.SelectedRecipe.Source}"/>
+                                </Hyperlink>
+                            </TextBlock>
+                            
                             <TextBlock Text="{Binding Recipes.SelectedRecipe.Source}" 
                                        FontStyle="Italic" 
-                                       Margin="{StaticResource SpacingTopSmall}"/>
+                                       Margin="{StaticResource SpacingTopSmall}"
+                                       Visibility="{Binding Recipes.SelectedRecipe.Source,
+                                                    Converter={StaticResource IsNotUrlConverter}}"/>
                             
                             <!-- Tags -->
                             <ItemsControl ItemsSource="{Binding Recipes.SelectedRecipe.Tags}"

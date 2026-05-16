@@ -1,15 +1,6 @@
-﻿using System.Text;
-using System.Text.Json;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.IO;
 using RecipePlanner.Models;
 using RecipePlanner.ViewModels;
 
@@ -60,6 +51,21 @@ namespace RecipePlanner
                 if (DataContext is MainViewModel vm && weekDay != null)
                     vm.MealPlan.PlanRecipeFromDrop(recipe, weekDay.Date);
             }
+        }
+
+        private void Hyperlink_RequestNavigate(object sender,
+            System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(
+                    new System.Diagnostics.ProcessStartInfo(e.Uri.AbsoluteUri)
+                    {
+                        UseShellExecute = true
+                    });
+            }
+            catch { }
+            e.Handled = true;
         }
     }
 }
