@@ -33,7 +33,9 @@ namespace RecipePlanner.Services.Data
                 DateTime date;
                 try
                 {
-                    date = DateTime.ParseExact(reader.GetString(2), "yyyy-MM-dd", null);
+                    date = DateTime.SpecifyKind(
+                        DateTime.ParseExact(reader.GetString(2), "yyyy-MM-dd", null),
+                        DateTimeKind.Local);
                 }
                 catch (FormatException)
                 {
@@ -74,7 +76,7 @@ namespace RecipePlanner.Services.Data
                     INSERT INTO PlannedMeals (RecipeID, Date)
                     VALUES ($rid, $date);";
                 insert.Parameters.AddWithValue("$rid", meal.Recipe.Id);
-                insert.Parameters.AddWithValue("$date", meal.Date.ToString("yyyy-MM-dd"));
+                insert.Parameters.AddWithValue("$date", meal.Date.Date.ToString("yyyy-MM-dd"));
                 insert.ExecuteNonQuery();
             }
 

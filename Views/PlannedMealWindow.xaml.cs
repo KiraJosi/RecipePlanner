@@ -60,7 +60,7 @@ namespace RecipePlanner.Views
                 return;
             }
 
-            _meal.Date = DatePicker.SelectedDate.Value;
+            _meal.Date = DateTime.SpecifyKind(DatePicker.SelectedDate.Value.Date, DateTimeKind.Local);
             _meal.Recipe = selectedRecipe;
 
             DialogResult = true;
