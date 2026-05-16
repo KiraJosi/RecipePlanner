@@ -18,7 +18,7 @@ namespace RecipePlanner.Helpers
             return Visibility.Collapsed;
         }
 
-        public object ConvertBack(object value, object targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => throw new NotImplementedException();
     }
 }
