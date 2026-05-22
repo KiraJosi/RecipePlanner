@@ -121,12 +121,13 @@
 
                     <!-- Eingabe -->
                     <StackPanel Grid.Row="0" Grid.Column="0">
-                        <TextBlock Text="Menge (optional):"
+                        <TextBlock Text='Vorräte (eine pro Zeile, z.B. 500g Mehl"):'
                                    Style="{StaticResource LabelStyle}"/>
-                        <TextBox Text="{Binding Pantry.NewPantryAmount, UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock Text="Zutat(en) (kommagetrennt):"
-                                   Style="{StaticResource LabelStyle}"/>
-                        <TextBox Text="{Binding Pantry.NewPantryName, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Text="{Binding Pantry.NewPantryText, UpdateSourceTrigger=PropertyChanged}" 
+                                 AcceptsReturn="True" 
+                                 TextWrapping="Wrap"
+                                 MinHeight="60"
+                                 VerticalScrollBarVisibility="Auto"/>
                     </StackPanel>
 
                     <!-- Vorratsliste -->

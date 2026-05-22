@@ -11,10 +11,10 @@ namespace RecipePlanner.Tests
         private readonly Mock<IDialogService> _dialogService = new();
         private readonly Mock<IPantryService> _pantryService = new();
 
-        private RecipesViewModel CreateVm(List<Recipe>? recipes = null)
+        private RecipesViewModel CreateVm(List<Recipe>? recipes = null, List<PantryItem>? pantryItems = null)
         {
             _recipeService.Setup(s => s.GetAll()).Returns(recipes ?? []);
-            _pantryService.Setup(s => s.GetAll()).Returns([]);
+            _pantryService.Setup(s => s.GetAll()).Returns(pantryItems ?? []);
             _pantryService.Setup(s => s.Save(It.IsAny<List<PantryItem>>()));
 
             var pantryVm = new PantryViewModel(_pantryService.Object, _dialogService.Object);
@@ -85,6 +85,32 @@ namespace RecipePlanner.Tests
             var vm = CreateVm([recipe]);
 
             vm.SearchText = "mehl";
+
+            var visible = vm.RecipesView.Cast<Recipe>().ToList();
+            Assert.Single(visible);
+            Assert.Equal("Pasta", visible[0].Name);
+        }
+
+        [Fact]
+        public void FindRecipes_ShowsOnlyCompletelyMakeableRecipes()
+        {
+            var completeRecipe = new Recipe { Id = 1, Name = "Pasta" };
+            completeRecipe.Ingredients.Add("200g Mehl");
+            completeRecipe.Ingredients.Add("3 Eier");
+
+            var incompleteRecipe = new Recipe { Id = 2, Name = "Pizza" };
+            incompleteRecipe.Ingredients.Add("Mehl");
+            incompleteRecipe.Ingredients.Add("Hefe");
+
+            var pantry = new List<PantryItem>()
+            {
+                new() { Name = "Mehl" },
+                new() { Name = "Eier" }
+            };
+
+            var vm = CreateVm([completeRecipe, incompleteRecipe], pantry);
+
+            vm.FindRecipesCommand.Execute(null);
 
             var visible = vm.RecipesView.Cast<Recipe>().ToList();
             Assert.Single(visible);

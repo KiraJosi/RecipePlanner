@@ -17,24 +17,16 @@ namespace RecipePlanner.ViewModels
 
         public ObservableCollection<PantryItem> PantryItems { get; }
 
-        private string? _newPantryName;
-        public string? NewPantryName
+        private string? _newPantryText;
+        public string? NewPantryText
         {
-            get => _newPantryName;
+            get => _newPantryText;
             set
             {
-                _newPantryName = value;
+                _newPantryText = value;
                 OnPropertyChanged();
-
                 (SavePantryCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
-        }
-
-        private string? _newPantryAmount;
-        public string? NewPantryAmount
-        {
-            get => _newPantryAmount;
-            set { _newPantryAmount = value; OnPropertyChanged(); }
         }
 
         private string _statusMessage = "";
@@ -67,32 +59,20 @@ namespace RecipePlanner.ViewModels
             EditPantryCommand = new RelayCommand(EditPantry);
             DeletePantryItemCommand = new RelayCommand<PantryItem>(DeletePantryItem);
         }
-        private bool CanSavePantry() => !string.IsNullOrWhiteSpace(NewPantryName);
+        private bool CanSavePantry() => !string.IsNullOrWhiteSpace(NewPantryText);
         private void SavePantry()
         {
-            if (string.IsNullOrWhiteSpace(NewPantryName)) return;
+            if (string.IsNullOrWhiteSpace(NewPantryText)) return;
 
-            if (!string.IsNullOrWhiteSpace(NewPantryAmount))
-            {
-                PantryItems.Add(new PantryItem()
-                {
-                    Name = NewPantryName.Trim(),
-                    Amount = NewPantryAmount.Trim()
-                });
-            }
-            else
-            {
-                var names = NewPantryName
-                    .Split(',')
-                    .Select(n => n.Trim())
-                    .Where(n => !string.IsNullOrWhiteSpace(n));
+            var lines = NewPantryText
+                .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(l => l.Trim())
+                .Where(l => !string.IsNullOrWhiteSpace(l));
 
-                foreach (var name in names)
-                    PantryItems.Add(new PantryItem {  Name = name });
-            }
+            foreach (var line in lines) 
+                PantryItems.Add(ParsePantryItem(line));
 
-            NewPantryName = string.Empty;
-            NewPantryAmount = string.Empty;
+            NewPantryText = string.Empty;
             ShowStatus("✓ Vorrat gespeichert");
         }
         private void DeletePantry()
@@ -128,8 +108,7 @@ namespace RecipePlanner.ViewModels
                 foreach (var part in parts)
                     PantryItems.Add(ParsePantryItem(part));
 
-                NewPantryName = string.Empty;
-                NewPantryAmount = string.Empty;
+                NewPantryText = string.Empty;
             }
         }
 

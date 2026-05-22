@@ -182,7 +182,10 @@ namespace RecipePlanner.ViewModels
                     || r.Ingredients.Any(i => i.Contains(_searchText, StringComparison.OrdinalIgnoreCase));
 
                 bool matchesPantry = !_pantryFilterActive
-                    || _pantry.PantryItems.Any(p => r.HasIngredient(p.Name));
+                    || (r.Ingredients.Any() && r.Ingredients.All(i =>
+                        _pantry.PantryItems.Any(p =>
+                            i.Contains(p.Name, StringComparison.OrdinalIgnoreCase))));
+                        
 
                 return matchesSearch && matchesPantry;
             };

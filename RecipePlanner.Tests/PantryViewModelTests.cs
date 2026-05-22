@@ -21,7 +21,7 @@ namespace RecipePlanner.Tests
         public void SavePantry_AddsItems_WhenTextIsValid()
         {
             var vm = CreateVm();
-            vm.NewPantryName = "Mehl, Zucker, Salz";
+            vm.NewPantryText = "Mehl\nZucker\nSalz";
             vm.SavePantryCommand.Execute(null);
             Assert.Equal(3, vm.PantryItems.Count);
         }
@@ -30,7 +30,7 @@ namespace RecipePlanner.Tests
         public void SavePantry_CannotExecute_WhenTextIsEmpty()
         {
             var vm = CreateVm();
-            vm.NewPantryName = "";
+            vm.NewPantryText = "";
             Assert.False(vm.SavePantryCommand.CanExecute(null));
         }
 
@@ -38,9 +38,9 @@ namespace RecipePlanner.Tests
         public void SavePantry_ClearsInputField_AfterSaving()
         {
             var vm = CreateVm();
-            vm.NewPantryName = "Mehl";
+            vm.NewPantryText = "Mehl";
             vm.SavePantryCommand.Execute(null);
-            Assert.True(string.IsNullOrEmpty(vm.NewPantryName));
+            Assert.True(string.IsNullOrEmpty(vm.NewPantryText));
         }
 
         [Fact]
@@ -69,8 +69,7 @@ namespace RecipePlanner.Tests
         public void SavePantry_WithAmountAndName_AddsOneItemWithAmount()
         {
             var vm = CreateVm();
-            vm.NewPantryAmount = "500g";
-            vm.NewPantryName = "Mehl";
+            vm.NewPantryText = "500g Mehl";
             vm.SavePantryCommand.Execute(null);
             Assert.Single(vm.PantryItems);
             Assert.Equal("500g", vm.PantryItems[0].Amount);
