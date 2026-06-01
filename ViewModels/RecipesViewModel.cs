@@ -15,7 +15,12 @@ namespace RecipePlanner.ViewModels
         private readonly IRecipeService _recipeService;
         private readonly IDialogService _dialogService;
         private readonly PantryViewModel _pantry;
+
         private bool _pantryFilterActive = false;
+
+        private readonly ObservableCollection<string> _activeFilters = new();
+        public ObservableCollection<string> ActiveFilters => _activeFilters;
+
         public ObservableCollection<Recipe> Recipes { get; }
 
         private Recipe? _selectedRecipe;
@@ -43,6 +48,7 @@ namespace RecipePlanner.ViewModels
                 _searchText = value;
                 OnPropertyChanged();
                 ApplyFilter();
+                (AddFilterCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -90,6 +96,8 @@ namespace RecipePlanner.ViewModels
         public ICommand FindRecipesCommand { get; }
         public ICommand IncrementServingsCommand { get; }
         public ICommand DecrementServingsCommand { get; }
+        public ICommand AddFilterCommand { get; }
+        public ICommand RemoveFilterCommand { get; }
         public ICollectionView RecipesView { get; }
 
         public RecipesViewModel(IRecipeService recipeService, IDialogService dialogService, PantryViewModel pantry)
@@ -108,6 +116,8 @@ namespace RecipePlanner.ViewModels
             ShowAllRecipesCommand = new RelayCommand(ShowAllRecipes);
             IncrementServingsCommand = new RelayCommand(() => CurrentServings++);
             DecrementServingsCommand = new RelayCommand(() => CurrentServings--);
+            AddFilterCommand = new RelayCommand(AddFilter, () => !string.IsNullOrWhiteSpace(_searchText));
+            RemoveFilterCommand = new RelayCommand<string>(RemoveFilter);
 
             _pantry.PantryItems.CollectionChanged += (_, __) =>
             {
@@ -167,7 +177,8 @@ namespace RecipePlanner.ViewModels
         private void ShowAllRecipes()
         {
             _pantryFilterActive = false;
-            ApplyFilter();
+            _activeFilters.Clear();
+            SearchText = "";
         }
         private void ApplyFilter()
         {
@@ -181,13 +192,18 @@ namespace RecipePlanner.ViewModels
                     || r.Tags.Any(t => t.Contains(_searchText, StringComparison.OrdinalIgnoreCase))
                     || r.Ingredients.Any(i => i.Contains(_searchText, StringComparison.OrdinalIgnoreCase));
 
+                bool matchesFilters = _activeFilters.All(filter =>
+                    r.Name.Contains(filter, StringComparison.OrdinalIgnoreCase)
+                    || r.Tags.Any(t => t.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                    || r.Ingredients.Any(i => i.Contains(filter, StringComparison.OrdinalIgnoreCase)));
+
                 bool matchesPantry = !_pantryFilterActive
                     || (r.Ingredients.Any() && r.Ingredients.All(i =>
                         _pantry.PantryItems.Any(p =>
                             i.Contains(p.Name, StringComparison.OrdinalIgnoreCase))));
                         
 
-                return matchesSearch && matchesPantry;
+                return matchesSearch && matchesFilters && matchesPantry;
             };
         }
 
@@ -200,6 +216,22 @@ namespace RecipePlanner.ViewModels
             };
             timer.Tick += (_, __) => { StatusMessage = ""; timer.Stop(); };
             timer.Start();
+        }
+
+        private void AddFilter()
+        {
+            if (string.IsNullOrWhiteSpace(SearchText)) return;
+
+            if (!_activeFilters.Any(f => f.Equals(SearchText.Trim(), StringComparison.OrdinalIgnoreCase)))
+                _activeFilters.Add(SearchText.Trim());
+
+            SearchText = "";
+        }
+
+        private void RemoveFilter(string filter)
+        {
+            _activeFilters.Remove(filter);
+            ApplyFilter();
         }
 
         public IEnumerable<string> GetPantryItems() => _pantry.PantryItems.Select(p => p.Name);

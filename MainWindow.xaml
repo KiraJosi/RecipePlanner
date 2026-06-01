@@ -52,7 +52,12 @@
                               HorizontalAlignment="Left"
                               Margin="0,4,0,0">
                             <TextBox Text="{Binding Recipes.SearchText, UpdateSourceTrigger=PropertyChanged}"
-                                     Margin="0"/>
+                                     Margin="0"
+                                     ToolTip="Tippe und drücke Enter, um einen Filter hinzuzufügen">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Return" Command="{Binding Recipes.AddFilterCommand}"/>
+                                </TextBox.InputBindings>
+                            </TextBox>
                             <TextBlock Text="🔍 Name, Zutaten, Tags …"
                                        IsHitTestVisible="False"
                                        Foreground="Gray"
@@ -71,6 +76,42 @@
                                 </TextBlock.Style>
                             </TextBlock>
                         </Grid>
+                        <ItemsControl ItemsSource="{Binding Recipes.ActiveFilters}"
+                                      Margin="0,4,0,0"
+                                      MaxWidth="160"
+                                      HorizontalAlignment="Left">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{StaticResource PrimaryBrush}"
+                                            CornerRadius="4"
+                                            Padding="5,2"
+                                            Margin="0,0,3,3">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding}"
+                                                       Foreground="White"
+                                                       FontSize="11"
+                                                       VerticalAlignment="Center"/>
+                                            <Button Content="✕"
+                                                    Command="{Binding DataContext.Recipes.RemoveFilterCommand,
+                                                              RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Foreground="White"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    FontSize="9"
+                                                    Padding="3,0,0,0"
+                                                    Margin="3,0,0,0"
+                                                    Cursor="Hand"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
                 </GroupBox.Header>
                 <ListBox ItemsSource="{Binding Recipes.RecipesView}" 

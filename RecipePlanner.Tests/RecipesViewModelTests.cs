@@ -116,5 +116,44 @@ namespace RecipePlanner.Tests
             Assert.Single(visible);
             Assert.Equal("Pasta", visible[0].Name);
         }
+
+        [Fact]
+        public void AddFilter_AddsChipAndFiltersRecipes()
+        {
+            var recipes = new List<Recipe>()
+            {
+                new() { Id = 1, Name = "Pasta" },
+                new() { Id = 2, Name = "Pizza" }
+            };
+            var vm = CreateVm(recipes);
+
+            vm.SearchText = "pasta";
+            vm.AddFilterCommand.Execute(null);
+
+            Assert.Empty(vm.SearchText);
+            Assert.Single(vm.ActiveFilters);
+            var visible = vm.RecipesView.Cast<Recipe>().ToList();
+            Assert.Single(visible);
+            Assert.Equal("Pasta", visible[0].Name);
+        }
+
+        [Fact]
+        public void RemoveFilter_RemoveschipAndShowsAllAgain()
+        {
+            var recipes = new List<Recipe>()
+            {
+                new() { Id = 1, Name = "Pasta" },
+                new() { Id = 2, Name = "Pizza" }
+            };
+            var vm = CreateVm(recipes);
+
+            vm.SearchText = "pasta";
+            vm.AddFilterCommand.Execute(null);
+            vm.RemoveFilterCommand.Execute("pasta");
+
+            Assert.Empty(vm.ActiveFilters);
+            var visible = vm.RecipesView.Cast<Recipe>().ToList();
+            Assert.Equal(2, visible.Count);
+        }
     }
 }
