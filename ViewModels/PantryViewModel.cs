@@ -93,7 +93,7 @@ namespace RecipePlanner.ViewModels
         {
             if (!PantryItems.Any()) return;
 
-            var editText = string.Join(", ", PantryItems.Select(p => p.DisplayText));
+            var editText = string.Join(Environment.NewLine, PantryItems.Select(p => p.DisplayText));
 
             if (_dialogService.ShowEditPantryDialog(editText, out string? updatedText) == true
                 && updatedText != null)
@@ -101,7 +101,7 @@ namespace RecipePlanner.ViewModels
                 PantryItems.Clear();
 
                 var parts = updatedText
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(p => p.Trim())
                     .Where(p => !string.IsNullOrWhiteSpace(p));
 

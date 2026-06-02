@@ -34,7 +34,8 @@ namespace RecipePlanner.Services.Data
                 try
                 {
                     date = DateTime.SpecifyKind(
-                        DateTime.ParseExact(reader.GetString(2), "yyyy-MM-dd", null),
+                        DateTime.ParseExact(reader.GetString(2), "yyyy-MM-dd",
+                            System.Globalization.CultureInfo.InvariantCulture).Date,
                         DateTimeKind.Local);
                 }
                 catch (FormatException)
