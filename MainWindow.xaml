@@ -434,7 +434,7 @@
                                 Command="{Binding MealPlan.PreviousWeekCommand}"/>
                         <TextBlock VerticalAlignment="Center" Margin="10,0"
                                    FontWeight="SemiBold"
-                                   Text="{Binding MealPlan.CurrentWeek[0], StringFormat=KW ab dd.MM.yyyy}"/>
+                                   Text="{Binding MealPlan.WeekLabel}"/>
                         <Button Content="▶" Width="30"
                                 Command="{Binding MealPlan.NextWeekCommand}"/>
 

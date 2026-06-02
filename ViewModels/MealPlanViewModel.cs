@@ -50,6 +50,13 @@ namespace RecipePlanner.ViewModels
 
         private DateTime _weekStart;
 
+        private string _weekLabel = "";
+        public string WeekLabel
+        {
+            get => _weekLabel;
+            private set {  _weekLabel = value; OnPropertyChanged(); }
+        }
+
         public ICommand DeletePlannedMealCommand { get; }
         public ICommand EditPlannedMealCommand { get; }
         public ICollectionView PlannedMealsView { get; }
@@ -117,6 +124,9 @@ namespace RecipePlanner.ViewModels
             CurrentWeek = Enumerable.Range(0, 7)
                 .Select(i => _weekStart.AddDays(i))
                 .ToList();
+
+            WeekLabel = $"KW ab {_weekStart:dd.MM.yyyy}";
+
             RefreshWeekDays();
         }
         private void RefreshWeekDays()
