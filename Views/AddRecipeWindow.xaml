@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Rezept"
-        Height="500"
-        Width="450"
+        Height="560"
+        Width="480"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize">
 
@@ -17,72 +17,196 @@
         <!-- Scrollbarer Inhalt -->
         <ScrollViewer Grid.Row="0" 
                       VerticalScrollBarVisibility="Auto">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>  <!-- URL Import -->
-                    <RowDefinition Height="Auto"/>  <!-- Name -->
-                    <RowDefinition Height="Auto"/>  <!-- Zutaten -->
-                    <RowDefinition Height="*"/>     <!-- Schritte -->
-                    <RowDefinition Height="Auto"/>  <!-- Quelle -->
-                    <RowDefinition Height="Auto"/>  <!-- Portionen -->
-                    <RowDefinition Height="Auto"/>  <!-- Tags -->
-                </Grid.RowDefinitions>
+            <StackPanel>
                 
                 <!-- URL Import -->
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,5">
-                    <Button x:Name="ImportFromUrlButton"
-                            Content="🌐 Aus URL importieren"
-                            Click="ImportFromUrlButton_Click"
-                            HorizontalAlignment="Left"/>
-                </StackPanel>
+                <Border BorderBrush="{StaticResource PrimaryBrush}"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Padding="10"
+                        Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="Rezept automatisch importieren"
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,0,4"/>
+                        <TextBlock Text="Füge eine URL einer Rezept-Website ein und die Felder werden automatisch ausgefüllt."
+                                   TextWrapping="Wrap"
+                                   Foreground="Gray"
+                                   FontSize="12"
+                                   Margin="0,0,0,8"/>
+                        <Button x:Name="ImportFromUrlButton"
+                                Content="🌐 Aus URL importieren"
+                                Click="ImportFromUrlButton_Click"
+                                HorizontalAlignment="Left"
+                                Margin="0"/>
+                    </StackPanel>
+                </Border>
 
                 <!-- Name -->
-                <StackPanel Grid.Row="1">
-                    <TextBlock Text="Name:" 
-                               Style="{StaticResource LabelStyle}"/>
+                <TextBlock Text="Rezeptname *"
+                           Style="{StaticResource LabelStyle}"/>
+                <Grid>
                     <TextBox x:Name="NameTextBox"/>
-                </StackPanel>
+                    <TextBlock Text="z. B. Spaghetti Carbonara"
+                               IsHitTestVisible="False"
+                               Foreground="Gray"
+                               FontSize="13"
+                               Padding="7,0,0,0"
+                               VerticalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=NameTextBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
 
                 <!-- Zutaten -->
-                <StackPanel Grid.Row="2">
-                    <TextBlock Text="Zutaten (eine pro Zeile):" 
-                               Style="{StaticResource LabelStyle}"/>
+                <TextBlock Text="Zutaten"
+                           Style="{StaticResource LabelStyle}"
+                           Margin="{StaticResource SpacingTopMedium}"/>
+                <TextBlock Text="Eine Zutat pro Zeile, z. B. »200g Mehl« oder »3 Eier»"
+                           Foreground="Gray"
+                           FontSize="12"
+                           Margin="0,0,0,4"/>
+                <Grid>
                     <TextBox x:Name="IngredientsTextBox"
                              AcceptsReturn="True"
-                             TextWrapping="Wrap"/>
-                </StackPanel>
+                             TextWrapping="Wrap"
+                             MinHeight="80"
+                             VerticalScrollBarVisibility="Auto"
+                             VerticalContentAlignment="Top"/>
+                    <TextBlock Text="200g Mehl&#x0a;3 Eier&#x0a;1 Prise Salz"
+                             IsHitTestVisible="False"
+                             Foreground="Gray"
+                             FontSize="12"
+                             Padding="7,6,0,0"
+                             VerticalAlignment="Top">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=IngredientsTextBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
 
                 <!-- Schritte -->
-                <StackPanel Grid.Row="3">
-                    <TextBlock Text="Schritte (einer pro Zeile):" 
-                               Style="{StaticResource LabelStyle}"/>
+                <TextBlock Text="Zubereitung"
+                           Style="{StaticResource LabelStyle}"
+                           Margin="{StaticResource SpacingTopMedium}"/>
+                <TextBlock Text="Einen Schritt pro Zeile"
+                           Foreground="Gray"
+                           FontSize="12"
+                           Margin="0,0,0,4"/>
+                <Grid>
                     <TextBox x:Name="StepsTextBox"
                              AcceptsReturn="True"
-                             TextWrapping="Wrap"/>
-                </StackPanel>
+                             TextWrapping="Wrap"
+                             MinHeight="80"
+                             VerticalScrollBarVisibility="Auto"
+                             VerticalContentAlignment="Top"/>
+                    <TextBlock Text="Wasser zum Kochen bringen&#x0a;Nudeln al dente kochen&#x0a;Soße anrührenz"
+                             IsHitTestVisible="False"
+                             Foreground="Gray"
+                             FontSize="12"
+                             Padding="7,6,0,0"
+                             VerticalAlignment="Top">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=StepsTextBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
 
-                <!-- Quelle -->
-                <StackPanel Grid.Row="4">
-                    <TextBlock Text="Quelle:" 
-                               Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="SourceTextBox"/>
-                </StackPanel>
-
-                <!-- Portionen -->
-                <StackPanel Grid.Row="5">
-                    <TextBlock Text="Portionen:"
-                               Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="ServingsTextBox"
-                             Text="4"/>
-                </StackPanel>
+                <!-- Portionen und Quelle nebeneinander -->
+                <Grid Margin="{StaticResource SpacingTopMedium}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Portionen -->
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Portionen"
+                                   Style="{StaticResource LabelStyle}"/>
+                        <TextBox x:Name="ServingsTextBox"
+                                 Text="4"/>
+                    </StackPanel>
+                    
+                    <!-- Quelle -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Quelle"
+                                   Style="{StaticResource LabelStyle}"/>
+                        <Grid>
+                            <TextBox x:Name="SourceTextBox"/>
+                            <TextBlock Text="URL oder Buchname"
+                                       IsHitTestVisible="False"
+                                       Foreground="Gray"
+                                       FontSize="13"
+                                       Padding="7,0,0,0"
+                                       VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=SourceTextBox}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
                 
                 <!-- Tags -->
-                <StackPanel Grid.Row="6">
-                    <TextBlock Text="Tags (kommagetrennt):"
-                               Style="{StaticResource LabelStyle}"/>
+                <TextBlock Text="Zubereitung"
+                           Style="{StaticResource LabelStyle}"
+                           Margin="{StaticResource SpacingTopMedium}"/>
+                <TextBlock Text="Kommagetrennt, z. B. »italienisch, vegetarisch, schnell«"
+                           Foreground="Gray"
+                           FontSize="12"
+                           Margin="0,0,0,4"/>
+                <Grid>
                     <TextBox x:Name="TagsTextBox"/>
-                </StackPanel>
-            </Grid>
+                    <TextBlock Text="italienisch, vegetarisch"
+                             IsHitTestVisible="False"
+                             Foreground="Gray"
+                             FontSize="13"
+                             Padding="7,0,0,0"
+                             VerticalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=TagsTextBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+
+            </StackPanel>
         </ScrollViewer>
 
         <!-- Buttons -->

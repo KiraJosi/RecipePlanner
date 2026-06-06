@@ -33,7 +33,7 @@ namespace RecipePlanner.ViewModels
                 OnPropertyChanged();
                 (DeleteRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 (EditRecipeCommand as RelayCommand)?.RaiseCanExecuteChanged();
-
+                _mealPlanCommand?.RaiseCanExecuteChanged();
                 CurrentServings = _selectedRecipe?.Servings ?? 4;
                 OnPropertyChanged(nameof(ScaledIngredients));
             }
