@@ -1,5 +1,6 @@
 ﻿using RecipePlanner.Models;
 using RecipePlanner.Views;
+using Microsoft.Win32;
 
 namespace RecipePlanner.Services
 {
@@ -31,6 +32,25 @@ namespace RecipePlanner.Services
             var result = dialog.ShowDialog();
             updatedText = dialog.InputText;
             return result;
+        }
+
+        public string? ShowSaveFileDialog(string filter, string defaultFileName)
+        {
+            var dialog = new SaveFileDialog()
+            {
+                Filter = filter,
+                FileName = defaultFileName
+            };
+            return dialog.ShowDialog() == true ? dialog.FileName : null;
+        }
+
+        public string? ShowOpenFileDialog(string filter)
+        {
+            var dialog = new OpenFileDialog()
+            {
+                Filter = filter
+            };
+            return dialog.ShowDialog() == true ? dialog.FileName : null;
         }
     }
 }

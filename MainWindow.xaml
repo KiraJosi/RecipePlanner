@@ -4,10 +4,8 @@
         xmlns:helpers="clr-namespace:RecipePlanner.Helpers"
         Title="RecipePlanner"
         WindowState="Maximized"  
-        Height="600"
-        MinHeight="600"
-        Width="900"
-        MinWidth="900">
+        Height="600" MinHeight="600"
+        Width="900" MinWidth="900">
 
     <Window.Resources>
         <helpers:IsTodayConverter x:Key="IsTodayConverter"/>
@@ -15,97 +13,110 @@
         <helpers:IsNotUrlConverter x:Key="IsNotUrlConverter"/>
     </Window.Resources>
 
-    <Grid Margin="{StaticResource SpacingMedium}" Cursor="">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <DockPanel>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="3*" />
-        </Grid.ColumnDefinitions>
-
-        <!-- Linke Spalte -->
-        <Grid Grid.Column="0">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Datei">
+                <MenuItem Header="📤 Rezepte exportieren"
+                          Command="{Binding ExportRecipesCommand}"/>
+                <MenuItem Header="📤 Rezepte importieren"
+                          Command="{Binding ImportRecipesCommand}"/>
+                <Separator/>
+                <MenuItem Header="💾 Datenbank sichern"
+                          Command="{Binding BackupDatabaseCommand}"/>
+            </MenuItem>
+        </Menu>
+        
+        <Grid Margin="{StaticResource SpacingMedium}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <!-- Rezeptliste -->
-                <RowDefinition Height="*" />
-                <!-- Vorrat / Zutaten -->
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
 
-            <!-- Rezeptliste -->
-            <GroupBox Grid.Row="0" 
+            <!-- Linke Spalte -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <!-- Rezeptliste -->
+                    <RowDefinition Height="*" />
+                    <!-- Vorrat / Zutaten -->
+                </Grid.RowDefinitions>
+
+                <!-- Rezeptliste -->
+                <GroupBox Grid.Row="0" 
                       MinHeight="150">
-                <GroupBox.Header>
-                    <StackPanel>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0"
+                    <GroupBox.Header>
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0"
                                        Text="🍲 Rezepte" 
                                        Style="{StaticResource GroupHeaderTextStyle}"
                                        VerticalAlignment="Center"/>
-                            <Button Grid.Column="2"
+                                <Button Grid.Column="2"
                                     Content="➕"
                                     Command="{Binding Recipes.AddRecipeCommand}"
                                     ToolTip="{StaticResource TT_AddRecipe}"
                                     Padding="8,2"
                                     Margin="8,0,0,0"
                                     VerticalAlignment="Center" Cursor="Hand"/>
-                        </Grid>
-                        <Grid Width="160"
+                            </Grid>
+                            <Grid Width="160"
                               HorizontalAlignment="Left"
                               Margin="0,4,0,0">
-                            <TextBox Text="{Binding Recipes.SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                <TextBox Text="{Binding Recipes.SearchText, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="0"
                                      ToolTip="Tippe und drücke Enter, um einen Filter hinzuzufügen">
-                                <TextBox.InputBindings>
-                                    <KeyBinding Key="Return" Command="{Binding Recipes.AddFilterCommand}"/>
-                                </TextBox.InputBindings>
-                            </TextBox>
-                            <TextBlock Text="🔍 Name, Zutaten, Tags …"
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Key="Return" Command="{Binding Recipes.AddFilterCommand}"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
+                                <TextBlock Text="🔍 Name, Zutaten, Tags …"
                                        IsHitTestVisible="False"
                                        Foreground="Gray"
                                        FontSize="13"
                                        Padding="7,0,0,0"
                                        VerticalAlignment="Center">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Recipes.SearchText}" Value="">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </Grid>
-                        <ItemsControl ItemsSource="{Binding Recipes.ActiveFilters}"
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Recipes.SearchText}" Value="">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding Recipes.ActiveFilters}"
                                       Margin="0,4,0,0"
                                       MaxWidth="160"
                                       HorizontalAlignment="Left">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Background="{StaticResource PrimaryBrush}"
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{StaticResource PrimaryBrush}"
                                             CornerRadius="4"
                                             Padding="5,2"
                                             Margin="0,0,3,3">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding}"
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding}"
                                                        Foreground="White"
                                                        FontSize="11"
                                                        VerticalAlignment="Center"/>
-                                            <Button Content="✕"
+                                                <Button Content="✕"
                                                     Command="{Binding DataContext.Recipes.RemoveFilterCommand,
                                                               RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                     CommandParameter="{Binding}"
@@ -116,89 +127,89 @@
                                                     Padding="3,0,0,0"
                                                     Margin="3,0,0,0"
                                                     Cursor="Hand"/>
-                                        </StackPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </GroupBox.Header>
-                
-                <ListBox ItemsSource="{Binding Recipes.RecipesView}" 
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </GroupBox.Header>
+
+                    <ListBox ItemsSource="{Binding Recipes.RecipesView}" 
                          SelectedItem="{Binding Recipes.SelectedRecipe}"
                          Margin="{StaticResource SpacingTopSmall}">
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="helpers:DragDropBehavior.EnableDrag" Value="True"/>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}" 
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="helpers:DragDropBehavior.EnableDrag" Value="True"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" 
                                        FontSize="14"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </GroupBox>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </GroupBox>
 
-            <!-- Vorrat / Zutaten -->
-            <GroupBox Grid.Row="1" 
+                <!-- Vorrat / Zutaten -->
+                <GroupBox Grid.Row="1" 
                       MinHeight="150">
-                <GroupBox.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="🥫" 
+                    <GroupBox.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🥫" 
                                    Margin="0,0,5,0"/>
-                        <TextBlock Text="Vorrat / Zutaten" 
+                            <TextBlock Text="Vorrat / Zutaten" 
                                    Style="{StaticResource GroupHeaderTextStyle}"/>
-                    </StackPanel>
-                </GroupBox.Header>
-                <Grid Margin="{StaticResource SpacingSmall}">
+                        </StackPanel>
+                    </GroupBox.Header>
+                    <Grid Margin="{StaticResource SpacingSmall}">
 
-                    <!-- 2 Spalten -->
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="10" />
-                        <!-- Liste -->
-                        <ColumnDefinition Width="Auto" />
-                        <!-- Buttons -->
-                    </Grid.ColumnDefinitions>
+                        <!-- 2 Spalten -->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*" />
+                            <ColumnDefinition Width="10" />
+                            <!-- Liste -->
+                            <ColumnDefinition Width="Auto" />
+                            <!-- Buttons -->
+                        </Grid.ColumnDefinitions>
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <!-- Eingabe -->
+                            <RowDefinition Height="*"/>
+                            <!-- Liste -->
+                        </Grid.RowDefinitions>
+
                         <!-- Eingabe -->
-                        <RowDefinition Height="*"/>
-                        <!-- Liste -->
-                    </Grid.RowDefinitions>
-
-                    <!-- Eingabe -->
-                    <StackPanel Grid.Row="0" Grid.Column="0">
-                        <TextBlock Text='Vorräte (eine pro Zeile, z.B. 500g Mehl"):'
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <TextBlock Text='Vorräte (eine pro Zeile, z.B. 500g Mehl"):'
                                    Style="{StaticResource LabelStyle}"/>
-                        <TextBox Text="{Binding Pantry.NewPantryText, UpdateSourceTrigger=PropertyChanged}" 
+                            <TextBox Text="{Binding Pantry.NewPantryText, UpdateSourceTrigger=PropertyChanged}" 
                                  AcceptsReturn="True" 
                                  TextWrapping="Wrap"
                                  MinHeight="60"
                                  VerticalScrollBarVisibility="Auto"/>
-                    </StackPanel>
+                        </StackPanel>
 
-                    <!-- Vorratsliste -->
-                    <ListBox Grid.Row="1"
+                        <!-- Vorratsliste -->
+                        <ListBox Grid.Row="1"
                              Grid.Column="0"
                              ItemsSource="{Binding Pantry.PantryItems}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="0"
+                                        <TextBlock Grid.Column="0"
                                                Text="{Binding DisplayText}" 
                                                FontSize="13"
                                                VerticalAlignment="Center"/>
 
-                                    <Button Grid.Column="1"
+                                        <Button Grid.Column="1"
                                             Content="🗑"
                                             Command="{Binding DataContext.Pantry.DeletePantryItemCommand,
                                                       RelativeSource={RelativeSource AncestorType=ListBox}}"
@@ -207,340 +218,341 @@
                                             Padding="4,2"
                                             Margin="4,0,0,0"/>
 
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
 
-                    <!-- Buttons -->
-                    <StackPanel Grid.Row="0"
+                        <!-- Buttons -->
+                        <StackPanel Grid.Row="0"
                                 Grid.RowSpan="2"
                                 Grid.Column="2"
                                 Orientation="Vertical"
                                 HorizontalAlignment="Right">
 
-                        <Button Content="💾"
+                            <Button Content="💾"
                                 Command="{Binding Pantry.SavePantryCommand}"
                                 Margin="{StaticResource SpacingBottomSmall}"
                                 ToolTip="{StaticResource TT_SavePantry}"/>
 
-                        <Button Content="✏"
+                            <Button Content="✏"
                                 Command="{Binding Pantry.EditPantryCommand}"
                                 Margin="{StaticResource SpacingBottomSmall}"
                                 ToolTip="{StaticResource TT_EditPantry}"/>
 
-                        <Button Content="🗑"
+                            <Button Content="🗑"
                                 Command="{Binding Pantry.DeletePantryCommand}"
                                 Margin="{StaticResource SpacingBottomMedium}"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 ToolTip="{StaticResource TT_DeletePantry}"/>
 
-                        <Separator Margin="0,5"/>
+                            <Separator Margin="0,5"/>
 
-                        <Button Content="Rezepte finden"
+                            <Button Content="Rezepte finden"
                                 Command="{Binding Recipes.FindRecipesCommand}"
                                 Margin="0,5,0,5"/>
 
-                        <Button Content="Alle Rezepte anzeigen"
+                            <Button Content="Alle Rezepte anzeigen"
                                 Command="{Binding Recipes.ShowAllRecipesCommand}"
                                 Margin="0,5,0,5"/>
-                        <TextBlock Text="{Binding Pantry.StatusMessage}"
+                            <TextBlock Text="{Binding Pantry.StatusMessage}"
                                    Foreground="{StaticResource AccentBrush}"
                                    FontWeight="SemiBold"
                                    Margin="0,8,0,0"
                                    HorizontalAlignment="Center"/>
-                    </StackPanel>
+                        </StackPanel>
 
-                </Grid>
-            </GroupBox>
+                    </Grid>
+                </GroupBox>
 
-        </Grid>
+            </Grid>
 
-        <!-- Rechte Spalte -->
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <!-- Details -->
-                <RowDefinition Height="*" />
-                <!-- Kochplan -->
-            </Grid.RowDefinitions>
+            <!-- Rechte Spalte -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <!-- Details -->
+                    <RowDefinition Height="*" />
+                    <!-- Kochplan -->
+                </Grid.RowDefinitions>
 
-            <!-- Rezeptdetails -->
-            <GroupBox Grid.Row="0" 
+                <!-- Rezeptdetails -->
+                <GroupBox Grid.Row="0" 
                       MinHeight="200">
-                <GroupBox.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="📋" 
+                    <GroupBox.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📋" 
                                    Margin="0,0,5,0"/>
-                        <TextBlock Text="Details"
+                            <TextBlock Text="Details"
                                    Style="{StaticResource GroupHeaderTextStyle}"/>
-                    </StackPanel>
-                </GroupBox.Header>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <!-- Scrollbarer Inhalt -->
-                        <RowDefinition Height="Auto"/>
-                        <!-- Buttons -->
-                    </Grid.RowDefinitions>
+                        </StackPanel>
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <!-- Scrollbarer Inhalt -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- Buttons -->
+                        </Grid.RowDefinitions>
 
-                    <!-- Scrollbarer Bereich -->
-                    <ScrollViewer Grid.Row="0" 
+                        <!-- Scrollbarer Bereich -->
+                        <ScrollViewer Grid.Row="0" 
                                   VerticalScrollBarVisibility="Auto" 
                                   HorizontalScrollBarVisibility="Disabled"
                                   CanContentScroll="False"
                                   Margin="{StaticResource SpacingBottomSmall}">
-                        <StackPanel>
-                            <TextBlock Text="{Binding Recipes.SelectedRecipe.Name}" 
+                            <StackPanel>
+                                <TextBlock Text="{Binding Recipes.SelectedRecipe.Name}" 
                                        FontWeight="Bold" 
                                        FontSize="18" 
                                        Margin="{StaticResource SpacingBottomMedium}"/>
 
-                            <!-- Zutaten -->
-                            <StackPanel Orientation="Horizontal" Margin="{StaticResource SpacingBottomSmall}">
-                                <TextBlock Text="Zutaten:" 
+                                <!-- Zutaten -->
+                                <StackPanel Orientation="Horizontal" Margin="{StaticResource SpacingBottomSmall}">
+                                    <TextBlock Text="Zutaten:" 
                                        FontWeight="SemiBold" 
                                        VerticalAlignment="Center"/>
-                                <Button Content="-"
+                                    <Button Content="-"
                                         Command="{Binding Recipes.DecrementServingsCommand}"
                                         Width="24" Margin="10,0,4,0" Padding="0"/>
-                                <TextBlock Text="{Binding Recipes.CurrentServings}"
+                                    <TextBlock Text="{Binding Recipes.CurrentServings}"
                                            VerticalAlignment="Center"
                                            FontWeight="SemiBold"
                                            MinWidth="16"
                                            TextAlignment="Center"/>
-                                <Button Content="+"
+                                    <Button Content="+"
                                         Command="{Binding Recipes.IncrementServingsCommand}"
                                         Width="24" Margin="4,0,0,0" Padding="0"/>
-                                <TextBlock Text="Portionen"
+                                    <TextBlock Text="Portionen"
                                            VerticalAlignment="Center"
                                            Margin="6,0,0,0"
                                            Foreground="{StaticResource TextBrush}"/>
-                            </StackPanel>
+                                </StackPanel>
 
-                            <ItemsControl ItemsSource="{Binding Recipes.ScaledIngredients}" 
+                                <ItemsControl ItemsSource="{Binding Recipes.ScaledIngredients}" 
                                           Margin="10,0,0,10">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Margin="0,0,0,2">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Margin="0,0,0,2">
                                             <Run Text="• "/>
                                             <Run Text="{Binding Path=.}"/>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
 
-                            <!-- Zubereitung -->
-                            <TextBlock Text="Zubereitung:" 
+                                <!-- Zubereitung -->
+                                <TextBlock Text="Zubereitung:" 
                                        FontWeight="SemiBold" 
                                        Margin="{StaticResource SpacingBottomSmall}"/>
-                            <ItemsControl ItemsSource="{Binding Recipes.SelectedRecipe.Steps}" 
+                                <ItemsControl ItemsSource="{Binding Recipes.SelectedRecipe.Steps}" 
                                           Margin="10,0,0,10">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Margin="0,0,0,2">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Margin="0,0,0,2">
                                             <Run Text="• "/>
                                             <Run Text="{Binding Path=.}"/>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
 
-                            <!-- Quelle -->
-                            <TextBlock Margin="{StaticResource SpacingBottomSmall}"
+                                <!-- Quelle -->
+                                <TextBlock Margin="{StaticResource SpacingBottomSmall}"
                                        Visibility="{Binding Recipes.SelectedRecipe.Source,
                                                     Converter={StaticResource IsUrlConverter}}">
                                 <Hyperlink NavigateUri="{Binding Recipes.SelectedRecipe.Source}"
                                            RequestNavigate="Hyperlink_RequestNavigate">
                                     <Run Text="{Binding Recipes.SelectedRecipe.Source}"/>
                                 </Hyperlink>
-                            </TextBlock>
+                                </TextBlock>
 
-                            <TextBlock Text="{Binding Recipes.SelectedRecipe.Source}" 
+                                <TextBlock Text="{Binding Recipes.SelectedRecipe.Source}" 
                                        FontStyle="Italic" 
                                        Margin="{StaticResource SpacingTopSmall}"
                                        Visibility="{Binding Recipes.SelectedRecipe.Source,
                                                     Converter={StaticResource IsNotUrlConverter}}"/>
 
-                            <!-- Tags -->
-                            <ItemsControl ItemsSource="{Binding Recipes.SelectedRecipe.Tags}"
+                                <!-- Tags -->
+                                <ItemsControl ItemsSource="{Binding Recipes.SelectedRecipe.Tags}"
                                           Margin="0,5,0,0">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Background="{StaticResource PrimaryBrush}"
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{StaticResource PrimaryBrush}"
                                                 CornerRadius="4"
                                                 Padding="6,2"
                                                 Margin="0,0,4,4">
-                                            <TextBlock Text="{Binding}"
+                                                <TextBlock Text="{Binding}"
                                                        Foreground="White"
                                                        FontSize="11"/>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </ScrollViewer>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ScrollViewer>
 
-                    <!-- Buttons -->
-                    <StackPanel Orientation="Horizontal" 
+                        <!-- Buttons -->
+                        <StackPanel Orientation="Horizontal" 
                                 HorizontalAlignment="Right" 
                                 Grid.Row="1">
-                        <TextBlock Text="{Binding Recipes.StatusMessage}"
+                            <TextBlock Text="{Binding Recipes.StatusMessage}"
                                    VerticalAlignment="Center"
                                    Foreground="{StaticResource AccentBrush}"
                                    FontWeight="SemiBold"
                                    Margin="0,0,8,0"/>
-                        <StackPanel Margin="0,0,5,0">
-                            <Button Content="✏" 
+                            <StackPanel Margin="0,0,5,0">
+                                <Button Content="✏" 
                                     Command="{Binding Recipes.EditRecipeCommand}" 
                                     Margin="0,0,0,2"
                                     ToolTip="{StaticResource TT_EditRecipe}"/>
-                            <Button Content="🗑" 
+                                <Button Content="🗑" 
                                     Command="{Binding Recipes.DeleteRecipeCommand}"
                                     Style="{StaticResource SecondaryButtonStyle}"
                                     Margin="0,0,0,2"
                                     ToolTip="{StaticResource TT_DeleteRecipe}"/>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </Grid>
-            </GroupBox>
+                    </Grid>
+                </GroupBox>
 
-            <!-- Kochplan -->
-            <GroupBox Grid.Row="1" 
+                <!-- Kochplan -->
+                <GroupBox Grid.Row="1" 
                       MinHeight="150">
-                <GroupBox.Header>
-                    <TextBlock Text="🗓 Wochenansicht"
+                    <GroupBox.Header>
+                        <TextBlock Text="🗓 Wochenansicht"
                                    Margin="0,0,5,0"/>
-                </GroupBox.Header>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <!-- Navigation -->
-                        <RowDefinition Height="*"/>
-                        <!-- ListBox -->
-                        <RowDefinition Height="Auto"/>
-                        <!-- Buttons -->
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <!-- Navigation -->
+                            <RowDefinition Height="*"/>
+                            <!-- ListBox -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- Buttons -->
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Row="0" Grid.ColumnSpan="7"
+                        <StackPanel Grid.Row="0" Grid.ColumnSpan="7"
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Margin="0,0,0,5">
-                        <Button Content="◀" Width="30"
+                            <Button Content="◀" Width="30"
                                 Command="{Binding MealPlan.PreviousWeekCommand}"/>
-                        <TextBlock VerticalAlignment="Center" Margin="10,0"
+                            <TextBlock VerticalAlignment="Center" Margin="10,0"
                                    FontWeight="SemiBold"
                                    Text="{Binding MealPlan.WeekLabel}"/>
-                        <Button Content="▶" Width="30"
+                            <Button Content="▶" Width="30"
                                 Command="{Binding MealPlan.NextWeekCommand}"/>
 
-                    </StackPanel>
+                        </StackPanel>
 
-                    <ListBox Grid.Row="1" Grid.ColumnSpan="7"
+                        <ListBox Grid.Row="1" Grid.ColumnSpan="7"
                              ItemsSource="{Binding MealPlan.CurrentWeekDays}"
                              HorizontalContentAlignment="Stretch"
                              BorderThickness="0"
                              Background="Transparent">
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="7"/>
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="Padding" Value="0"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="ListBoxItem">
-                                            <ContentPresenter/>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border AllowDrop="True"
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="7"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <ContentPresenter/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border AllowDrop="True"
                                         Drop="Day_Drop"
                                         Margin="2"
                                         MinHeight="60"
                                         VerticalAlignment="Stretch">
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Setter Property="Background" Value="Transparent"/>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Date, 
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Date, 
                                                              Converter={StaticResource IsTodayConverter}}" 
                                                              Value="True">
-                                                    <Setter Property="Background" Value="#1A0078D4"/>
-                                                    <Setter Property="TextElement.FontWeight" Value="Bold"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
+                                                        <Setter Property="Background" Value="#1A0078D4"/>
+                                                        <Setter Property="TextElement.FontWeight" Value="Bold"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
 
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding Date, StringFormat=ddd dd.MM.}"
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Date, StringFormat=ddd dd.MM.}"
                                                    FontWeight="Bold"
                                                    Margin="0,0,0,5"/>
-                                        <ListBox ItemsSource="{Binding Meals}"
+                                            <ListBox ItemsSource="{Binding Meals}"
                                                  SelectedItem="{Binding DataContext.MealPlan.SelectedPlannedMeal,
                                                                 RelativeSource={RelativeSource AncestorType=Window}}"
                                                  BorderThickness="0"
                                                  Background="Transparent">
-                                            <ListBox.ItemContainerStyle>
-                                                <Style TargetType="ListBoxItem">
-                                                    <Setter Property="Padding" Value="2"/>
-                                                </Style>
-                                            </ListBox.ItemContainerStyle>
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Recipe.Name}"
+                                                <ListBox.ItemContainerStyle>
+                                                    <Style TargetType="ListBoxItem">
+                                                        <Setter Property="Padding" Value="2"/>
+                                                    </Style>
+                                                </ListBox.ItemContainerStyle>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Recipe.Name}"
                                                                TextWrapping="Wrap"/>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
 
-                    <!-- Buttons -->
-                    <StackPanel Grid.Row="2" 
+                        <!-- Buttons -->
+                        <StackPanel Grid.Row="2" 
                                 Grid.ColumnSpan="7"
                                 Orientation="Horizontal" 
                                 HorizontalAlignment="Right">
-                        <Button Content="🛒"
+                            <Button Content="🛒"
                                 Command="{Binding MealPlan.GenerateShoppingListCommand}"
                                 ToolTip="{StaticResource TT_ShoppingList}"/>
-                        <Button Content="➕" 
+                            <Button Content="➕" 
                                 Command="{Binding MealPlan.PlanRecipeCommand}"
                                 ToolTip="{StaticResource TT_PlanRecipe}"/>
-                        <Button Content="✏" 
+                            <Button Content="✏" 
                                 Command="{Binding MealPlan.EditPlannedMealCommand}" 
                                 ToolTip="{StaticResource TT_EditPlannedMeal}"/>
-                        <Button Content="🗑" 
+                            <Button Content="🗑" 
                                 Command="{Binding MealPlan.DeletePlannedMealCommand}"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 ToolTip="{StaticResource TT_DeletePlannedMeal}"/>
-                    </StackPanel>
-                </Grid>
-            </GroupBox>
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+            </Grid>
         </Grid>
-    </Grid>
+    </DockPanel>
 </Window>

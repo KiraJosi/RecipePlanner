@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RecipePlanner.Models;
+﻿using RecipePlanner.Models;
 
 namespace RecipePlanner.Services
 {
@@ -13,5 +8,7 @@ namespace RecipePlanner.Services
         bool? ShowEditRecipeDialog(Recipe recipe);
         bool? ShowPlannedMealDialog(PlannedMeal meal,List <Recipe> recipes);
         bool? ShowEditPantryDialog(string currentText, out string? updatedText);
+        string? ShowSaveFileDialog(string filter, string defaultFileName);
+        string? ShowOpenFileDialog(string filter);
     }
 }

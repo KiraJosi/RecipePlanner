@@ -235,5 +235,25 @@ namespace RecipePlanner.ViewModels
         }
 
         public IEnumerable<string> GetPantryItems() => _pantry.PantryItems.Select(p => p.Name);
+
+        public (int added, int skipped) ImportRecipes(List<Recipe> importedRecipes)
+        {
+            int added = 0, skipped = 0;
+
+            foreach (var recipe in importedRecipes)
+            {
+                if (Recipes.Any(r => r.Name.Equals(recipe.Name, StringComparison.OrdinalIgnoreCase)))
+                {
+                    skipped++;
+                    continue;
+                }
+
+                _recipeService.Add(recipe);
+                Recipes.Add(recipe);
+                added++;
+            }
+
+            return (added, skipped);
+        }
     }
 }

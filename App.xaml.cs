@@ -17,8 +17,9 @@ namespace RecipePlanner
                 new RecipeService(new RecipeRepository(factory)),
                 new PantryService(new PantryRepository(factory)),
                 new PlannedMealsService(new PlannedMealRepository(factory)),
-                new DialogService()
-                );
+                new DialogService(),
+                new ExportImportService()
+            );
 
             var window = new MainWindow(vm);
             window.Show();
