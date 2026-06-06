@@ -15,12 +15,9 @@
         <helpers:IsNotUrlConverter x:Key="IsNotUrlConverter"/>
     </Window.Resources>
 
-    <Grid Margin="{StaticResource SpacingMedium}">
+    <Grid Margin="{StaticResource SpacingMedium}" Cursor="">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <!-- Hauptinhalt -->
-            <RowDefinition Height="Auto" />
-            <!-- Buttons unten -->
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -42,12 +39,24 @@
                       MinHeight="150">
                 <GroupBox.Header>
                     <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="🍲" 
-                                   Margin="0,0,5,0"/>
-                        <TextBlock Text="Rezepte"
-                                   Style="{StaticResource GroupHeaderTextStyle}"/>
-                        </StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="🍲 Rezepte" 
+                                       Style="{StaticResource GroupHeaderTextStyle}"
+                                       VerticalAlignment="Center"/>
+                            <Button Grid.Column="2"
+                                    Content="➕"
+                                    Command="{Binding Recipes.AddRecipeCommand}"
+                                    ToolTip="{StaticResource TT_AddRecipe}"
+                                    Padding="8,2"
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center" Cursor="Hand"/>
+                        </Grid>
                         <Grid Width="160"
                               HorizontalAlignment="Left"
                               Margin="0,4,0,0">
@@ -114,6 +123,7 @@
                         </ItemsControl>
                     </StackPanel>
                 </GroupBox.Header>
+                
                 <ListBox ItemsSource="{Binding Recipes.RecipesView}" 
                          SelectedItem="{Binding Recipes.SelectedRecipe}"
                          Margin="{StaticResource SpacingTopSmall}">
@@ -284,7 +294,7 @@
                             <TextBlock Text="{Binding Recipes.SelectedRecipe.Name}" 
                                        FontWeight="Bold" 
                                        FontSize="18" 
-                                       Margin="{StaticResource SpacingBottomMedium}"/>  
+                                       Margin="{StaticResource SpacingBottomMedium}"/>
 
                             <!-- Zutaten -->
                             <StackPanel Orientation="Horizontal" Margin="{StaticResource SpacingBottomSmall}">
@@ -330,7 +340,7 @@
                                     <DataTemplate>
                                         <TextBlock Margin="0,0,0,2">
                                             <Run Text="• "/>
-                                            <Run Text="{Binding Path=.}"/>                 
+                                            <Run Text="{Binding Path=.}"/>
                                         </TextBlock>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -345,13 +355,13 @@
                                     <Run Text="{Binding Recipes.SelectedRecipe.Source}"/>
                                 </Hyperlink>
                             </TextBlock>
-                            
+
                             <TextBlock Text="{Binding Recipes.SelectedRecipe.Source}" 
                                        FontStyle="Italic" 
                                        Margin="{StaticResource SpacingTopSmall}"
                                        Visibility="{Binding Recipes.SelectedRecipe.Source,
                                                     Converter={StaticResource IsNotUrlConverter}}"/>
-                            
+
                             <!-- Tags -->
                             <ItemsControl ItemsSource="{Binding Recipes.SelectedRecipe.Tags}"
                                           Margin="0,5,0,0">
@@ -404,7 +414,7 @@
             <GroupBox Grid.Row="1" 
                       MinHeight="150">
                 <GroupBox.Header>
-                        <TextBlock Text="🗓 Wochenansicht"
+                    <TextBlock Text="🗓 Wochenansicht"
                                    Margin="0,0,5,0"/>
                 </GroupBox.Header>
                 <Grid>
@@ -509,7 +519,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    
+
                     <!-- Buttons -->
                     <StackPanel Grid.Row="2" 
                                 Grid.ColumnSpan="7"
@@ -532,19 +542,5 @@
                 </Grid>
             </GroupBox>
         </Grid>
-
-        <!-- Buttons -->
-        <Border Grid.Row="1" 
-                Grid.ColumnSpan="2" 
-                BorderThickness="0,1,0,0" 
-                BorderBrush="LightGray" 
-                Padding="{StaticResource SpacingSmall}">
-            <StackPanel Orientation="Horizontal" 
-                        HorizontalAlignment="Right">
-                <Button Content="➕" 
-                        Command="{Binding Recipes.AddRecipeCommand}"
-                        ToolTip="{StaticResource TT_AddRecipe}" Cursor="Hand"/>
-            </StackPanel>
-        </Border>
     </Grid>
 </Window>
