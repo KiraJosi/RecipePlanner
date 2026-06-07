@@ -13,5 +13,6 @@ namespace RecipePlanner.Services
         void Add (Recipe recipe);
         void Update (Recipe recipe);
         void Delete (int  id);
+        void IncrementTimesCooked (int id);
     }
 }

@@ -36,6 +36,8 @@ namespace RecipePlanner.ViewModels
                 _mealPlanCommand?.RaiseCanExecuteChanged();
                 CurrentServings = _selectedRecipe?.Servings ?? 4;
                 OnPropertyChanged(nameof(ScaledIngredients));
+                OnPropertyChanged(nameof(TimesPlanned));
+                (MarkAsCookedCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -83,11 +85,18 @@ namespace RecipePlanner.ViewModels
                 .Select(i => IngredientScaler.Scale(i, ScalingFactor))
             ?? [];
 
+        private MealPlanViewModel? _mealPlan;
+        private RelayCommand? _mealPlanCommand;
+
         public void SetMealPlan(MealPlanViewModel mealPlan)
         {
+            _mealPlan = mealPlan;
             _mealPlanCommand = mealPlan.PlanRecipeCommand as RelayCommand;
         }
-        private RelayCommand? _mealPlanCommand;
+
+        public int TimesPlanned =>
+            _mealPlan?.PlannedMeals
+            .Count(m => m.Recipe?.Id == SelectedRecipe?.Id) ?? 0;   
 
         public ICommand AddRecipeCommand { get; }
         public ICommand DeleteRecipeCommand { get; }
@@ -98,6 +107,7 @@ namespace RecipePlanner.ViewModels
         public ICommand DecrementServingsCommand { get; }
         public ICommand AddFilterCommand { get; }
         public ICommand RemoveFilterCommand { get; }
+        public ICommand MarkAsCookedCommand { get; }
         public ICollectionView RecipesView { get; }
 
         public RecipesViewModel(IRecipeService recipeService, IDialogService dialogService, PantryViewModel pantry)
@@ -118,6 +128,7 @@ namespace RecipePlanner.ViewModels
             DecrementServingsCommand = new RelayCommand(() => CurrentServings--);
             AddFilterCommand = new RelayCommand(AddFilter, () => !string.IsNullOrWhiteSpace(_searchText));
             RemoveFilterCommand = new RelayCommand<string>(RemoveFilter);
+            MarkAsCookedCommand = new RelayCommand(MarkAsCooked, () => SelectedRecipe != null);
 
             _pantry.PantryItems.CollectionChanged += (_, __) =>
             {
@@ -226,6 +237,16 @@ namespace RecipePlanner.ViewModels
                 _activeFilters.Add(SearchText.Trim());
 
             SearchText = "";
+        }
+
+        public void MarkAsCooked()
+        {
+            if (SelectedRecipe == null) return;
+
+            _recipeService.IncrementTimesCooked(SelectedRecipe.Id);
+            SelectedRecipe.TimesCooked++;
+            OnPropertyChanged(nameof(SelectedRecipe));
+            ShowStatus("✓ Als gekocht markiert");
         }
 
         private void RemoveFilter(string filter)

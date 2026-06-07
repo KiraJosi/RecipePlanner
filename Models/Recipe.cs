@@ -8,6 +8,7 @@ namespace RecipePlanner.Models
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int Servings { get; set; } = 4;
+        public int TimesCooked { get; set; } = 0;
         public ObservableCollection<string> Ingredients { get; set; }
             = new ObservableCollection<string>();
         public ObservableCollection<string> Steps { get; set; } 

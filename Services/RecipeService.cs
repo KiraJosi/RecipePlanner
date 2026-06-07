@@ -21,5 +21,6 @@ namespace RecipePlanner.Services
         public void Add(Recipe recipe) => _repo.Add(recipe);
         public void Update(Recipe recipe) => _repo.Update(recipe);
         public void Delete(int id) => _repo.Delete(id);
+        public void IncrementTimesCooked(int id) => _repo.IncrementTimesCooked(id);
     }
 }

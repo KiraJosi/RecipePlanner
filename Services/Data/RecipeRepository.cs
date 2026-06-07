@@ -24,7 +24,7 @@ namespace RecipePlanner.Services.Data
             using var connection = _factory.CreateConnection();
 
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT Id, Name, Source, Servings FROM Recipes";
+            command.CommandText = "SELECT Id, Name, Source, Servings, TimesCooked FROM Recipes";
 
             using var reader = command.ExecuteReader();
             while (reader.Read())
@@ -35,6 +35,7 @@ namespace RecipePlanner.Services.Data
                     Name = reader.GetString(1),
                     Source = reader.IsDBNull(2) ? "" : reader.GetString(2),
                     Servings = reader.IsDBNull(3) ? 4 : reader.GetInt32(3),
+                    TimesCooked = reader.IsDBNull(4) ? 0 : reader.GetInt32(4),
                 };
 
                 recipe.Ingredients = new ObservableCollection<string>(
@@ -120,6 +121,16 @@ namespace RecipePlanner.Services.Data
             using var connection = _factory.CreateConnection();
             var command = connection.CreateCommand();
             command.CommandText = "DELETE FROM Recipes WHERE ID = $id";
+            command.Parameters.AddWithValue("$id", id);
+            command.ExecuteNonQuery();
+        }
+
+        public void IncrementTimesCooked(int id)
+        {
+            using var connection = _factory.CreateConnection();
+            var command = connection.CreateCommand();
+            command.CommandText =
+                "UPDATE Recipes SET TimesCooked = TimesCooked + 1 WHERE ID = $id";
             command.Parameters.AddWithValue("$id", id);
             command.ExecuteNonQuery();
         }

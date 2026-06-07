@@ -302,10 +302,40 @@
                                   CanContentScroll="False"
                                   Margin="{StaticResource SpacingBottomSmall}">
                             <StackPanel>
+                                
+                                <!-- Rezeptname -->
                                 <TextBlock Text="{Binding Recipes.SelectedRecipe.Name}" 
                                        FontWeight="Bold" 
                                        FontSize="18" 
                                        Margin="{StaticResource SpacingBottomMedium}"/>
+                                
+                                <!-- Statistikzeile -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Text="📊 "
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock VerticalAlignment="Center">
+                                            <Run Text="{Binding Recipes.SelectedRecipe.TimesCooked, Mode=OneWay}"/>
+                                            <Run Text="× gekocht  ·  "/>
+                                            <Run Text="{Binding Recipes.TimesPlanned, Mode=OneWay}"/>
+                                            <Run Text="× geplant"/>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <Button Grid.Column="1"
+                                            Content="✓ Gekocht"
+                                            Command="{Binding Recipes.MarkAsCookedCommand}"
+                                            Padding="8,3"
+                                            Margin="0"
+                                            ToolTip="Dieses Rezept als heute gekocht markieren"/>
+                                </Grid>
 
                                 <!-- Zutaten -->
                                 <StackPanel Orientation="Horizontal" Margin="{StaticResource SpacingBottomSmall}">

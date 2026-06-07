@@ -113,6 +113,18 @@ namespace RecipePlanner.Services.Data
             {
 
             }
+
+            try
+            {
+                var migration = connection.CreateCommand();
+                migration.CommandText =
+                    "ALTER TABLE Recipes ADD COLUMN TimesCooked INTEGER NOT NULL DEFAULT 0;";
+                migration.ExecuteNonQuery();
+            }
+            catch (Microsoft.Data.Sqlite.SqliteException ex) when (ex.SqliteErrorCode == 1)
+            {
+
+            }
         }
     }
 }
