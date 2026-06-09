@@ -11,6 +11,7 @@
         <helpers:IsTodayConverter x:Key="IsTodayConverter"/>
         <helpers:IsUrlConverter x:Key="IsUrlConverter"/>
         <helpers:IsNotUrlConverter x:Key="IsNotUrlConverter"/>
+        <helpers:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
     </Window.Resources>
 
     <DockPanel>
@@ -56,10 +57,18 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0"
-                                       Text="🍲 Rezepte" 
-                                       Style="{StaticResource GroupHeaderTextStyle}"
-                                       VerticalAlignment="Center"/>
+                                <StackPanel Grid.Column="0"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                    <TextBlock Text="🍲 Rezepte" 
+                                               Style="{StaticResource GroupHeaderTextStyle}"/>
+                                    <TextBlock Foreground="Gray"
+                                               FontSize="13"
+                                               FontWeight="Normal"
+                                               VerticalAlignment="Center"
+                                               Margin="6,0,0,0"
+                                               Text="{Binding Recipes.RecipeCount, StringFormat='({0})'}"/>
+                                </StackPanel>
                                 <Button Grid.Column="2"
                                     Content="➕"
                                     Command="{Binding Recipes.AddRecipeCommand}"
@@ -136,17 +145,71 @@
                     </GroupBox.Header>
 
                     <ListBox ItemsSource="{Binding Recipes.RecipesView}" 
-                         SelectedItem="{Binding Recipes.SelectedRecipe}"
-                         Margin="{StaticResource SpacingTopSmall}">
+                             SelectedItem="{Binding Recipes.SelectedRecipe}"
+                             Margin="{StaticResource SpacingTopSmall}">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="helpers:DragDropBehavior.EnableDrag" Value="True"/>
+                                <Setter Property="Padding" Value="6,5"/>
+                                <Setter Property="Margin" Value="0,1"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border x:Name="ItemBorder"
+                                                    Background="Transparent"
+                                                    CornerRadius="6"
+                                                    Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="ItemBorder"
+                                                            Property="Background"
+                                                            Value="#15FF6F4A"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="ItemBorder"
+                                                            Property="Background"
+                                                            Value="#25FF6F4A"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Name}" 
-                                       FontSize="14"/>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}" 
+                                               FontSize="14"
+                                               FontWeight="SemiBold"/>
+
+                                    <ItemsControl ItemsSource="{Binding Tags}"
+                                                  Margin="0,3,0,0"
+                                                  Visibility="{Binding Tags.Count,
+                                                               Converter={StaticResource CountToVisibilityConverter}}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="#1AFF6F4A"
+                                                    BorderBrush="{StaticResource PrimaryBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="3"
+                                                    Padding="5,1"
+                                                    Margin="0,0,4,2">
+                                                    <TextBlock Text="{Binding}"
+                                                           FontSize="10"
+                                                           Foreground="{StaticResource PrimaryBrush}"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

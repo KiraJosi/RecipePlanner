@@ -3,6 +3,7 @@ using RecipePlanner.Models;
 using RecipePlanner.Services;
 using RecipePlanner.ViewModels.Base;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
@@ -96,7 +97,9 @@ namespace RecipePlanner.ViewModels
 
         public int TimesPlanned =>
             _mealPlan?.PlannedMeals
-            .Count(m => m.Recipe?.Id == SelectedRecipe?.Id) ?? 0;   
+            .Count(m => m.Recipe?.Id == SelectedRecipe?.Id) ?? 0;  
+        
+        public int RecipeCount => RecipesView.Cast<object>().Count();
 
         public ICommand AddRecipeCommand { get; }
         public ICommand DeleteRecipeCommand { get; }
@@ -110,6 +113,7 @@ namespace RecipePlanner.ViewModels
         public ICommand MarkAsCookedCommand { get; }
         public ICollectionView RecipesView { get; }
 
+        //Konstruktor
         public RecipesViewModel(IRecipeService recipeService, IDialogService dialogService, PantryViewModel pantry)
         {
             _recipeService = recipeService;
@@ -118,6 +122,11 @@ namespace RecipePlanner.ViewModels
 
             Recipes = new ObservableCollection<Recipe>(_recipeService.GetAll());
             RecipesView = CollectionViewSource.GetDefaultView(Recipes);
+
+            RecipesView.Filter = _ => true;
+            RecipesView.CurrentChanged += (_, __) => OnPropertyChanged(nameof(RecipeCount));
+            ((INotifyCollectionChanged)RecipesView).CollectionChanged += (_, __) =>
+                OnPropertyChanged(nameof(RecipeCount));
 
             AddRecipeCommand = new RelayCommand(AddRecipe);
             DeleteRecipeCommand = new RelayCommand(DeleteRecipe, CanDeleteRecipe);
@@ -216,6 +225,7 @@ namespace RecipePlanner.ViewModels
 
                 return matchesSearch && matchesFilters && matchesPantry;
             };
+            OnPropertyChanged(nameof(RecipeCount));
         }
 
         private void ShowStatus(string message)
